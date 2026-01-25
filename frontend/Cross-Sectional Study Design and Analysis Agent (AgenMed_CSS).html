@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgenMed_CSS - Cross-Sectional Study Agent</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #4a90e2;
+            --dark-blue: #2c5282;
+            --light-blue: #e6f3ff;
+            --accent-blue: #3182ce;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #e6f3ff 0%, #f0f8ff 100%);
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 隐藏滚动条 */
+        body::-webkit-scrollbar {
+            display: none;
+        }
+        
+        body {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, var(--dark-blue) 0%, var(--primary-blue) 100%);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            padding: 0 2rem;
+        }
+        
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2.5rem;
+            width: 100%;
+        }
+        
+        @media (max-width: 768px) {
+            .cards-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+        
+        .module-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem 2.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(74, 144, 226, 0.1);
+            border: 1px solid rgba(74, 144, 226, 0.1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--accent-blue));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .module-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .module-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 48px rgba(74, 144, 226, 0.2);
+            border-color: rgba(74, 144, 226, 0.3);
+        }
+        
+        .module-card:active {
+            transform: translateY(-4px);
+        }
+        
+        .card-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            box-shadow: 0 8px 24px rgba(74, 144, 226, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .module-card:hover .card-icon {
+            transform: scale(1.05);
+            box-shadow: 0 8px 28px rgba(74, 144, 226, 0.35);
+        }
+        
+        .card-title {
+            font-size: 1.375rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 2.5rem;
+            text-align: center;
+            letter-spacing: -0.025em;
+        }
+        
+        .card-button {
+            width: 100%;
+            padding: 0.875rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9375rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(74, 144, 226, 0.3);
+        }
+        
+        .card-button:hover {
+            box-shadow: 0 6px 20px rgba(74, 144, 226, 0.35);
+            transform: translateY(-1px);
+        }
+        
+        .card-button:active {
+            transform: translateY(0);
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .card-1 {
+            animation: fadeInLeft 0.8s ease-out;
+        }
+        
+        .card-2 {
+            animation: fadeInRight 0.8s ease-out;
+        }
+        
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(74, 144, 226, 0.12);
+            color: var(--primary-blue);
+            border-radius: 16px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            letter-spacing: 0.025em;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar fixed top-0 left-0 right-0 z-50">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mr-3">
+                        <i class="fas fa-microscope text-white text-xl"></i>
+                    </div>
+                    <h1 class="text-xl font-bold text-white">Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-white text-opacity-80">Choose Your Module</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Module Cards -->
+            <div class="cards-container">
+                <!-- Protocol Generation Card -->
+                <div class="module-card card-1" onclick="navigateToModule('protocol_generation.html')">
+                    <div class="card-icon">
+                        <i class="fas fa-file-medical"></i>
+                    </div>
+                    <div class="badge">Module 1</div>
+                    <h2 class="card-title">Protocol Generation</h2>
+                    <button class="card-button">
+                        <i class="fas fa-arrow-right mr-2"></i>Enter Protocol Generation
+                    </button>
+                </div>
+                
+                <!-- Statistical Analysis Card -->
+                <div class="module-card card-2" onclick="navigateToModule('statistical_analysis.html')">
+                    <div class="card-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="badge">Module 2</div>
+                    <h2 class="card-title">Statistical Analysis</h2>
+                    <button class="card-button">
+                        <i class="fas fa-arrow-right mr-2"></i>Enter Statistical Analysis
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function navigateToModule(page) {
+            // Add a smooth transition effect
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.3s ease';
+            
+            setTimeout(() => {
+                window.location.href = page;
+            }, 300);
+        }
+        
+        // Add keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === '1') {
+                navigateToModule('protocol_generation.html');
+            } else if (e.key === '2') {
+                navigateToModule('statistical_analysis.html');
+            }
+        });
+        
+        // Add visual feedback on hover
+        document.querySelectorAll('.module-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.cursor = 'pointer';
+            });
+        });
+    </script>
+</body>
+</html>
+

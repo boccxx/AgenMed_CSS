@@ -1,0 +1,246 @@
+{
+  "name": "A_Research_Question_Framework_Confirmation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "bochunxinprotocola",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "dae17470-c697-40d8-ade6-dd6339e89a1d",
+      "name": "Webhook",
+      "webhookId": "fd690156-3318-48b0-b7ab-d8cdc69fce97"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "session-id",
+              "name": "sessionId",
+              "value": "={{ $json.body.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "framework",
+              "name": "framework",
+              "value": "={{ $json.body.framework }}",
+              "type": "string"
+            },
+            {
+              "id": "framework-data",
+              "name": "frameworkData",
+              "value": "={{ $json.body.frameworkData }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        0
+      ],
+      "id": "7466bf20-bf22-4b40-a0b1-ff257d28601d",
+      "name": "Prepare Input"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=【Role Assignment】  \nYou are a rigorous research assistant in epidemiology and biostatistics.  \nThe user has selected a research question framework (PECO / CoCoPop / SPIDER / PECO and CoCoPop) on the frontend and filled in each component using natural language or itemized format.  \nThese components may be lengthy, containing bullet points, explanations, and qualifying conditions.  \n\nYour task is not to mechanically substitute {P}/{E}/{O} into a template, but rather to:  \n1. Carefully read and understand the meaning of each component;  \n2. Organize and refine this content into **fluent, smooth, academically-styled research question/research objective statements**;  \n3. Simultaneously output a structured components object, preserving your organized component text for use by subsequent modules.  \n\n【Current Session Input】  \n- framework: {{ $json.framework }}  \n- frameworkData (JSON or object): {{ $json.frameworkData }}  \n\nframework can only take one of the following values:  \n- \"PECO\"  \n- \"CoCoPop\"  \n- \"SPIDER\"  \n- \"PECO and CoCoPop\"  \n\nframeworkData will contain the original component text corresponding to the selected framework, for example:  \n- PECO: P (Population), E (Exposure), C (Comparison), O (Outcome);  \n- CoCoPop: Pop (Population), Context, Co (Condition);  \n- SPIDER: S, PI, D, E, R, etc.;  \n- When framework = \"PECO and CoCoPop\", frameworkData will provide both CoCoPop and PECO component descriptions.  \nThese component descriptions may be lists, long sentences, or combinations of multiple sentences—you must treat them all as \"raw materials\" to understand and rephrase.  \n\n--------------------------------  \n【Overall Writing Objectives】  \n\nYou must generate a JSON object with the following fixed structure:  \n{\"final_question\":\"<string>\",\"components\":{...}}  \n\n1. **final_question**  \n   - A natural, fluent research question/research objective description, which can be viewed as the Research Objectives/Research Questions section in a research protocol.  \n   - Must begin with the corresponding framework label, e.g., [PECO], [CoCoPop], [SPIDER]; when framework = PECO和CoCoPop, the first two lines should begin with [CoCoPop] and [PECO] respectively.  \n   - **Declarative statements** are permitted (e.g., This study aims to..., This study seeks to...), as well as interrogative forms, but ensure they read as natural sentences, not rigid templates.  \n   - The sentence should completely express:  \n     - What data/time range/sampling design was used (if the user provided this);  \n     - Who the study population is (P or Pop);  \n     - What exposure/grouping/factors are being compared or examined (E, C, etc.);  \n     - What disease/condition/outcome is of interest (Co or O);  \n     - Whether temporal trends or subgroup analyses are involved.  \n   - You may adjust word order, add necessary connectives (e.g., based on..., furthermore, as well as, and assess), and merge or split multiple short sentences, as long as **you do not alter the meaning of the user's original information** and do not add new information arbitrarily.\n   - Do not omit any information points uploaded by the user.\n\n2. **components**  \n   - Used to store your organized component text, not the original scattered bullets.  \n   - Each key corresponds to a component (e.g., P / E / C / O or Pop / Context / Co, etc.), and the value should be **semantically clear phrases or sentences suitable for direct inclusion in a manuscript**:  \n     - May be more concise than the user's original input, with more natural word order;  \n     - But do not delete any important qualifiers (time range, data source, main stratification variables, etc.).  \n   - Do not omit any information points uploaded by the user.\n\n--------------------------------  \n【Writing Guidelines for Different Frameworks】  \n\n### I. framework = \"CoCoPop\"  \n\n**Objective**: Clearly state  \n- Under what context/data source and time range (Context),  \n- For which population (Pop),  \n- Estimate the prevalence of what condition (Co) (and mention temporal trends if necessary).  \n\n**Recommended phrasing (flexible adjustment allowed, not verbatim substitution)**:  \n- Prioritize **declarative statements**, for example:  \n  - [CoCoPop] Based on {Context}, this study aims to estimate the prevalence of {Co} among {Pop} and describe its temporal trends during the study period.  \n- When there are multiple conditions (e.g., short sleep, recommended sleep, long sleep), you may write:  \n  - ...estimate the prevalence of sleep duration states including short sleep, recommended sleep, and long sleep...  \n\n**components structure requirements**:  \ncomponents: {  \n  Pop: <Your organized Pop description>,  \n  Context: <Your organized Context description>,  \n  Co: <Your organized Co description>  \n}  \n\n### II. framework = \"PECO\"  \n\n**Objective**: Clearly state  \n- In which population (P),  \n- Using what as comparison/reference (C),  \n- Compare which exposures or groupings/factors (E),  \n- Assess the association or difference between these factors and which outcomes/indicators (O).  \n\n**Recommended phrasing**:  \n- Typically use declarative statements, for example:  \n  - [PECO] Among {P}, using {C} as reference, compare differences between {E}, and assess the association between these factors and {O} as well as their temporal changes.  \n- If temporal trends or subgroup analyses are involved, naturally incorporate them into the sentence, for example:  \n  - ...and across subgroups stratified by household income, sex, and age, examine the association between the aforementioned factors and {O} and their temporal trends.  \n\n**components structure requirements**:  \ncomponents: {  \n  P: <Organized P>,  \n  E: <Organized E>,  \n  C: <Organized C>,  \n  O: <Organized O>  \n}  \n\n### III. framework = \"SPIDER\"  \n\n**Objective**: Summarize a qualitative study's:  \n- Study subjects/setting (S),  \n- Phenomenon or issue to be explored (PI),  \n- Study design or data source (D),  \n- Evaluation/analysis approach (E),  \n- Research type or methodological orientation (R).  \n\n**Recommended phrasing**:  \n- Use one or two declarative statements, for example:  \n  - [SPIDER] This {R} study aims to, based on {D}, deeply explore {PI} among {S}, and analyze participants experiences and perspectives through {E}.  \n\n**components structure requirements**:  \ncomponents: {  \n  S: <Organized S>,  \n  PI: <Organized PI>,  \n  D: <Organized D>,  \n  E: <Organized E>,  \n  R: <Organized R>  \n}  \n\n### IV. framework = \"PECO and CoCoPop\"  \n\n**Objective**:  \n- Output two lines of text (connected by newline character \\n):  \n  - Line 1 is **CoCoPop style**: describing overall prevalence/epidemic level;  \n  - Line 2 is **PECO style**: within the same population/data, describing association analysis or comparison questions.  \n\n**Writing requirements**:  \n- Line 1 begins with [CoCoPop], generally similar to:  \n  - [CoCoPop] Based on {Context}, this study aims to estimate the prevalence of {Co} among {Pop} and its temporal trends during the study period.  \n- Line 2 begins with [PECO], generally similar to:  \n  - [PECO] Within the same {P}, using {C} as reference, compare differences between {E}, and assess the association between these factors and {O} and their temporal trends.  \n- The two lines should connect coherently, reading like:  \n  - First describe overall prevalence/epidemic situation, then explain which factors associations with outcomes are being compared.  \n\n**components structure requirements**:  \ncomponents: {  \n  CoCoPop: {  \n    Pop: <Organized Pop>,  \n    Context: <Organized Context>,  \n    Co: <Organized Co>  \n  },  \n  PECO: {  \n    P: <Organized P>,  \n    E: <Organized E>,  \n    C: <Organized C>,  \n    O: <Organized O>  \n  }  \n}  \n\n--------------------------------  \n【Specific Requirements for Information Retention and Rephrasing】  \n\n1. **Comprehension First**:  \n   - First mentally understand the user-input components in your own words:  \n     - What are the data sources, survey years, sampling methods?  \n     - What are the target population and its stratification methods?  \n     - What are the key exposures/comparison factors?  \n     - What are the core outcomes and temporal trends?  \n   - You may reorganize sentences, but cannot arbitrarily add new variables or research objectives.  \n\n2. **Moderate Condensation, But Do Not Arbitrarily Delete Core Content**:  \n   - You may merge redundant information and omit overly technical details (e.g., very lengthy sampling procedure descriptions),  \n     but must retain: data source/time range, population scope, main exposure/grouping, main outcomes, and whether temporal trends or subgroup analyses are considered.  \n\n3. **Prohibition Rules for Grammatical Errors and Redundant Expressions (Very Important)**:  \n   - Prohibit the following types of expressions:  \n     - prevalence of the difference in prevalence of X  \n     - ...prevalence and its...prevalence  \n     - Any structures like prevalence of differences, prevalence of trends.  \n   - When you want to express prevalence of X and its temporal trends, uniformly rephrase as:  \n     - prevalence of X and its temporal change trends or  \n     - prevalence of X and its temporal trends.  \n   - When you want to express assess whether associated, preferentially use:  \n     - assess the association between...and...  \n     rather than whether associated with the prevalence of...  \n\n4. **Style Requirements**:  \n   - Tone: Academic, objective, clear, similar to the Research Objectives or Research Questions section in a research protocol/plan;  \n   - Avoid colloquialisms, fragmented sentences, and also avoid excessively stacked long sentences; use appropriate semicolons or commas for sentence division.  \n\n--------------------------------  \n【Mandatory Output Format Constraints】  \n\n- You **must output only one line of valid JSON**, with the structure strictly as:  \n  {final_question: string, components: {...}}  \n- Do not output any explanatory text, titles, or comments.  \n- Do not use code block markers (e.g., three backticks with json).  \n- All key names must use English double quotes;  \n- Field names can only be:  \n  - Top level: final_question, components;  \n  - Within components:  \n    - For PECO: P, E, C, O;  \n    - For CoCoPop: Pop, Context, Co;  \n    - For SPIDER: S, PI, D, E, R;  \n    - For PECO and CoCoPop: CoCoPop, PECO and their corresponding sub-keys.  \n- For missing or user-unprovided information, fill with empty string, but do not fabricate.  ",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        448,
+        0
+      ],
+      "id": "2cd1a46c-9615-44a3-bf3c-f0f85c3e5420",
+      "name": "Organize Research Question"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get basic input parameters\nconst sessionId = $('Prepare Input').item.json.sessionId;\nconst framework  = $('Prepare Input').item.json.framework;\n\n// Compatible with model placing results at root or output layer\nconst out = $json.output ? $json.output : $json;\n\nconst finalQuestion = String(out.final_question || '').trim();\nconst components    = (out.components && typeof out.components === 'object') ? out.components : {};\n\n// Uniformly store in database: store final question + selected framework + framework components together in final_structured_memory\nconst fsm = {\n  framework,                // User-selected framework\n  final_question: finalQuestion,\n  components                // All component key-values used for frontend backfilling/organization\n};\n\n// As input for next SQL step\nreturn [{\n  json: {\n    session_id: sessionId,\n    classified_framework: framework,\n    fsm_str: JSON.stringify(fsm),    // ::jsonb for database\n    final_question: finalQuestion    // Can also be returned to frontend\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1008,
+        0
+      ],
+      "id": "3a7793f8-7991-4e81-aae5-c4b6c4a5f9f4",
+      "name": "Prepare Data for Storage"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO public.conversation_sessions\n  (session_id, created_at, classified_framework, final_structured_memory)\nVALUES\n  ($1, NOW(), $2, $3::jsonb)\nON CONFLICT (session_id) DO UPDATE\nSET\n  classified_framework     = EXCLUDED.classified_framework,\n  final_structured_memory  = EXCLUDED.final_structured_memory;",
+        "options": {
+          "queryReplacement": "={{ $json.session_id || '' }}  {{ $json.classified_framework || '' }}  {{ $json.fsm_str || '{}' }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1232,
+        0
+      ],
+      "id": "b3967a7c-375d-40b1-98e3-5a6970788586",
+      "name": "Save to Database",
+      "credentials": {
+        "postgres": {
+          "id": "uaHhgTOU0gtpkeQ6",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ JSON.stringify({\n  \"sessionId\": $('Prepare Input').item.json.sessionId,\n  \"framework\": $('Prepare Input').item.json.framework,\n  \"final_question\": $('Prepare Data for Storage').item.json.final_question || ''\n}) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1456,
+        0
+      ],
+      "id": "cfe00b63-5b15-4aea-999f-9d365ceaefc8",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "const src = $json;\n\nconst rawText = (typeof src === 'string')\n  ? src\n  : (src.text ?? src.message ?? src.output ?? src.content ?? JSON.stringify(src));\n\nfunction tryParse(s) {\n  try {\n    return JSON.parse(s);\n  } catch {\n    return null;\n  }\n}\n\nfunction stripFences(s) {\n  return String(s || '')\n    .replace(/^\\s*```(?:json)?/i, '')\n    .replace(/```?\\s*$/i, '')\n    .trim();\n}\n\nfunction extractFirstJSON(s) {\n  if (!s) return null;\n\n  let obj = tryParse(s);\n  if (obj && typeof obj === 'object') return obj;\n\n  const cleaned = stripFences(s);\n  obj = tryParse(cleaned);\n  if (obj && typeof obj === 'object') return obj;\n\n  let start = cleaned.indexOf('{');\n  while (start !== -1) {\n    let depth = 0;\n    let inStr = false;\n    let prev = '';\n\n    for (let i = start; i < cleaned.length; i++) {\n      const ch = cleaned[i];\n\n      if (ch === '\"' && prev !== '\\\\') {\n        inStr = !inStr;\n      } else if (!inStr) {\n        if (ch === '{') depth++;\n        else if (ch === '}') {\n          depth--;\n          if (depth === 0) {\n            const cand = cleaned.slice(start, i + 1);\n            obj = tryParse(cand);\n            if (obj && typeof obj === 'object') return obj;\n            break;\n          }\n        }\n      }\n\n      prev = ch;\n    }\n\n    start = cleaned.indexOf('{', start + 1);\n  }\n\n  return null;\n}\n\nconst framework = $('Prepare Input').item.json.framework;\nconst frameworkData = $('Prepare Input').item.json.frameworkData;\n\nlet parsed = extractFirstJSON(rawText);\n\nif (parsed && typeof parsed.components === 'string') {\n  const inner = tryParse(parsed.components);\n  if (inner && typeof inner === 'object') {\n    parsed.components = inner;\n  }\n}\n\n// If parsing completely fails, provide a minimal empty skeleton\nif (!parsed || typeof parsed !== 'object') {\n  parsed = { final_question: '', components: {} };\n}\n\nparsed.final_question = String(parsed.final_question || '').trim();\nif (!parsed.components || typeof parsed.components !== 'object') {\n  parsed.components = {};\n}\n\nfunction rebuildFinalQuestion(fr, comp) {\n  if (fr === 'PECO') {\n    const P = comp.P || '';\n    const E = comp.E || '';\n    const C = comp.C || '';\n    const O = comp.O || '';\n    return `[PECO] Among ${P}, compare ${E} versus ${C}, to assess whether associated with prevalence of ${O}?`.trim();\n  }\n\n  if (fr === 'CoCoPop') {\n    const Context = comp.Context || '';\n    const Pop = comp.Pop || '';\n    const Co = comp.Co || '';\n    return `[CoCoPop] In ${Context}, what is the prevalence of ${Co} among ${Pop}?`.trim();\n  }\n\n  if (fr === 'SPIDER') {\n    const S = comp.S || '';\n    const PI = comp.PI || '';\n    const D = comp.D || '';\n    const E = comp.E || '';\n    const R = comp.R || '';\n    return `[SPIDER] This ${R} study will, based on ${D}, explore ${PI} among ${S} and conduct ${E}.`.trim();\n  }\n\n  if (fr === 'PECO和CoCoPop') {\n    const co = comp.CoCoPop || {};\n    const pe = comp.PECO || {};\n    const line1 = `[CoCoPop] In ${co.Context || ''}, what is the prevalence of ${co.Co || ''} among ${co.Pop || ''}?`;\n    const line2 = `[PECO] Among ${pe.P || ''}, compare ${pe.E || ''} versus ${pe.C || ''}, to assess whether associated with prevalence of ${pe.O || ''}?`;\n    return `${line1}\\n${line2}`.trim();\n  }\n\n  return parsed.final_question;\n}\n\nparsed.final_question = rebuildFinalQuestion(framework, parsed.components);\n\nreturn [{ json: parsed }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        0
+      ],
+      "id": "c6437602-e572-4797-a1aa-438b89427ccf",
+      "name": "Extract JSON"
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-3-pro-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        464,
+        224
+      ],
+      "id": "1d5c02d6-07ab-4935-9831-90056f09712a",
+      "name": "Model1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "So4oLCHbFnhyK4pw",
+          "name": "OpenRouter account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Prepare Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Input": {
+      "main": [
+        [
+          {
+            "node": "Organize Research Question",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Organize Research Question": {
+      "main": [
+        [
+          {
+            "node": "Extract JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Data for Storage": {
+      "main": [
+        [
+          {
+            "node": "Save to Database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to Database": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract JSON": {
+      "main": [
+        [
+          {
+            "node": "Prepare Data for Storage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Organize Research Question",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1239eeba-c5f1-45c1-86c0-de721b296904",
+  "meta": {
+    "instanceId": "80ba165fc158dff2241db7d1bcd6321181a547103579dbd3779b72b2fd728028"
+  },
+  "id": "oQw20ys29IdCPzmi",
+  "tags": []
+}

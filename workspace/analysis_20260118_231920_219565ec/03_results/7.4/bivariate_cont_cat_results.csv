@@ -1,0 +1,9 @@
+"Pair","Continuous_Var","Categorical_Var","Test","Statistic","DF","P_value","Mean_Diff","F_statistic","DF1","DF2"
+"BMD vs Exercise_Group","Bone_Mineral_Density","Exercise_Group","Weighted t-test",-3.077,1259,0.0021,-0.036,NA,NA,NA
+"BMD vs Exercise_Frequency","Bone_Mineral_Density","Exercise_Frequency","Design-based ANOVA",NA,NA,0,NA,8.675,3,1257
+"Age vs Exercise_Group","Age","Exercise_Group","Weighted t-test",0.754,1259,0.4512,0.301,NA,NA,NA
+"BMI vs Exercise_Group","BMI","Exercise_Group","Weighted t-test",-1.537,1259,0.1246,-0.411,NA,NA,NA
+"Age vs Osteoporosis_Status","Age","Osteoporosis_Status","Design-based ANOVA",NA,NA,0,NA,27.991,2,1258
+"BMI vs Osteoporosis_Status","BMI","Osteoporosis_Status","Design-based ANOVA",NA,NA,0,NA,34.725,2,1258
+"Hemoglobin vs Osteoporosis_Status","Hemoglobin","Osteoporosis_Status","Design-based ANOVA",NA,NA,0,NA,33.309,2,1258
+"Fasting_Glucose vs Osteoporosis_Status","Fasting_Glucose","Osteoporosis_Status","Design-based ANOVA",NA,NA,0.261,NA,1.345,2,1258

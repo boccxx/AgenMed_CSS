@@ -1,0 +1,157 @@
+{
+  "stage_7.1": {
+    "timestamp": "2026-01-18T23:27:39.656790",
+    "methods_executed": [
+      {
+        "methods_executed": [
+          "Duplicate detection and removal",
+          "Range-based outlier detection",
+          "Z-score based extreme value flagging",
+          "Missing data pattern analysis",
+          "Sparse variable risk assessment",
+          "Design variable validation"
+        ],
+        "quality_checks_passed": true
+      }
+    ],
+    "key_parameters": {},
+    "critical_findings": [
+      "duplicates_removed",
+      "outliers_corrected",
+      "high_missing_vars",
+      "design_validation",
+      "sparse_vars_identified"
+    ],
+    "next_stage_guidance": {
+      "recommendation": "Proceed to Stage 7.2 (Missing Data Handling)",
+      "notes": [
+        "High-risk sparse variables (Cerebrovascular_Disease, Other_Neurological_Diseases) should be excluded from models",
+        "Medium-risk sparse variables should have levels merged before modeling",
+        "Consider multiple imputation for variables with 3-10% missing (Hemoglobin, biochemical markers)"
+      ]
+    }
+  },
+  "stage_7.2": {
+    "timestamp": "2026-01-18T23:30:04.791193",
+    "methods_executed": [
+      {
+        "methods_executed": [
+          "MICE (Predictive Mean Matching)",
+          "Complete Case Analysis",
+          "MNAR Delta-Adjustment Sensitivity"
+        ],
+        "imputation_methods": {
+          "BMI": "pmm",
+          "Hemoglobin": "pmm",
+          "Fasting_Glucose": "pmm",
+          "Total_Bilirubin": "pmm",
+          "Serum_Creatinine": "pmm",
+          "Blood_Urea_Nitrogen": "pmm",
+          "Total_Cholesterol": "pmm",
+          "Triglycerides": "pmm"
+        }
+      }
+    ],
+    "key_parameters": {},
+    "critical_findings": [
+      "imputed_vars",
+      "excluded_vars",
+      "design_vars_protected",
+      "cca_n",
+      "mnar_delta"
+    ],
+    "next_stage_guidance": {
+      "note": "Use imputed_data_1.csv to imputed_data_20.csv for pooled analysis",
+      "pooling_method": "Rubin's Rules",
+      "sensitivity_datasets": [
+        "data_complete_case.csv",
+        "mice_imputed_mnar_delta.rds"
+      ]
+    }
+  },
+  "stage_7.3": {
+    "timestamp": "2026-01-18T23:34:25.617511",
+    "methods_executed": [
+      {
+        "framework": "Complex Survey Weighted Estimation",
+        "continuous_vars_normal": "",
+        "continuous_vars_nonnormal": "Age, BMI, Hemoglobin, Fasting_Glucose, Total_Bilirubin, Serum_Creatinine, Blood_Urea_Nitrogen, Total_Cholesterol, Triglycerides, Bone_Mineral_Density",
+        "categorical_vars": "Geographic_Region, Gender, Self_Rated_Health, Self_Care_Ability, Exercise_Frequency, Dietary_Habits, Smoking_Status, Alcohol_Frequency, Physical_Function, Cerebrovascular_Disease, Other_Neurological_Diseases, Osteoporosis_Status",
+        "balance_metric": "Standardized Mean Difference (SMD)",
+        "hypothesis_testing": "None (descriptive only, per protocol)"
+      }
+    ],
+    "key_parameters": {},
+    "critical_findings": [
+      "exercise_grouping",
+      "imbalanced_vars",
+      "smd_threshold",
+      "normality_testing",
+      "nonnormal_vars"
+    ],
+    "next_stage_guidance": {
+      "note": "Exercise_Group variable created for stratified analysis",
+      "imbalanced_vars_require_adjustment": true,
+      "recommended_action": "Consider adjustment for imbalanced variables in regression models"
+    }
+  },
+  "normality_tests": {
+    "7.3": "normality_testing"
+  },
+  "stage_7.4": {
+    "timestamp": "2026-01-18T23:40:06.621883",
+    "methods_executed": [
+      {
+        "framework": "Complex survey weighted tests",
+        "categorical_vs_categorical": "Rao-Scott Corrected Chi-square Test",
+        "continuous_vs_categorical_2groups": "Complex survey weighted t-test",
+        "continuous_vs_categorical_multigroup": "Design-based F-test (ANOVA)",
+        "continuous_vs_continuous": "Weighted linear regression slope",
+        "tests_conducted": 21
+      }
+    ],
+    "key_parameters": {},
+    "critical_findings": [
+      "significant_associations",
+      "non_linear_trends",
+      "note"
+    ],
+    "next_stage_guidance": {
+      "note": "Proceed to Stage 7.5 for multivariable modeling",
+      "adjustment_strategy": "Use DAG-based adjustment sets, not bivariate p-values"
+    }
+  },
+  "stage_7.5": {
+    "timestamp": "2026-01-18T23:52:53.298310",
+    "methods_executed": [],
+    "key_parameters": {},
+    "critical_findings": [
+      "adjustment_set",
+      "convergence_status"
+    ],
+    "next_stage_guidance": {}
+  },
+  "stage_7.7": {
+    "timestamp": "2026-01-18T23:54:04.302282",
+    "methods_executed": [
+      {
+        "model_type": "Complex survey modified Poisson regression",
+        "interaction_terms": "Exposure × Moderator product terms",
+        "pooling_method": "Single dataset",
+        "adjustment_set": "Age, Gender, Geographic_Region, Self_Care_Ability (excluding moderator)",
+        "multiplicity_control": "Benjamini-Hochberg FDR correction"
+      }
+    ],
+    "key_parameters": {},
+    "critical_findings": [
+      "tested_interactions",
+      "significant_interactions",
+      "fdr_method",
+      "fdr_threshold",
+      "note"
+    ],
+    "next_stage_guidance": {
+      "note": "Stage 7.8 (Sensitivity Analysis) should use main_output.csv with Age_Group and Exercise_Group variables"
+    }
+  }
+}

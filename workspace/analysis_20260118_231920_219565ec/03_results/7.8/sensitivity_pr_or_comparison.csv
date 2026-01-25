@@ -1,0 +1,3 @@
+"Model","Estimate","CI_Lower","CI_Upper"
+"Modified Poisson (PR)",1.25,0.76,1.85
+"Logistic Regression (OR)",1.19,0.76,1.85

@@ -1,0 +1,6 @@
+# 忽略大部分 log 文件，但保留分析日志
+*.log
+!workspace/analysis_*/analysis_*.log
+
+.DS_Store
+__pycache__/

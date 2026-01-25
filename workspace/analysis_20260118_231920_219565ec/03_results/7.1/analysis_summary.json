@@ -1,0 +1,61 @@
+{
+  "stage": "7.1_data_preparation",
+  "method": "Data Preparation and Quality Control",
+  "timestamp": "2026-01-18 23:27:39",
+  "sample_size": {
+    "n_original": 1265,
+    "n_after_dedup": 1263,
+    "n_final": 1263
+  },
+  "weight_detection": {
+    "weight_variable": "Sampling_Weight",
+    "usable_weight": true,
+    "detection_reason": "valid_weight_detected",
+    "weight_summary": {
+      "variable": "Sampling_Weight",
+      "min": 0.38,
+      "median": 0.83,
+      "max": 1.98,
+      "n_unique": 3,
+      "pct_missing": 0,
+      "has_nonpositive": false,
+      "all_equal_one": false
+    }
+  },
+  "design": {
+    "design_verified_level": "design_based",
+    "weight_variable": "Sampling_Weight",
+    "strata_variable": "Geographic_Region",
+    "psu_variable": {},
+    "weight_is_placeholder": false,
+    "weights_actually_used": false,
+    "design_limitations": "Valid sampling weights detected; design-based inference possible in later stages"
+  },
+  "critical_decisions": {
+    "duplicates_removed": 2,
+    "outliers_corrected": 80,
+    "high_missing_vars": [],
+    "design_validation": "Geographic_Region = 3 levels, Sampling_Weight = OK",
+    "sparse_vars_identified": ["Self_Rated_Health", "Dietary_Habits", "Cerebrovascular_Disease", "Other_Neurological_Diseases"]
+  },
+  "data_quality": {
+    "n_variables": 23,
+    "n_continuous": 10,
+    "n_categorical": 13,
+    "overall_missing_pct": 1.12,
+    "variables_with_high_missing": []
+  },
+  "protocol_deviations": {
+    "missing_protocol_vars": ["Education_Level", "Chronic_Disease_Burden", "Menopausal_Status"],
+    "reason": "Variables specified in protocol DAG not found in dataset",
+    "impact": "Will use available proxy variables (Self_Care_Ability, Cerebrovascular_Disease) in adjustment set"
+  },
+  "next_stage_requirements": {
+    "recommendation": "Proceed to Stage 7.2 (Missing Data Handling)",
+    "notes": ["High-risk sparse variables (Cerebrovascular_Disease, Other_Neurological_Diseases) should be excluded from models", "Medium-risk sparse variables should have levels merged before modeling", "Consider multiple imputation for variables with 3-10% missing (Hemoglobin, biochemical markers)"]
+  },
+  "statistical_methods_summary": {
+    "methods_executed": ["Duplicate detection and removal", "Range-based outlier detection", "Z-score based extreme value flagging", "Missing data pattern analysis", "Sparse variable risk assessment", "Design variable validation"],
+    "quality_checks_passed": true
+  }
+}

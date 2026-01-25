@@ -1,0 +1,60 @@
+{
+  "stage": "7.7_dose_response_analysis",
+  "timestamp": "2026-01-19 00:01:22",
+  "sample_size": 1265,
+  "n_imputations": 20,
+  "ordinal_exposures": ["Exercise_Frequency", "Alcohol_Frequency"],
+  "continuous_exposures": ["Hemoglobin", "Fasting_Glucose"],
+  "ordinal_levels": {
+    "Exercise_Frequency": ["No_Exercise", "Occasional", "Weekly_Or_More", "Daily"],
+    "Alcohol_Frequency": ["Never", "Occasional", "Frequent", "Daily"]
+  },
+  "rcs_knots": 4,
+  "adjustment_variables": ["Age", "Gender", "Geographic_Region", "BMI"],
+  "significant_trends": [],
+  "ordinal_trend_results": {
+    "Exercise_Frequency": {
+      "PR": 0.9613,
+      "CI": [0.8784, 1.0522],
+      "P": 0.3919
+    },
+    "Alcohol_Frequency": {
+      "PR": 1.1244,
+      "CI": [0.974, 1.298],
+      "P": 0.1096
+    }
+  },
+  "rcs_nonlinearity_results": {
+    "Hemoglobin": {
+      "Nonlinearity_P": 0.1582
+    },
+    "Fasting_Glucose": {
+      "Nonlinearity_P": 0.5625
+    }
+  },
+  "critical_decisions": {
+    "ordinal_scoring": "Sequential integers (0, 1, 2, ...) for ordinal levels",
+    "rcs_knots": "4 knots placed at quantiles for RCS models",
+    "pooling_method": "Manual Rubin's Rules for combining MICE results",
+    "adjustment_strategy": "Same covariates as main model (Age, Gender, Geographic_Region, BMI)",
+    "binary_outcome_family": "quasipoisson(link='log') for PR estimation",
+    "continuous_outcome_family": "gaussian() for BMD prediction",
+    "nonlinearity_test": "F-test comparing linear vs RCS models",
+    "prediction_fix": "Added type checking for predict() return values to handle both list and atomic vector returns"
+  },
+  "statistical_methods_summary": {
+    "ordinal_trend": "Survey-weighted GLM with ordinal score as continuous predictor",
+    "rcs_modeling": "Restricted Cubic Splines with 4 knots",
+    "pooling": "Manual Rubin's Rules across 20 MICE datasets",
+    "inference": "Pooled estimates with Barnard-Rubin degrees of freedom"
+  },
+  "next_stage_requirements": {
+    "note": "Dose-response analysis complete. Results can inform sensitivity analyses.",
+    "data_transfer": "main_output.csv contains original data for next stage"
+  },
+  "output_files": {
+    "main_output": "main_output.csv",
+    "dose_response_results": "dose_response_results.csv",
+    "graphics": ["dose_response_exercise.png", "dose_response_alcohol.png", "dose_response_hemoglobin.png", "dose_response_glucose.png"]
+  }
+}

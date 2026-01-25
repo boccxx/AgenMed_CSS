@@ -1,0 +1,32 @@
+{
+  "summary": {
+    "issues_detected": 2,
+    "fixes_applied": 2,
+    "affected_samples": 20
+  },
+  "issues": [
+    "Fasting_Glucose: 14 extreme outliers (>5*IQR)",
+    "Total_Bilirubin: 6 suspiciously low values (<10% of median)"
+  ],
+  "cleaning_rules": [
+    "Winsorize to [-1.97, 13.29]",
+    "Set to missing: Total_Bilirubin: 6 suspiciously low values (<10% of median)"
+  ],
+  "comparison": {
+    "variables_affected": [
+      "Age",
+      "BMI",
+      "Hemoglobin",
+      "Fasting_Glucose",
+      "Total_Bilirubin",
+      "Serum_Creatinine",
+      "Blood_Urea_Nitrogen",
+      "Total_Cholesterol",
+      "Triglycerides",
+      "Bone_Mineral_Density",
+      "Sampling_Weight"
+    ],
+    "statistics_change": {
+      "Age": {
+        "variable": "Age",
+        "n_change": 

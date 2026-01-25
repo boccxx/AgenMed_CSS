@@ -1,0 +1,10 @@
+"Pair","Variable1","Variable2","Test","Statistic","DF","P_value"
+"Exercise_Group vs Osteoporosis_Status","Exercise_Group","Osteoporosis_Status","Rao-Scott Chi-square",12.667,2,0.0178
+"Exercise_Frequency vs Osteoporosis_Status","Exercise_Frequency","Osteoporosis_Status","Rao-Scott Chi-square",28.185,6,0.0037
+"Exercise_Group vs Gender","Exercise_Group","Gender","Rao-Scott Chi-square",1.682,1,0.2998
+"Exercise_Group vs Geographic_Region","Exercise_Group","Geographic_Region","Rao-Scott Chi-square",315.008,2,0
+"Exercise_Group vs Self_Care_Ability","Exercise_Group","Self_Care_Ability","Rao-Scott Chi-square",0.345,2,0.9063
+"Exercise_Group vs Smoking_Status","Exercise_Group","Smoking_Status","Rao-Scott Chi-square",75.058,1,0
+"Osteoporosis_Status vs Gender","Osteoporosis_Status","Gender","Rao-Scott Chi-square",222.789,2,0
+"Osteoporosis_Status vs Dietary_Habits","Osteoporosis_Status","Dietary_Habits","Rao-Scott Chi-square",8.995,4,0.2493
+"Osteoporosis_Status vs Smoking_Status","Osteoporosis_Status","Smoking_Status","Rao-Scott Chi-square",8.625,2,0.0397

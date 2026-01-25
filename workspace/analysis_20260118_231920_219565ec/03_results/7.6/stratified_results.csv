@@ -1,0 +1,7 @@
+"Exposure","Moderator","Moderator_Level","Outcome","Coefficient_Name","Effect_Type","Effect_Estimate","CI_Lower","CI_Upper","P_Value"
+"Exercise_Frequency","Gender","Male","Bone_Mineral_Density","Exercise_FrequencyDaily","Beta",0.0363660332879751,0.00210741203068509,0.0706246545452651,0.0376754943256533
+"Exercise_Frequency","Gender","Male","Bone_Mineral_Density","Exercise_FrequencyWeekly_Or_More","Beta",-0.14723915201109,-0.407489337945085,0.113011033922905,0.267689899928503
+"Exercise_Frequency","Gender","Male","Bone_Mineral_Density","Exercise_FrequencyOccasional","Beta",-0.0967590343557822,-0.14866775267579,-0.0448503160357748,0.000269356244736585
+"Exercise_Frequency","Gender","Female","Bone_Mineral_Density","Exercise_FrequencyDaily","Beta",0.0192357582728444,-0.00186567960176547,0.0403371961474542,0.0742257817816245
+"Exercise_Frequency","Gender","Female","Bone_Mineral_Density","Exercise_FrequencyWeekly_Or_More","Beta",-0.0505433058706224,-0.114665721504785,0.0135791097635403,0.122614013252541
+"Exercise_Frequency","Gender","Female","Bone_Mineral_Density","Exercise_FrequencyOccasional","Beta",0.0617924448783392,0.0133060708686665,0.110278818888012,0.0126208077934177

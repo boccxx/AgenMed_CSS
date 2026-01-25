@@ -1,0 +1,30 @@
+{
+  "stage": "7.6_interaction_analysis",
+  "timestamp": "2026-01-18 23:54:04",
+  "n_imputations": 20,
+  "n_observations": 1265,
+  "n_interactions_tested": 4,
+  "n_significant_interactions": 1,
+  "significant_interactions": "Exercise_Frequency × Gender → Bone_Mineral_Density",
+  "fdr_method": "Benjamini-Hochberg",
+  "fdr_threshold": 0.05,
+  "exposures_tested": ["Exercise_Frequency", "Smoking_Status"],
+  "moderators_tested": ["Gender", "Age_Group"],
+  "outcomes_tested": ["Osteoporosis_Binary", "Bone_Mineral_Density"],
+  "excluded_sparse_variables": ["Self_Care_Ability", "Physical_Function"],
+  "critical_decisions": {
+    "sparse_variable_handling": "Excluded high-risk variables: Self_Care_Ability, Physical_Function",
+    "dietary_habits_merging": "Merged sparse levels into 'Other' category",
+    "age_group_creation": "Created Age_Group with breaks at 65, 75, 85",
+    "fdr_control": "Applied Benjamini-Hochberg FDR correction",
+    "stratified_analysis_criterion": "Conducted only for interactions with q < 0.05",
+    "exposure_selection": "Limited to Exercise_Frequency and Smoking_Status to avoid convergence issues"
+  },
+  "statistical_methods_summary": {
+    "interaction_model": "Survey-weighted GLM with product terms",
+    "binary_outcome_family": "quasipoisson(link='log') for PR estimation",
+    "continuous_outcome_family": "gaussian() for beta estimation",
+    "pooling_method": "Manual Rubin's Rules implementation",
+    "multiplicity_control": "Benjamini-Hochberg FDR procedure"
+  }
+}

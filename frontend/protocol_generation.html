@@ -1,0 +1,3473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+    <style>
+        :root {
+            --primary-blue: #4a90e2;
+            --dark-blue: #2c5282;
+            --light-blue: #e6f3ff;
+            --accent-blue: #3182ce;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #e6f3ff 0%, #f0f8ff 100%);
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        
+        .main-content {
+            margin-top: 64px; /* navbar height (h-16 = 4rem = 64px) */
+            height: calc(100vh - 64px);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        
+        .chat-container {
+            height: 100%;
+            overflow-y: auto;
+            background: white;
+        }
+        
+        .message {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .typing-indicator {
+            animation: pulse 1.5s infinite;
+        }
+        
+        .step-active {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+            color: white;
+        }
+        
+        .step-completed {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+        
+        .step-pending {
+            background: rgba(255, 255, 255, 0.8);
+            color: #6b7280;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .step-failed {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, var(--dark-blue) 0%, var(--primary-blue) 100%);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /* position: fixed already defined above */
+        }
+        
+        .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(74, 144, 226, 0.1);
+        }
+        
+        .chat-area {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(74, 144, 226, 0.1);
+        }
+        
+        .input-area {
+            background: rgba(255, 255, 255, 0.9);
+            border-top: 1px solid rgba(74, 144, 226, 0.1);
+        }
+        
+        .btn-send {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-send:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+        }
+        
+        .btn-send:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .chat-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .chat-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        
+        .chat-container::-webkit-scrollbar-thumb {
+            background: var(--primary-blue);
+            border-radius: 3px;
+        }
+        
+        .chat-container .message p,
+        .chat-container .message div {
+            font-size: 0.8125rem;
+        }
+        
+        .message-bubble {
+            max-width: none;
+            width: fit-content;
+            min-width: 100px;
+        }
+        
+        .result-content {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+            line-height: 1.8;
+        }
+        
+        .result-content h1,
+        .result-content h2,
+        .result-content h3 {
+            color: #2563eb;
+            margin-top: 20px;
+            margin-bottom: 12px;
+        }
+        
+        .result-content h1 {
+            font-size: 1.5em;
+            border-bottom: 2px solid #2563eb;
+            padding-bottom: 8px;
+        }
+        
+        .result-content h2 {
+            font-size: 1.3em;
+            border-left: 4px solid #2563eb;
+            padding-left: 12px;
+        }
+        
+        .result-content h3 {
+            font-size: 1.1em;
+        }
+        
+        .result-content h4,
+        .result-content h5,
+        .result-content h6 {
+            color: #2563eb;
+            margin-top: 16px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .result-content h4 {
+            font-size: 1.1em;
+        }
+        
+        .result-content h5 {
+            font-size: 1.05em;
+        }
+        
+        .result-content h6 {
+            font-size: 1em;
+        }
+        
+        .result-content p {
+            margin-bottom: 12px;
+            line-height: 1.8;
+        }
+        
+        .result-content code {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .result-content pre {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 12px;
+            overflow-x: auto;
+        }
+        
+        .result-content ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+            padding-left: 20px;
+            list-style-type: disc;
+            list-style-position: outside;
+        }
+        
+        .result-content ol {
+            margin-left: 20px;
+            margin-bottom: 12px;
+            padding-left: 20px;
+            list-style-type: decimal;
+            list-style-position: outside;
+        }
+        
+        .result-content li {
+            margin-bottom: 6px;
+            line-height: 1.8;
+            display: list-item;
+        }
+        
+        .result-content ul ul {
+            list-style-type: circle;
+            margin-left: 20px;
+        }
+        
+        .result-content ul ul ul {
+            list-style-type: square;
+            margin-left: 20px;
+        }
+        
+        .result-content ol ol {
+            list-style-type: lower-alpha;
+            margin-left: 20px;
+        }
+        
+        .result-content ol ol ol {
+            list-style-type: lower-roman;
+            margin-left: 20px;
+        }
+        
+        .result-content blockquote {
+            border-left: 4px solid #2563eb;
+            padding-left: 16px;
+            margin-left: 0;
+            margin-bottom: 12px;
+            color: #6b7280;
+            font-style: italic;
+        }
+        
+        .result-content strong {
+            font-weight: bold;
+            color: #1f2937;
+        }
+        
+        .result-content em {
+            font-style: italic;
+        }
+        
+        .result-content hr {
+            border: none;
+            border-top: 2px solid #e5e7eb;
+            margin: 20px 0;
+        }
+        
+        .result-content a {
+            color: #2563eb;
+            text-decoration: underline;
+        }
+        
+        .result-content a:hover {
+            color: #1e40af;
+        }
+        
+        /* MathJax 公式样式 */
+        .result-content .MathJax {
+            font-size: 1.1em !important;
+        }
+        
+        .result-content .MathJax_Display {
+            margin: 20px 0 !important;
+        }
+        
+        /* 确保表格样式一致 */
+        .result-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 15px 0;
+        }
+        
+        .result-content table th,
+        .result-content table td {
+            border: 1px solid #dee2e6;
+            padding: 8px 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+        
+        .result-content table th {
+            background-color: #e9ecef;
+            font-weight: bold;
+        }
+        
+        .result-content table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .result-content table tr:hover {
+            background-color: #f1f3f5;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="max-w-full mx-auto px-2 sm:px-4 lg:px-6">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mr-3">
+                        <i class="fas fa-microscope text-white text-xl"></i>
+                    </div>
+                    <h1 class="text-xl font-bold text-white">Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-sm text-white text-opacity-80">Session ID:</span>
+                        <input 
+                            type="text" 
+                            id="sessionIdInput" 
+                            class="bg-white bg-opacity-20 text-white px-2 py-1 rounded text-sm w-48 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50" 
+                            placeholder="Enter or generate new ID"
+                            value=""
+                        />
+                        <button 
+                            onclick="loadSessionById()" 
+                            class="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-3 py-1 rounded text-sm transition-all"
+                            title="Load historical session"
+                        >
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <button 
+                            onclick="generateNewSession()" 
+                            class="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-3 py-1 rounded text-sm transition-all"
+                            title="Generate new session"
+                        >
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content max-w-full mx-auto px-2 sm:px-4 lg:px-6 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 h-full">
+            <div class="lg:col-span-1 flex flex-col">
+                <div class="sidebar p-4" style="max-height: calc(100vh - 64px - 4rem); overflow-y: auto;">
+                    <h3 class="text-base font-semibold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-route mr-2 text-blue-600"></i>Generation Progress
+                    </h3>
+                    <div class="space-y-2" id="progress-steps">
+                        <div class="step-item flex items-center p-3 rounded-xl step-active transition-all duration-300 cursor-pointer hover:opacity-80" data-step="A" onclick="viewStepResult('A')">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold mr-3">1</div>
+                            <span class="font-medium text-sm">Research Question Framework Confirmation</span>
+                        </div>
+                        <div class="step-item flex items-center p-3 rounded-xl step-pending transition-all duration-300 cursor-pointer hover:opacity-80" data-step="B1" onclick="viewStepResult('B1')">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold mr-3">2</div>
+                            <span class="text-sm">Study Design Information Storage</span>
+                        </div>
+                        <div class="step-item flex items-center p-3 rounded-xl step-pending transition-all duration-300 cursor-pointer hover:opacity-80" data-step="B2" onclick="viewStepResult('B2')">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold mr-3">3</div>
+                            <span class="text-sm">Statistical Analysis Plan Storage</span>
+                        </div>
+                        <div class="step-item flex items-center p-3 rounded-xl step-pending transition-all duration-300 cursor-pointer hover:opacity-80" data-step="B3" onclick="viewStepResult('B3')">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold mr-3">4</div>
+                            <span class="text-sm">Validation and Dissemination Information Storage</span>
+                        </div>
+                        <div class="step-item flex items-center p-3 rounded-xl step-pending transition-all duration-300 cursor-pointer hover:opacity-80" data-step="C" onclick="viewStepResult('C')">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold mr-3">5</div>
+                            <span class="text-sm">Agent-Generated Protocol Writing</span>
+                        </div>
+                    </div>
+                    <div id="continue-button-container" class="mt-4 hidden">
+                        <button onclick="startAutoWorkflows()" class="w-full btn-send text-white px-4 py-2 rounded-lg text-sm">
+                            <i class="fas fa-play mr-2"></i>Continue with Subsequent Workflows
+                        </button>
+                    </div>
+                    <div id="retry-button-container" class="mt-4 hidden">
+                        <button onclick="retryFailedWorkflow()" class="w-full bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm">
+                            <i class="fas fa-redo mr-2"></i>Retry Failed Workflow
+                        </button>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="lg:col-span-4 flex flex-col" style="max-height: calc(100vh - 64px - 4rem);">
+                <div id="framework-selection" class="chat-area p-6 rounded-2xl flex-1 overflow-y-auto" style="max-height: 100%;">
+                    <div class="mb-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4">Please Select the Framework Appropriate for Your Research Question</h2>
+                            <div class="space-y-4">
+                                <div class="framework-card border-2 border-gray-200 rounded-xl p-4 hover:border-blue-400 cursor-pointer transition-all" data-framework="PECO">
+                                    <div class="flex items-start justify-between">
+                                        <div class="flex-1">
+                                            <h3 class="text-lg font-semibold text-blue-600 mb-2">PECO Framework</h3>
+                                            <p class="text-sm text-gray-700 mb-2"><strong>Applicable Scenarios:</strong> Investigating associations between exposure and outcome or conducting inter-group comparisons</p>
+                                            <p class="text-sm text-gray-600"><strong>Four Components:</strong></p>
+                                            <ul class="text-sm text-gray-600 ml-4 mt-1 space-y-1">
+                                                <li>• <strong>P (Population)</strong> - Population: Whom do you wish to study?</li>
+                                                <li>• <strong>E (Exposure)</strong> - Exposure: What is the core factor under investigation?</li>
+                                                <li>• <strong>C (Comparison)</strong> - Comparison: What is the reference group for the exposed group?</li>
+                                                <li>• <strong>O (Outcome)</strong> - Outcome: What is the health condition or event of interest?</li>
+                                            </ul>
+                                        </div>
+                                        <i class="fas fa-check-circle text-blue-500 text-2xl opacity-0 framework-check"></i>
+                                    </div>
+                                </div>
+                                
+                                <div class="framework-card border-2 border-gray-200 rounded-xl p-4 hover:border-blue-400 cursor-pointer transition-all" data-framework="CoCoPop">
+                                    <div class="flex items-start justify-between">
+                                        <div class="flex-1">
+                                            <h3 class="text-lg font-semibold text-blue-600 mb-2">CoCoPop Framework</h3>
+                                            <p class="text-sm text-gray-700 mb-2"><strong>Applicable Scenarios:</strong> Estimating the prevalence of a condition in a specific population</p>
+                                            <p class="text-sm text-gray-600"><strong>Three Components:</strong></p>
+                                            <ul class="text-sm text-gray-600 ml-4 mt-1 space-y-1">
+                                                <li>• <strong>Co (Condition)</strong> - Condition: What is the specific disease, symptom, or state under investigation?</li>
+                                                <li>• <strong>Co (Context)</strong> - Context: In what environment or setting does the condition occur?</li>
+                                                <li>• <strong>Pop (Population)</strong> - Population: What is the specific target population for your study?</li>
+                                            </ul>
+                                        </div>
+                                        <i class="fas fa-check-circle text-blue-500 text-2xl opacity-0 framework-check"></i>
+                                    </div>
+                                </div>
+                                
+                                <div class="framework-card border-2 border-gray-200 rounded-xl p-4 hover:border-blue-400 cursor-pointer transition-all" data-framework="SPIDER">
+                                    <div class="flex items-start justify-between">
+                                        <div class="flex-1">
+                                            <h3 class="text-lg font-semibold text-blue-600 mb-2">SPIDER Framework</h3>
+                                            <p class="text-sm text-gray-700 mb-2"><strong>Applicable Scenarios:</strong> Conducting qualitative exploration of people's experiences and perspectives to inform subsequent quantitative research</p>
+                                            <p class="text-sm text-gray-600"><strong>Five Components:</strong></p>
+                                            <ul class="text-sm text-gray-600 ml-4 mt-1 space-y-1">
+                                                <li>• <strong>S (Sample)</strong> - Sample: Who constitutes the study sample?</li>
+                                                <li>• <strong>PI (Phenomenon of Interest)</strong> - Phenomenon of Interest: What is the core phenomenon of interest?</li>
+                                                <li>• <strong>D (Design)</strong> - Design: What design will the study employ?</li>
+                                                <li>• <strong>E (Evaluation)</strong> - Evaluation: What outcomes do you wish to evaluate or understand?</li>
+                                                <li>• <strong>R (Research type)</strong> - Research Type: What type of research does this represent?</li>
+                                            </ul>
+                                        </div>
+                                        <i class="fas fa-check-circle text-blue-500 text-2xl opacity-0 framework-check"></i>
+                                    </div>
+                                </div>
+                                
+                                <div class="framework-card border-2 border-gray-200 rounded-xl p-4 hover:border-blue-400 cursor-pointer transition-all" data-framework="PECO and CoCoPop">
+                                    <div class="flex items-start justify-between">
+                                        <div class="flex-1">
+                                            <h3 class="text-lg font-semibold text-blue-600 mb-2">PECO and CoCoPop Framework (Hybrid)</h3>
+                                            <p class="text-sm text-gray-700 mb-2"><strong>Applicable Scenarios:</strong> Studies involving both investigation of exposure-outcome associations/inter-group comparisons and estimation of prevalence of a condition in a specific population</p>
+                                            <p class="text-sm text-gray-600"><strong>Included Components:</strong> All elements of PECO + All elements of CoCoPop</p>
+                                        </div>
+                                        <i class="fas fa-check-circle text-blue-500 text-2xl opacity-0 framework-check"></i>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+
+                <div class="chat-area hidden flex flex-col overflow-y-auto" id="form-container-wrapper" style="max-height: calc(100vh - 64px - 4rem);">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-xl font-bold text-gray-800">Complete Research Information</h2>
+                            <button onclick="backToFrameworkSelection()" class="text-blue-600 hover:text-blue-800 text-sm">
+                                <i class="fas fa-arrow-left mr-2"></i>Reselect Framework
+                            </button>
+                        </div>
+                        
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6 rounded">
+                            <p class="text-sm text-blue-800">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                Currently Selected Framework: <strong id="selectedFrameworkName"></strong>
+                            </p>
+                        </div>
+                        
+                        <form id="researchForm" class="space-y-6">
+                            <div id="dynamicFields"></div>
+                            
+                            <div class="flex justify-end space-x-4 pt-4 border-t">
+                                <button type="button" onclick="backToFrameworkSelection()" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 text-sm">
+                                    Cancel
+                                </button>
+                                <button type="submit" class="btn-send text-white px-8 py-3 rounded-lg text-sm">
+                                    <i class="fas fa-magic mr-2"></i>Generate Research Question Framework
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="chat-area mt-6 hidden" id="resultArea">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-xl font-bold text-gray-800">Agent-Generated Protocol</h2>
+                            <div class="flex space-x-2">
+                                <button onclick="downloadMarkdown()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm transition-all">
+                                    <i class="fas fa-file-code mr-2"></i>Download Markdown
+                                </button>
+                                <button onclick="downloadProtocol()" class="btn-send text-white px-4 py-2 rounded-lg text-sm">
+                                    <i class="fas fa-file-word mr-2"></i>Download Word
+                                </button>
+                            </div>
+                        </div>
+                        <div class="result-content" id="resultContent"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loading-indicator" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-6">
+            <div class="flex items-center space-x-4 mb-4">
+                <div class="typing-indicator">
+                    <i class="fas fa-spinner fa-spin text-blue-500 text-xl"></i>
+                </div>
+                <span class="text-gray-700" id="loadingText">Processing, please wait...</span>
+            </div>
+            <div class="flex justify-center">
+                <button onclick="cancelWorkflow()" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-sm">
+                    <i class="fas fa-times mr-2"></i>Cancel Workflow
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const N8N_BASE_URL = 'http://localhost:5678/webhook';
+        
+        function checkUrlConfig() {
+            if (N8N_BASE_URL.includes('your-n8n-instance.com')) {
+                return false;
+            }
+            return true;
+        }
+
+        let sessionId = null;
+        let currentStage = 'A';
+        let isProcessing = false;
+        let selectedFramework = null;
+        let frameworkData = {}; // Store user-filled framework data
+        let workflowResults = {}; // Store workflow results for each stage
+        let failedWorkflow = null; // Record failed workflow step
+        let shouldStopWaiting = false; // Used to stop waiting for C workflow
+        let abortController = null; // Used to cancel fetch requests
+        let hasDisplayedFinalResult = false; // Avoid duplicate rendering of final results
+        let isCancelled = false; // Global flag to track if user has cancelled the workflow
+
+        const frameworkSelection = document.getElementById('framework-selection');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const loadingText = document.getElementById('loadingText');
+        const resultArea = document.getElementById('resultArea');
+        const resultContent = document.getElementById('resultContent');
+        const formContainerWrapper = document.getElementById('form-container-wrapper');
+        const dynamicFields = document.getElementById('dynamicFields');
+        const selectedFrameworkName = document.getElementById('selectedFrameworkName');
+        const researchForm = document.getElementById('researchForm');
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if we need to auto-load a session after error refresh
+            const autoLoadSessionId = localStorage.getItem('autoLoadSessionId');
+            const autoLoadErrorInfo = localStorage.getItem('autoLoadErrorInfo');
+            
+            if (autoLoadSessionId) {
+                localStorage.removeItem('autoLoadSessionId'); // Clear it after use
+                
+                // Parse error info if available
+                let errorInfo = null;
+                if (autoLoadErrorInfo) {
+                    try {
+                        errorInfo = JSON.parse(autoLoadErrorInfo);
+                        localStorage.removeItem('autoLoadErrorInfo'); // Clear it after use
+                    } catch (e) {
+                        console.error('Failed to parse error info:', e);
+                    }
+                }
+                
+                const sessionIdInput = document.getElementById('sessionIdInput');
+                if (sessionIdInput) {
+                    sessionIdInput.value = autoLoadSessionId;
+                }
+                sessionId = autoLoadSessionId;
+                
+                // Auto-load the session to show retry button
+                setTimeout(() => {
+                    loadSessionById().then(() => {
+                        // After loading session, display the error message if available
+                        // Use a small delay to ensure chat container is ready
+                        setTimeout(() => {
+                            if (errorInfo && errorInfo.workflow && errorInfo.message) {
+                                console.log('Displaying saved error message after refresh:', errorInfo);
+                                addErrorMessage(errorInfo.message);
+                            }
+                        }, 200);
+                    }).catch(err => {
+                        console.error('Failed to load session after refresh:', err);
+                        // Still display error message if session load fails
+                        if (errorInfo && errorInfo.message) {
+                            setTimeout(() => {
+                                addErrorMessage(errorInfo.message);
+                            }, 200);
+                        }
+                    });
+                }, 100);
+                return;
+            }
+            
+            sessionId = getOrCreateSessionId();
+            const sessionIdInput = document.getElementById('sessionIdInput');
+            if (sessionIdInput) {
+                sessionIdInput.value = sessionId;
+            }
+            
+            setupFrameworkSelection();
+            
+            if (researchForm) {
+                researchForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    handleFormSubmit();
+                });
+            }
+            
+            if (sessionIdInput) {
+                sessionIdInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        loadSessionById();
+                    }
+                });
+            }
+        });
+
+        function getOrCreateSessionId() {
+            return generateUUID();
+        }
+
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+        
+        function generateNewSession() {
+            if (confirm('Are you sure you want to generate a new session ID? Progress in the current session will not be saved.')) {
+                sessionId = generateUUID();
+                const sessionIdInput = document.getElementById('sessionIdInput');
+                if (sessionIdInput) {
+                    sessionIdInput.value = sessionId;
+                }
+                resetSession();
+            }
+        }
+        
+        function resetSession() {
+            workflowResults = {};
+            failedWorkflow = null;
+            selectedFramework = null;
+            frameworkData = {};
+            currentStage = 'A';
+            hasDisplayedFinalResult = false;
+            
+            if (frameworkSelection) {
+                frameworkSelection.classList.remove('hidden');
+            }
+            if (formContainerWrapper) {
+                formContainerWrapper.classList.add('hidden');
+            }
+            if (resultArea) {
+                resultArea.classList.add('hidden');
+            }
+            const chatContainerWrapper = document.getElementById('chat-container-wrapper');
+            if (chatContainerWrapper) {
+                chatContainerWrapper.classList.add('hidden');
+            }
+            const continueButtonContainer = document.getElementById('continue-button-container');
+            if (continueButtonContainer) {
+                continueButtonContainer.classList.add('hidden');
+            }
+            const retryButtonContainer = document.getElementById('retry-button-container');
+            if (retryButtonContainer) {
+                retryButtonContainer.classList.add('hidden');
+            }
+            
+            const steps = document.querySelectorAll('.step-item');
+            steps.forEach((step, index) => {
+                step.classList.remove('step-active', 'step-completed', 'step-pending', 'step-failed');
+                if (index === 0) {
+                    step.classList.add('step-active');
+                } else {
+                    step.classList.add('step-pending');
+                }
+            });
+        }
+        
+        async function loadSessionById() {
+            const sessionIdInput = document.getElementById('sessionIdInput');
+            if (!sessionIdInput) return;
+            
+            const inputSessionId = sessionIdInput.value.trim();
+            if (!inputSessionId) {
+                alert('Please enter a session ID');
+                return;
+            }
+            
+            const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+            if (!uuidRegex.test(inputSessionId)) {
+                alert('Session ID format is incorrect, please enter a valid UUID format');
+                return;
+            }
+            
+            isProcessing = true;
+            isCancelled = false; // Reset cancellation flag
+            showLoading('Loading historical session...');
+            
+            try {
+                const sessionData = await loadSessionData(inputSessionId);
+                
+                if (sessionData && sessionData.session_id) {
+                    
+                    sessionId = inputSessionId;
+                    
+                    if (sessionData.final_structured_memory) {
+                        try {
+                            const fsm = typeof sessionData.final_structured_memory === 'string' 
+                                ? JSON.parse(sessionData.final_structured_memory) 
+                                : sessionData.final_structured_memory;
+                            
+                            if (fsm.final_question) {
+                                workflowResults['A'] = {
+                                    final_question: fsm.final_question,
+                                    framework: sessionData.classified_framework || '',
+                                    timestamp: new Date().toISOString()
+                                };
+                                markStepCompleted('A');
+                            }
+                        } catch (e) {
+                            console.warn('解析final_structured_memory失败:', e);
+                        }
+                    }
+
+                    const isACompleted = !!sessionData.classified_framework;
+
+                    const isB1Completed = !!sessionData.workflow_b1_completed;
+
+                    const isB2Completed = !!sessionData.workflow_b2_completed;
+
+                    const isB3Completed = !!sessionData.workflow_b3_completed;
+
+                    const isCCompleted = !!sessionData.workflow_c_completed;
+
+                    console.log('=== 会话数据完整性检查 ===');
+                    console.log('SessionID:', sessionId);
+                    console.log('数据库所有字段:', Object.keys(sessionData));
+                    console.log('步骤完成状态:', {
+                        A: isACompleted,
+                        B1: isB1Completed,
+                        B2: isB2Completed,
+                        B3: isB3Completed,
+                        C: isCCompleted
+                    });
+                    console.log('工作流完成时间戳检查:', {
+                        A阶段: {
+                            classified_framework: !!sessionData.classified_framework
+                        },
+                        B1阶段: {
+                            workflow_b1_completed: sessionData.workflow_b1_completed,
+                            完成时间: sessionData.workflow_b1_completed || 'Not completed'
+                        },
+                        B2阶段: {
+                            workflow_b2_completed: sessionData.workflow_b2_completed,
+                            完成时间: sessionData.workflow_b2_completed || 'Not completed'
+                        },
+                        B3阶段: {
+                            workflow_b3_completed: sessionData.workflow_b3_completed,
+                            完成时间: sessionData.workflow_b3_completed || 'Not completed'
+                        },
+                        C阶段: {
+                            workflow_c_completed: sessionData.workflow_c_completed,
+                            完成时间: sessionData.workflow_c_completed || 'Not completed'
+                        }
+                    });
+                    console.log('Complete sessionData:', sessionData);
+                    console.log('========================');
+                    
+                    // Mark completed steps
+                    if (isACompleted) {
+                        markStepCompleted('A');
+                        workflowResults['A'] = { 
+                            status: 'completed',
+                            final_question: workflowResults['A']?.final_question,
+                            framework: sessionData.classified_framework,
+                            timestamp: new Date().toISOString() 
+                        };
+                    }
+                    
+                    if (isB1Completed) {
+                        markStepCompleted('B1');
+                        workflowResults['B1'] = { status: 'completed', timestamp: new Date().toISOString() };
+                    }
+                    
+                    if (isB2Completed) {
+                        markStepCompleted('B2');
+                        workflowResults['B2'] = { status: 'completed', timestamp: new Date().toISOString() };
+                    }
+                    
+                    if (isB3Completed) {
+                        markStepCompleted('B3');
+                        workflowResults['B3'] = { status: 'completed', timestamp: new Date().toISOString() };
+                    }
+                    
+                    if (isCCompleted) {
+                        markStepCompleted('C');
+                        workflowResults['C'] = {
+                            status: 'completed',
+                            protocol_markdown: sessionData.research_proposal || sessionData.protocol_markdown,
+                            chapters: sessionData.chapters,
+                            timestamp: new Date().toISOString()
+                        };
+                            if (!hasDisplayedFinalResult) {
+                            await displayFinalResult(workflowResults['C']);
+                            if (document.getElementById('chat-container')) {
+                                addAssistantMessage('Generated agent-generated protocol detected. The latest results are now displayed for you.');
+                            }
+                        }
+                    }
+
+                    if (isACompleted) {
+
+                        if (frameworkSelection) {
+                            frameworkSelection.classList.add('hidden');
+                        }
+                        if (formContainerWrapper) {
+                            formContainerWrapper.classList.add('hidden');
+                        }
+
+                        let chatContainerWrapper = document.getElementById('chat-container-wrapper');
+                        if (!chatContainerWrapper) {
+                            const middleArea = document.querySelector('.lg\\:col-span-4');
+                            if (middleArea) {
+                                chatContainerWrapper = document.createElement('div');
+                                chatContainerWrapper.id = 'chat-container-wrapper';
+                                chatContainerWrapper.className = 'chat-area flex flex-col overflow-y-auto';
+                                chatContainerWrapper.style.maxHeight = 'calc(100vh - 64px - 4rem)';
+                                chatContainerWrapper.innerHTML = `
+                                    <div class="chat-container p-6 rounded-t-2xl flex-1 overflow-y-auto" id="chat-container" style="min-height: 0;"></div>
+                                `;
+                                middleArea.appendChild(chatContainerWrapper);
+                            }
+                        }
+                        
+                        if (chatContainerWrapper) {
+                            chatContainerWrapper.classList.remove('hidden');
+                            const chatContainer = document.getElementById('chat-container');
+                            if (chatContainer) {
+                                chatContainer.innerHTML = '';
+
+                                if (workflowResults['A'] && workflowResults['A'].final_question) {
+                                    const messageDiv = document.createElement('div');
+                                    messageDiv.className = 'message mb-6';
+                                    const formattedContent = formatTextForDisplay(`Research question has been organized:\n\n${workflowResults['A'].final_question}`);
+                                    messageDiv.innerHTML = `
+                                        <div class="flex items-start space-x-4">
+                                            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                                <i class="fas fa-robot text-white text-sm"></i>
+                                            </div>
+                                            <div class="bg-blue-50 rounded-2xl p-4 message-bubble">
+                                                <p class="text-gray-800 leading-relaxed" style="font-size: 0.8125rem;">${formattedContent}</p>
+                                            </div>
+                                        </div>
+                                    `;
+                                    chatContainer.appendChild(messageDiv);
+                                }
+                                
+                                // Check for any failed workflows
+                                let failedSteps = [];
+                                let failedStepErrors = [];
+                                if (workflowResults['B1'] && workflowResults['B1'].status === 'failed') {
+                                    failedSteps.push('B1');
+                                    if (workflowResults['B1'].error) {
+                                        failedStepErrors.push({ step: 'B1', error: workflowResults['B1'].error });
+                                    }
+                                }
+                                if (workflowResults['B2'] && workflowResults['B2'].status === 'failed') {
+                                    failedSteps.push('B2');
+                                    if (workflowResults['B2'].error) {
+                                        failedStepErrors.push({ step: 'B2', error: workflowResults['B2'].error });
+                                    }
+                                }
+                                if (workflowResults['B3'] && workflowResults['B3'].status === 'failed') {
+                                    failedSteps.push('B3');
+                                    if (workflowResults['B3'].error) {
+                                        failedStepErrors.push({ step: 'B3', error: workflowResults['B3'].error });
+                                    }
+                                }
+                                if (workflowResults['C'] && workflowResults['C'].status === 'failed') {
+                                    failedSteps.push('C');
+                                    if (workflowResults['C'].error) {
+                                        failedStepErrors.push({ step: 'C', error: workflowResults['C'].error });
+                                    }
+                                }
+                                
+                                let statusMessage = `Session loaded: ${inputSessionId}\n\nCompleted steps: ${getCompletedSteps()}`;
+                                
+                                if (failedSteps.length > 0) {
+                                    failedWorkflow = failedSteps[0]; // Set the first failed workflow for retry
+                                    statusMessage += `\n\nFailed steps detected: ${failedSteps.join(', ')}. Please use the retry button to re-run failed workflows.`;
+                                    
+                                    // Display detailed error messages for failed steps
+                                    failedStepErrors.forEach(({ step, error }) => {
+                                        addErrorMessage(`${getStepName(step)} execution failed: ${error}`);
+                                    });
+                                } else {
+                                    statusMessage += `\n\nYou can click on the progress bar to view the results of completed steps, or click the "Continue with Subsequent Workflows" button to proceed.`;
+                                }
+                                
+                                addAssistantMessage(statusMessage);
+                                scrollToBottom();
+                            }
+                        }
+                        
+                        // Show retry button if there are failed workflows, otherwise show continue button
+                        let hasFailed = (workflowResults['B1'] && workflowResults['B1'].status === 'failed') ||
+                                       (workflowResults['B2'] && workflowResults['B2'].status === 'failed') ||
+                                       (workflowResults['B3'] && workflowResults['B3'].status === 'failed') ||
+                                       (workflowResults['C'] && workflowResults['C'].status === 'failed');
+                        
+                        if (hasFailed) {
+                            console.log('loadSessionById: hasFailed workflows detected, showing retry button');
+                            showRetryButton();
+                        } else if (!isCCompleted) {
+                            const continueButtonContainer = document.getElementById('continue-button-container');
+                            if (continueButtonContainer) {
+                                continueButtonContainer.classList.remove('hidden');
+                            }
+                        }
+                    } else {
+                        if (frameworkSelection) {
+                            frameworkSelection.classList.remove('hidden');
+                        }
+                        if (formContainerWrapper) {
+                            formContainerWrapper.classList.add('hidden');
+                        }
+                        const chatContainerWrapper = document.getElementById('chat-container-wrapper');
+                        if (chatContainerWrapper) {
+                            chatContainerWrapper.classList.add('hidden');
+                        }
+                    }
+                    
+                    if (isCCompleted) {
+                    }
+                } else {
+                    alert('Data for this session ID was not found. Please verify the ID is correct.');
+                }
+            } catch (error) {
+                console.error('Failed to load session:', error);
+                alert('Failed to load session: ' + error.message);
+            } finally {
+                isProcessing = false;
+                hideLoading();
+            }
+        }
+        
+        async function loadSessionData(sessionId) {
+            try {
+                const response = await fetch(`${N8N_BASE_URL}/get-session-data`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        sessionId: sessionId
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to retrieve session data: ${response.status}`);
+                }
+                
+                const text = await response.text();
+                if (!text || text.trim() === '') {
+                    return null;
+                }
+                
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    throw new Error('Returned data format is incorrect');
+                }
+            } catch (error) {
+                if (error.message.includes('CORS') || error.message.includes('Failed to fetch')) {
+                    throw new Error('CORS Error: Unable to access n8n webhook.\n\nSolution:\n1. Create a workflow in n8n with webhook path /get-session-data\n2. Enable "CORS" in the Webhook node "Options"\n3. The workflow should query the database and return session data\n\nFor detailed configuration instructions, please refer to code comments or contact the administrator.');
+                }
+                if (error.message.includes('404') || error.message.includes('not configured')) {
+                    throw new Error('Webhook for retrieving session data is not configured in n8n.\n\nPlease create a workflow in n8n:\n1. Webhook node: Set path to /get-session-data, method POST\n2. Enable "CORS" in the Webhook node "Options"\n3. Query database: SELECT * FROM conversation_sessions WHERE session_id = {{ $json.sessionId }}\n4. Respond to Webhook node: Return query results');
+                }
+                throw error;
+            }
+        }
+
+        async function waitForProtocolResult(sessionId, maxChecks = 360, intervalSeconds = 5) {
+            const intervalMs = intervalSeconds * 1000;
+            const maxWaitTime = maxChecks * intervalSeconds * 1000;
+            const startTime = Date.now();
+            shouldStopWaiting = false;
+
+            for (let i = 0; i < maxChecks; i++) {
+                if (shouldStopWaiting || !isProcessing) {
+                    console.log('Workflow stop detected, ceasing to wait for Stage C results');
+                    throw new Error('Stage C workflow has been stopped');
+                }
+
+                if (i > 0) {
+                    const checkInterval = 100;
+                    const checksPerWait = Math.floor(intervalMs / checkInterval);
+                    for (let j = 0; j < checksPerWait; j++) {
+                        if (shouldStopWaiting || !isProcessing) {
+                            console.log('Workflow stop detected, ceasing to wait for Stage C results');
+                            throw new Error('Stage C workflow has been stopped');
+                        }
+                        await new Promise(resolve => setTimeout(resolve, checkInterval));
+                    }
+                }
+
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const elapsedMinutes = Math.floor(elapsed / 60);
+                const elapsedSeconds = elapsed % 60;
+                const remaining = Math.max(0, maxChecks * intervalSeconds - elapsed);
+                const remainingMinutes = Math.floor(remaining / 60);
+                const remainingSeconds = remaining % 60;
+
+                updateProgress('C', `Generating agent-generated protocol (Stage C), waited ${elapsedMinutes} min ${elapsedSeconds} sec, estimated ${remainingMinutes} min ${remainingSeconds} sec remaining...`);
+
+                try {
+                    if (shouldStopWaiting || !isProcessing) {
+                        console.log('Workflow stop detected, ceasing to wait for Stage C results');
+                        throw new Error('Stage C workflow has been stopped');
+                    }
+                    
+                    const sessionData = await loadSessionData(sessionId);
+                    
+                    const isCCompleted = !!sessionData?.workflow_c_completed;
+                    
+                    const cResult = sessionData?.research_proposal || 
+                                   sessionData?.protocol_markdown || 
+                                   sessionData?.chapters;
+                    
+                    if (sessionData && isCCompleted && cResult) {
+                        console.log('Stage C completion flag and result content detected, returning immediately:', {
+                            workflow_c_completed: sessionData.workflow_c_completed,
+                            hasResearchProposal: !!sessionData.research_proposal,
+                            hasProtocolMarkdown: !!sessionData.protocol_markdown,
+                            hasChapters: !!sessionData.chapters,
+                            contentLength: typeof cResult === 'string' ? cResult.length : 'object'
+                        });
+                        return {
+                            protocol_markdown: sessionData.research_proposal || sessionData.protocol_markdown,
+                            chapters: sessionData.chapters,
+                            status: 'completed'
+                        };
+                    } else {
+                        if (i % 3 === 0) {
+                            console.log(`Check ${i + 1}: Agent-generated protocol not yet generated, continuing to wait...`, {
+                                hasSessionData: !!sessionData,
+                                workflow_c_completed: sessionData?.workflow_c_completed || 'Not completed',
+                                hasResearchProposal: !!sessionData?.research_proposal,
+                                hasProtocolMarkdown: !!sessionData?.protocol_markdown,
+                                hasChapters: !!sessionData?.chapters
+                            });
+                        }
+                    }
+                } catch (e) {
+                    if (e.message && e.message.includes('workflow has been stopped')) {
+                        throw e;
+                    }
+                    console.error('Failed to check agent-generated protocol generation status:', e);
+                }
+            }
+
+            if (shouldStopWaiting || !isProcessing) {
+                throw new Error('Stage C workflow has been stopped');
+            }
+            
+            const totalMinutes = Math.floor((maxChecks * intervalSeconds) / 60);
+            throw new Error(`Stage C execution timed out (agent-generated protocol not generated after ${totalMinutes} minutes)`);
+        }
+
+        function addUserMessage(content) {
+            const chatContainer = document.getElementById('chat-container');
+            if (!chatContainer) return;
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message mb-6';
+            messageDiv.innerHTML = `
+                <div class="flex items-start space-x-4 justify-end">
+                    <div class="bg-blue-500 text-white rounded-2xl p-4 message-bubble">
+                        <p class="leading-relaxed" style="font-size: 0.8125rem;">${escapeHtml(content)}</p>
+                    </div>
+                    <div class="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-user text-white text-sm"></i>
+                    </div>
+                </div>
+            `;
+            chatContainer.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function addAssistantMessage(content) {
+            const chatContainer = document.getElementById('chat-container');
+            if (!chatContainer) return;
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message mb-6';
+            const formattedContent = formatTextForDisplay(content);
+            messageDiv.innerHTML = `
+                <div class="flex items-start space-x-4">
+                    <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-robot text-white text-sm"></i>
+                    </div>
+                    <div class="bg-blue-50 rounded-2xl p-4 message-bubble">
+                        <p class="text-gray-800 leading-relaxed" style="font-size: 0.8125rem;">${formattedContent}</p>
+                    </div>
+                </div>
+            `;
+            chatContainer.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function addErrorMessage(error) {
+            let chatContainer = document.getElementById('chat-container');
+            if (!chatContainer) {
+                console.warn('[addErrorMessage] chat-container not found, creating it...');
+                let chatContainerWrapper = document.getElementById('chat-container-wrapper');
+                if (!chatContainerWrapper) {
+                    const middleArea = document.querySelector('.lg\\:col-span-4');
+                    if (middleArea) {
+                        chatContainerWrapper = document.createElement('div');
+                        chatContainerWrapper.id = 'chat-container-wrapper';
+                        chatContainerWrapper.className = 'chat-area flex flex-col overflow-y-auto';
+                        chatContainerWrapper.style.maxHeight = 'calc(100vh - 64px - 4rem)';
+                        chatContainerWrapper.innerHTML = `
+                            <div class="chat-container p-6 rounded-t-2xl flex-1 overflow-y-auto" id="chat-container" style="min-height: 0;"></div>
+                        `;
+                        middleArea.appendChild(chatContainerWrapper);
+                        chatContainerWrapper.classList.remove('hidden');
+                    }
+                } else {
+                    chatContainerWrapper.classList.remove('hidden');
+                }
+                chatContainer = document.getElementById('chat-container');
+            }
+            
+            if (!chatContainer) {
+                console.error('[addErrorMessage] Failed to create chat-container, using alert instead');
+                alert(`错误：${typeof error === 'string' ? error : JSON.stringify(error)}`);
+                return;
+            }
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message mb-6';
+            const errorContent = typeof error === 'string' && error.includes('<br>') ? error : escapeHtml(error);
+            messageDiv.innerHTML = `
+                <div class="flex items-start space-x-4">
+                    <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-exclamation-triangle text-white text-sm"></i>
+                    </div>
+                    <div class="bg-red-50 border-l-4 border-red-400 rounded-2xl p-4 message-bubble">
+                        <div class="text-red-800 leading-relaxed" style="font-size: 0.8125rem;">
+                            <strong>错误：</strong>${errorContent}
+                        </div>
+                    </div>
+                </div>
+            `;
+            chatContainer.appendChild(messageDiv);
+            scrollToBottom();
+            
+            console.log('[addErrorMessage] Error message displayed:', error);
+        }
+
+        function showRetryButton() {
+            const retryButtonContainer = document.getElementById('retry-button-container');
+            if (retryButtonContainer) {
+                retryButtonContainer.classList.remove('hidden');
+                // Use !important to override Tailwind CSS hidden class
+                retryButtonContainer.style.setProperty('display', 'block', 'important');
+                retryButtonContainer.style.setProperty('visibility', 'visible', 'important');
+                retryButtonContainer.style.setProperty('opacity', '1', 'important');
+                const isVisible = !retryButtonContainer.classList.contains('hidden') && 
+                                retryButtonContainer.offsetParent !== null;
+                console.log('[showRetryButton] Retry button shown, isVisible:', isVisible, 'offsetParent:', retryButtonContainer.offsetParent);
+                return true;
+            } else {
+                console.error('[showRetryButton] retry-button-container element not found!');
+                return false;
+            }
+        }
+
+        function refreshPageOnError(failedWorkflowName, errorMessage) {
+            // Save current session ID and error info to localStorage
+            if (sessionId) {
+                localStorage.setItem('autoLoadSessionId', sessionId);
+                if (failedWorkflowName && errorMessage) {
+                    localStorage.setItem('autoLoadErrorInfo', JSON.stringify({
+                        workflow: failedWorkflowName,
+                        message: errorMessage,
+                        timestamp: new Date().toISOString()
+                    }));
+                }
+                console.log('[refreshPageOnError] Saved session ID and error info for auto-load:', sessionId, failedWorkflowName);
+                // Refresh page after a short delay to allow error message to be displayed
+                setTimeout(() => {
+                    console.log('[refreshPageOnError] Refreshing page...');
+                    window.location.reload();
+                }, 1000); // Increased delay to 1 second so user can see the error message
+            } else {
+                console.error('[refreshPageOnError] No session ID available, cannot refresh');
+            }
+        }
+
+        function scrollToBottom() {
+            const chatContainer = document.getElementById('chat-container');
+            if (chatContainer) {
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+        }
+
+        function escapeHtml(text) {
+            if (typeof text !== 'string') return text;
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatTextForDisplay(text) {
+            if (typeof text !== 'string') return text;
+            const escaped = escapeHtml(text);
+            return escaped.replace(/\n/g, '<br>');
+        }
+
+        function setupFrameworkSelection() {
+            const frameworkCards = document.querySelectorAll('.framework-card');
+            frameworkCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    selectedFramework = this.getAttribute('data-framework');
+                    showFrameworkForm(selectedFramework);
+                });
+            });
+        }
+
+        const frameworkFields = {
+            'PECO': [
+                { id: 'population', label: 'P (Population)', placeholder: 'Please enter population information...' },
+                { id: 'exposure', label: 'E (Exposure)', placeholder: 'Please enter exposure information...' },
+                { id: 'comparator', label: 'C (Comparison)', placeholder: 'Please enter comparison group information...' },
+                { id: 'outcome', label: 'O (Outcome)', placeholder: 'Please enter outcome information...' }
+            ],
+            'CoCoPop': [
+                { id: 'condition', label: 'Co (Condition)', placeholder: 'Please enter condition information...' },
+                { id: 'context', label: 'Co (Context)', placeholder: 'Please enter context information...' },
+                { id: 'population', label: 'Pop (Population)', placeholder: 'Please enter population information...' }
+            ],
+            'SPIDER': [
+                { id: 'sample', label: 'S (Sample)', placeholder: 'Please enter sample information...' },
+                { id: 'phenomenon', label: 'PI (Phenomenon of Interest)', placeholder: 'Please enter phenomenon of interest...' },
+                { id: 'design', label: 'D (Design)', placeholder: 'Please enter design information...' },
+                { id: 'evaluation', label: 'E (Evaluation)', placeholder: 'Please enter evaluation information...' },
+                { id: 'researchType', label: 'R (Research type)', placeholder: 'Please enter research type...' }
+            ],
+            'PECO and CoCoPop': [
+                { id: 'population', label: 'P/Pop (Population)', placeholder: 'Please enter population information...' },
+                { id: 'exposure', label: 'E (Exposure)', placeholder: 'Please enter exposure information...' },
+                { id: 'comparator', label: 'C (Comparison)', placeholder: 'Please enter comparison group information...' },
+                { id: 'outcome_condition', label: 'O/Co (Outcome/Condition)', placeholder: 'Please enter outcome/condition information...' },
+                { id: 'context', label: 'Context', placeholder: 'Please enter context information...' }
+            ]
+        };
+
+        function showFrameworkForm(framework) {
+            frameworkSelection.classList.add('hidden');
+            if (formContainerWrapper) {
+                formContainerWrapper.classList.remove('hidden');
+            }
+            
+            if (selectedFrameworkName) {
+                selectedFrameworkName.textContent = framework;
+            }
+            
+            generateFormFields(framework);
+        }
+
+        function getFieldGuide(framework, fieldId) {
+            const guides = {
+                'PECO': {
+                    'population': {
+                        title: 'P (Population)',
+                        description: 'Please specify:',
+                        points: [
+                            'Target Population: To whom do you wish to generalize your research findings?',
+                            'Source Population: What is the specific population you can access and from which you will draw your sample?',
+                            'Inclusion/Exclusion Criteria: Detailed criteria including age range, sex, geographic location, disease status, etc.'
+                        ],
+                        example: 'Example: Residents aged 65-80 years who lived in a community in Beijing during 2023, excluding those with a history of type 1 diabetes or gestational diabetes'
+                    },
+                    'exposure': {
+                        title: 'E (Exposure)',
+                        description: 'Please specify:',
+                        points: [
+                            'What is the core exposure?',
+                            'How will it be operationally defined and measured? (Via questionnaire, biochemical markers, or electronic records?)',
+                            'Has the measurement tool been validated for reliability and validity?',
+                            'How do you plan to analyze the exposure variable? (As a continuous, binary, or multi-categorical variable?)'
+                        ],
+                        example: 'Example: Average daily sugar-sweetened beverage intake over the past month, assessed via Food Frequency Questionnaire (FFQ). This variable will be analyzed primarily as a continuous variable'
+                    },
+                    'comparator': {
+                        title: 'C (Comparison)',
+                        description: 'Please specify:',
+                        points: [
+                            'Who is the comparison group for the exposed group?',
+                            'The comparison group must be selected from the same source population (internal comparison principle)'
+                        ],
+                        example: 'Example: Individuals from the same source population with an average daily sugar-sweetened beverage intake of 0 grams over the past month'
+                    },
+                    'outcome': {
+                        title: 'O (Outcome)',
+                        description: 'Please specify:',
+                        points: [
+                            'What is the outcome of primary interest?',
+                            'How will it be operationally defined and measured?',
+                            'What is the estimated prevalence? (If >10%, prevalence ratio PR must be used; if <10%, odds ratio OR can be used)'
+                        ],
+                        example: 'Example: Prevalence of type 2 diabetes, operationally defined as meeting any of the following criteria at the time of survey: 1. Self-reported physician diagnosis of type 2 diabetes; 2. Fasting blood glucose ≥ 7.0 mmol/L; 3. HbA1c ≥ 6.5%'
+                    }
+                },
+                'CoCoPop': {
+                    'condition': {
+                        title: 'Co (Condition)',
+                        description: 'Please specify:',
+                        points: [
+                            'What is the core condition you wish to assess? (Specific disease, symptom, or state)',
+                            'Which recognized clinical guideline will be used for the definition?',
+                            'How will it be operationally defined and measured?'
+                        ],
+                        example: 'Example: Hypertension, operationally defined as: Based on 2017 ACC/AHA guidelines, at the time of survey, average systolic blood pressure ≥ 130 mmHg or average diastolic blood pressure ≥ 80 mmHg, or self-reported current use of antihypertensive medication'
+                    },
+                    'context': {
+                        title: 'Co (Context)',
+                        description: 'Please specify:',
+                        points: [
+                            'Geographic Boundaries: What is the specific geographic scope?',
+                            'Setting Boundaries: In what setting will the study be conducted? (Community, hospital, or specific institution?)',
+                            'Temporal Boundaries: What is the time point or time period for data collection?'
+                        ],
+                        example: 'Example: Community residential settings within the administrative boundaries of Beijing during 2024'
+                    },
+                    'population': {
+                        title: 'Pop (Population)',
+                        description: 'Please specify:',
+                        points: [
+                            'What is the specific target population?',
+                            'Define precise inclusion/exclusion criteria (age range, residential status, other key exclusion criteria)'
+                        ],
+                        example: 'Example: Residents aged ≥18 years who have resided continuously in Beijing communities for at least 6 months and are not pregnant'
+                    }
+                },
+                'SPIDER': {
+                    'sample': {
+                        title: 'S (Sample)',
+                        description: 'Please specify:',
+                        points: [
+                            'From whom do you wish to gain in-depth understanding?',
+                            'What purposive sampling strategy will be employed? (Maximum variation sampling, homogeneous sampling, snowball sampling, etc.)'
+                        ],
+                        example: 'Example: 20-30 patients with type 2 diabetes who have been recommended but have not yet initiated or have discontinued insulin therapy, recruited through maximum variation sampling to ensure diversity in age, disease duration, and education level'
+                    },
+                    'phenomenon': {
+                        title: 'PI (Phenomenon of Interest)',
+                        description: 'Please specify:',
+                        points: [
+                            'What is the core phenomenon you wish to explore?',
+                            'Focus on a specific research domain (barriers and facilitators, decision-making processes, treatment burden, etc.)'
+                        ],
+                        example: 'Example: Personal, social, and systemic barriers and facilitators affecting insulin therapy initiation among patients with type 2 diabetes'
+                    },
+                    'design': {
+                        title: 'D (Design)',
+                        description: 'Please specify:',
+                        points: [
+                            'Which qualitative research paradigm will be used? (Qualitative description, phenomenology, grounded theory, etc.)',
+                            'Which data collection method will be used? (Semi-structured interviews, focus groups, etc.)'
+                        ],
+                        example: 'Example: A qualitative descriptive approach, with data collected through semi-structured interviews with individual participants'
+                    },
+                    'evaluation': {
+                        title: 'E (Evaluation)',
+                        description: 'Please specify:',
+                        points: [
+                            'What outcomes do you wish to evaluate or understand? (Experiences, views/perspectives, beliefs/attitudes)'
+                        ],
+                        example: 'Example: Patients\' experiences, perspectives, and beliefs regarding insulin therapy initiation'
+                    },
+                    'researchType': {
+                        title: 'R (Research type)',
+                        description: 'Please specify:',
+                        points: [
+                            'What type of research is this? (Stand-alone qualitative study, qualitative phase of a mixed-methods study, etc.)'
+                        ],
+                        example: 'Example: Qualitative phase of an exploratory sequential mixed-methods study'
+                    }
+                },
+                'PECO and CoCoPop': {
+                    'population': {
+                        title: 'P/Pop (Population)',
+                        description: 'Please specify (combining requirements from PECO\'s P and CoCoPop\'s Pop):',
+                        points: [
+                            'Target Population: To whom do you wish to generalize your research findings?',
+                            'Source Population: What is the specific population you can access and from which you will draw your sample?',
+                            'Inclusion/Exclusion Criteria: Detailed criteria including age range, sex, geographic location, disease status, etc.',
+                            'Define precise inclusion/exclusion criteria (age range, residential status, other key exclusion criteria)'
+                        ],
+                        example: 'Example: Residents aged 65-80 years who lived in a community in Beijing during 2023, excluding those with a history of type 1 diabetes or gestational diabetes. Residents aged ≥18 years who have resided continuously in Beijing communities for at least 6 months and are not pregnant'
+                    },
+                    'exposure': {
+                        title: 'E (Exposure)',
+                        description: 'Please specify:',
+                        points: [
+                            'What is the core exposure?',
+                            'How will it be operationally defined and measured? (Via questionnaire, biochemical markers, or electronic records?)',
+                            'Has the measurement tool been validated for reliability and validity?',
+                            'How do you plan to analyze the exposure variable? (As a continuous, binary, or multi-categorical variable?)'
+                        ],
+                        example: 'Example: Average daily sugar-sweetened beverage intake over the past month, assessed via Food Frequency Questionnaire (FFQ). This variable will be analyzed primarily as a continuous variable'
+                    },
+                    'comparator': {
+                        title: 'C (Comparison)',
+                        description: 'Please specify:',
+                        points: [
+                            'Who is the comparison group for the exposed group?',
+                            'The comparison group must be selected from the same source population (internal comparison principle)'
+                        ],
+                        example: 'Example: Individuals from the same source population with an average daily sugar-sweetened beverage intake of 0 grams over the past month'
+                    },
+                    'outcome_condition': {
+                        title: 'O/Co (Outcome/Condition)',
+                        description: 'Please specify (combining requirements from PECO\'s O and CoCoPop\'s Co):',
+                        points: [
+                            'What is the outcome of primary interest?',
+                            'How will it be operationally defined and measured?',
+                            'What is the estimated prevalence? (If >10%, prevalence ratio PR must be used; if <10%, odds ratio OR can be used)',
+                            'What is the core condition you wish to assess? (Specific disease, symptom, or state)',
+                            'Which recognized clinical guideline will be used for the definition?',
+                            'How will it be operationally defined and measured?'
+                        ],
+                        example: 'Example: Prevalence of type 2 diabetes, operationally defined as meeting any of the following criteria at the time of survey: 1. Self-reported physician diagnosis of type 2 diabetes; 2. Fasting blood glucose ≥ 7.0 mmol/L; 3. HbA1c ≥ 6.5%. Hypertension, operationally defined as: Based on 2017 ACC/AHA guidelines, at the time of survey, average systolic blood pressure ≥ 130 mmHg or average diastolic blood pressure ≥ 80 mmHg, or self-reported current use of antihypertensive medication'
+                    },
+                    'context': {
+                        title: 'Context',
+                        description: 'Please specify:',
+                        points: [
+                            'Geographic Boundaries: What is the specific geographic scope?',
+                            'Setting Boundaries: In what setting will the study be conducted? (Community, hospital, or specific institution?)',
+                            'Temporal Boundaries: What is the time point or time period for data collection?'
+                        ],
+                        example: 'Example: Community residential settings within the administrative boundaries of Beijing during 2024'
+                    }
+                }
+            };
+            
+            return guides[framework]?.[fieldId] || null;
+        }
+
+        function generateFormFields(framework) {
+            if (!dynamicFields) return;
+            
+            dynamicFields.innerHTML = '';
+            const fields = frameworkFields[framework] || [];
+            
+            fields.forEach(field => {
+                const guide = getFieldGuide(framework, field.id);
+                const div = document.createElement('div');
+                div.className = 'form-group bg-white rounded-lg p-5 border border-gray-200 shadow-sm';
+                
+                let guideHtml = '';
+                if (guide) {
+                    guideHtml = `
+                        <div class="bg-blue-50 rounded-lg p-4 mb-4 border border-blue-200">
+                            <p class="font-semibold text-gray-800 mb-2">${guide.title}</p>
+                            ${guide.description ? `<p class="text-gray-700 text-sm mb-2">${guide.description}</p>` : ''}
+                            ${guide.points && guide.points.length > 0 ? `
+                                <ul class="list-disc list-inside text-gray-700 text-sm ml-2 mb-2 space-y-1">
+                                    ${guide.points.map(point => `<li>${point}</li>`).join('')}
+                                </ul>
+                            ` : ''}
+                            ${guide.example ? `<p class="text-gray-600 text-xs italic mt-2">${guide.example}</p>` : ''}
+                        </div>
+                    `;
+                }
+                
+                div.innerHTML = `
+                    ${guideHtml}
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">${field.label} <span class="text-red-500">*</span></label>
+                    <textarea 
+                        id="${field.id}" 
+                        class="w-full border border-gray-300 rounded-lg p-3 resize-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
+                        rows="4"
+                        placeholder="${field.placeholder}"
+                        required
+                    ></textarea>
+                `;
+                dynamicFields.appendChild(div);
+            });
+        }
+
+        function backToFrameworkSelection() {
+            if (formContainerWrapper) {
+                formContainerWrapper.classList.add('hidden');
+            }
+            frameworkSelection.classList.remove('hidden');
+            selectedFramework = null;
+            if (researchForm) {
+                researchForm.reset();
+            }
+        }
+
+        async function callWorkflowA(sessionId, framework, frameworkData) {
+            try {
+                const response = await fetch(`${N8N_BASE_URL}/bochunxinprotocola`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        sessionId: sessionId,
+                        framework: framework,
+                        frameworkData: frameworkData
+                    })
+                });
+                
+                const text = await response.text();
+                
+                if (!text || text.trim() === '') {
+                    throw new Error('Server returned empty response');
+                }
+                
+                try {
+                    const parsed = JSON.parse(text);
+                    if (parsed && typeof parsed === 'object') {
+                        if (parsed.code !== undefined && parsed.message && !parsed.final_question) {
+                            throw new Error(`Workflow execution failed: ${parsed.message}`);
+                        }
+                        return parsed;
+                    }
+                } catch (jsonError) {
+                    const jsonMatch = text.match(/\{[\s\S]*\}/);
+                    if (jsonMatch) {
+                        try {
+                            return JSON.parse(jsonMatch[0]);
+                        } catch (e) {
+                        }
+                    }
+                    throw new Error(`Response is not valid JSON format: ${text.substring(0, 200)}`);
+                }
+                
+                throw new Error(`HTTP error: ${response.status}`);
+            } catch (error) {
+                if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+                    throw new Error('Unable to connect to server. Please check: 1) n8n URL configuration is correct 2) Network connection is normal 3) n8n service is running');
+                }
+                throw error;
+            }
+        }
+
+        async function pollWorkflowStatus(workflowName, sessionId, maxChecks = 7, intervalMinutes = 5) {
+            const intervalMs = intervalMinutes * 60 * 1000;
+            const maxWaitTime = maxChecks * intervalMinutes * 60 * 1000;
+            const startTime = Date.now();
+            let consecutiveFailures = 0;
+            const maxConsecutiveFailures = 3;
+            let n8nStatusCheckAvailable = true;
+            
+            console.log(`[pollWorkflowStatus] Starting for ${workflowName}, sessionId: ${sessionId}`);
+            
+            for (let i = 0; i < maxChecks; i++) {
+                if (isCancelled) {
+                    console.log(`[pollWorkflowStatus] ${workflowName} cancelled by user`);
+                    throw new Error('Workflow cancelled by user');
+                }
+                
+                if (i > 0) {
+                    const checkInterval = 500;
+                    const numChecks = Math.floor(intervalMs / checkInterval);
+                    for (let j = 0; j < numChecks; j++) {
+                        if (isCancelled) {
+                            console.log(`[pollWorkflowStatus] ${workflowName} cancelled during wait`);
+                            throw new Error('Workflow cancelled by user');
+                        }
+                        await new Promise(resolve => setTimeout(resolve, checkInterval));
+                    }
+                }
+                
+                if (Date.now() - startTime >= maxWaitTime) {
+                    throw new Error(`${workflowName} workflow execution timed out (exceeded ${maxChecks * intervalMinutes} minutes)`);
+                }
+                
+                try {
+                    console.log(`[pollWorkflowStatus] ${workflowName} status check ${i + 1}/${maxChecks}`);
+                    
+                    // Step 1: Try to check n8n execution status (if API is available)
+                    if (n8nStatusCheckAvailable) {
+                        console.log(`[pollWorkflowStatus] ${workflowName} checking n8n status via API...`);
+                        try {
+                    const checkResponse = await fetch(`${N8N_BASE_URL}/check-workflow-status`, {
+                        method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ sessionId: sessionId, workflowName: workflowName })
+                            });
+                            
+                            console.log(`[pollWorkflowStatus] ${workflowName} n8n status API response: HTTP ${checkResponse.status}, ok: ${checkResponse.ok}`);
+                    
+                    if (checkResponse.ok) {
+                        const checkText = await checkResponse.text();
+                                console.log(`[pollWorkflowStatus] ${workflowName} n8n status API response text (first 500 chars):`, checkText.substring(0, 500));
+                        
+                        if (checkText && checkText.trim()) {
+                            try {
+                                        const n8nStatus = JSON.parse(checkText);
+                                        console.log(`[pollWorkflowStatus] ${workflowName} n8n status parsed:`, JSON.stringify(n8nStatus));
+                                        
+                                        // Check for failure status
+                                        if (n8nStatus.status === 'failed' || n8nStatus.status === 'error') {
+                                            const errorDetail = n8nStatus.message || n8nStatus.error || n8nStatus.details || n8nStatus.errorMessage || 'Unknown error';
+                                            const errorMsg = `${workflowName} workflow execution failed in n8n: ${errorDetail}`;
+                                            console.error(`[pollWorkflowStatus] ${workflowName} FAILED in n8n:`, errorMsg);
+                                            addErrorMessage(errorMsg);
+                                            throw new Error(errorMsg);
+                                        }
+                                        
+                                        // Check for interruption status
+                                        if (n8nStatus.status === 'cancelled' || n8nStatus.status === 'stopped' || n8nStatus.status === 'aborted') {
+                                            const errorMsg = `${workflowName} workflow was manually interrupted in n8n (status: ${n8nStatus.status})`;
+                                            console.error(`[pollWorkflowStatus] ${workflowName} INTERRUPTED in n8n:`, errorMsg);
+                                            addErrorMessage(errorMsg);
+                                            throw new Error(errorMsg);
+                                        }
+                                        
+                                        // Log other statuses
+                                        console.log(`[pollWorkflowStatus] ${workflowName} n8n status: ${n8nStatus.status || 'unknown'}`);
+                                        
+                                        // If n8n says completed but database not updated, continue waiting
+                                        if (n8nStatus.status === 'completed') {
+                                            console.log(`[pollWorkflowStatus] ${workflowName} n8n reports completed, checking database...`);
+                                        }
+                                    } catch (parseError) {
+                                        if (parseError.message && (
+                                            parseError.message.includes('workflow execution failed') ||
+                                            parseError.message.includes('interrupted')
+                                        )) {
+                                            throw parseError;
+                                        }
+                                        console.warn(`[pollWorkflowStatus] ${workflowName} failed to parse n8n status:`, parseError, 'Response text:', checkText.substring(0, 200));
+                                    }
+                                } else {
+                                    // Empty response from /check-workflow-status API indicates n8n workflow failure
+                                    // According to user: "should return empty when there is an error"
+                                    // Don't add error message here, let upper level handle it to avoid duplicate messages
+                                    const errorMsg = `${workflowName} workflow status check API returned empty response. This indicates the workflow has failed in n8n. Please check n8n execution history and use the retry button.`;
+                                    console.error(`[pollWorkflowStatus] ${workflowName} FAILURE detected (empty API response):`, errorMsg);
+                                    throw new Error(errorMsg);
+                                }
+                            } else if (checkResponse.status === 404) {
+                                console.warn(`[pollWorkflowStatus] ${workflowName} /check-workflow-status API not found (404), will rely on database checks only`);
+                                n8nStatusCheckAvailable = false;
+                                // Warn user that we cannot detect n8n failures automatically
+                                if (i === 0) {
+                                    const warningMsg = `Warning: The /check-workflow-status API is not available. We cannot automatically detect if ${workflowName} workflow fails in n8n. If the workflow fails, please check n8n execution history and use the retry button.`;
+                                    console.warn(`[pollWorkflowStatus] ${warningMsg}`);
+                                    addErrorMessage(warningMsg);
+                                }
+                            } else {
+                                const errorText = await checkResponse.text().catch(() => 'Unable to read error');
+                                console.warn(`[pollWorkflowStatus] ${workflowName} n8n status check returned HTTP ${checkResponse.status}, response:`, errorText.substring(0, 200));
+                            }
+                        } catch (n8nCheckError) {
+                            console.error(`[pollWorkflowStatus] ${workflowName} n8n status check exception:`, n8nCheckError);
+                            
+                            // Check if this is a critical error that should stop immediately
+                            const errorMsg = n8nCheckError.message || '';
+                            const isCriticalError = errorMsg.includes('workflow execution failed') ||
+                                                  errorMsg.includes('workflow has failed') ||
+                                                  errorMsg.includes('interrupted') ||
+                                                  errorMsg.includes('empty response') ||
+                                                  errorMsg.includes('FAILURE detected') ||
+                                                  errorMsg.includes('failed in n8n');
+                            
+                            if (isCriticalError) {
+                                console.error(`[pollWorkflowStatus] ${workflowName} critical error detected, re-throwing:`, errorMsg);
+                                throw n8nCheckError;
+                            }
+                            
+                            if (errorMsg.includes('404')) {
+                                console.warn(`[pollWorkflowStatus] ${workflowName} /check-workflow-status API not available (404 in error), will rely on database checks only`);
+                                n8nStatusCheckAvailable = false;
+                        } else {
+                                console.warn(`[pollWorkflowStatus] ${workflowName} n8n status check failed (non-critical):`, errorMsg);
+                            }
+                        }
+                    } else {
+                        console.log(`[pollWorkflowStatus] ${workflowName} n8n status check API not available, skipping n8n status check`);
+                    }
+                    
+                    // Step 2: Check database completion flag
+                    const sessionData = await loadSessionData(sessionId);
+                    
+                    if (!sessionData) {
+                        console.warn(`[pollWorkflowStatus] ${workflowName} session data not found, attempt ${i + 1}`);
+                        consecutiveFailures++;
+                        if (consecutiveFailures >= maxConsecutiveFailures) {
+                            throw new Error(`${workflowName}: Failed to load session data ${consecutiveFailures} times. Database may be unavailable.`);
+                        }
+                        continue;
+                    }
+                    
+                    let isCompleted = false;
+                    let completionField = '';
+                    
+                    if (workflowName === 'B1') {
+                        isCompleted = !!sessionData.workflow_b1_completed;
+                        completionField = 'workflow_b1_completed';
+                    } else if (workflowName === 'B2') {
+                        isCompleted = !!sessionData.workflow_b2_completed;
+                        completionField = 'workflow_b2_completed';
+                    } else if (workflowName === 'B3') {
+                        isCompleted = !!sessionData.workflow_b3_completed;
+                        completionField = 'workflow_b3_completed';
+                    } else if (workflowName === 'C') {
+                        isCompleted = !!sessionData.workflow_c_completed;
+                        completionField = 'workflow_c_completed';
+                    }
+                    
+                    console.log(`[pollWorkflowStatus] ${workflowName} database check:`, {
+                        field: completionField,
+                        value: sessionData[completionField],
+                        isCompleted: isCompleted,
+                        attempt: i + 1
+                    });
+                    
+                    const elapsed = Math.floor((Date.now() - startTime) / 60000);
+                    const remaining = Math.max(0, maxChecks * intervalMinutes - elapsed);
+                    
+                    if (isCompleted) {
+                        console.log(`[pollWorkflowStatus] ${workflowName} completed (check ${i + 1}, waited ${elapsed} minutes)`);
+                        consecutiveFailures = 0;
+                        return { status: 'completed' };
+                    } else {
+                        // Critical: If n8n status check is not available, we cannot determine if workflow is running or failed
+                        // Use a shorter timeout to detect potential failures early
+                        const shortTimeoutMinutes = 3; // Short timeout when n8n status check is unavailable
+                        if (!n8nStatusCheckAvailable && elapsed >= shortTimeoutMinutes) {
+                            const errorMsg = `${workflowName} workflow has been running for ${elapsed} minutes without completion. Since the /check-workflow-status API is not available, we cannot determine if the workflow is still running or has failed. Please check n8n execution history. If the workflow failed, please stop it in n8n and use the retry button.`;
+                            console.error(`[pollWorkflowStatus] ${errorMsg}`);
+                            addErrorMessage(errorMsg);
+                            throw new Error(errorMsg);
+                        }
+                        
+                        console.log(`[pollWorkflowStatus] ${workflowName} still running (check ${i + 1}/${maxChecks}, waited ${elapsed} min, remaining ~${remaining} min)`);
+                        updateProgress(workflowName, `Workflow executing, waited ${elapsed} minutes, estimated ${remaining} minutes remaining...`);
+                        
+                        consecutiveFailures = 0;
+                        continue;
+                    }
+                    
+                } catch (checkError) {
+                    console.error(`[pollWorkflowStatus] ${workflowName} status check error:`, checkError);
+                    console.error(`[pollWorkflowStatus] ${workflowName} error message:`, checkError.message);
+                    console.error(`[pollWorkflowStatus] ${workflowName} error stack:`, checkError.stack);
+                    
+                    // Check if this is a critical error that should stop immediately
+                    const errorMsg = checkError.message || '';
+                    const isCriticalError = errorMsg.includes('interrupted') ||
+                                          errorMsg.includes('execution failed') ||
+                                          errorMsg.includes('FAILED') ||
+                                          errorMsg.includes('FAILURE detected') ||
+                                          errorMsg.includes('failed in n8n') ||
+                                          errorMsg.includes('empty response') ||
+                                          errorMsg.includes('workflow has failed') ||
+                                          errorMsg.includes('cancelled by user') ||
+                                          errorMsg.includes('Database may be unavailable') ||
+                                          errorMsg.includes('workflow execution failed') ||
+                                          errorMsg.includes('workflow was manually interrupted');
+                    
+                    if (isCriticalError) {
+                        console.error(`[pollWorkflowStatus] ${workflowName} critical error detected, stopping immediately`);
+                        throw checkError;
+                    }
+                    
+                    // For non-critical errors, count failures
+                    consecutiveFailures++;
+                    console.warn(`[pollWorkflowStatus] ${workflowName} consecutive failures: ${consecutiveFailures}/${maxConsecutiveFailures}`);
+                    
+                    if (consecutiveFailures >= maxConsecutiveFailures) {
+                        const finalError = new Error(`${workflowName} workflow status check encountered errors ${consecutiveFailures} times: ${checkError.message}. The workflow may have failed.`);
+                        console.error(`[pollWorkflowStatus] ${workflowName} too many failures, throwing error:`, finalError);
+                        throw finalError;
+                    }
+                }
+                
+                const elapsed = Math.floor((Date.now() - startTime) / 60000);
+                const remaining = Math.max(0, maxChecks * intervalMinutes - elapsed);
+                updateProgress(workflowName, `Workflow executing, waited ${elapsed} minutes, estimated ${remaining} minutes remaining...`);
+            }
+            
+            throw new Error(`${workflowName} workflow execution timed out (exceeded ${maxChecks * intervalMinutes} minutes)`);
+        }
+
+        async function callWorkflowB1(sessionId) {
+            updateProgress('B1', 'Storing study design information... (Expected to take over 30 minutes, please be patient)');
+            try {
+                const response = await fetch(`${N8N_BASE_URL}/bochunxinprotocolb1`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        sessionId: sessionId
+                    })
+                });
+                
+                console.log('B1 workflow HTTP response status:', response.status, response.ok);
+                
+                // ✅ 先检查 HTTP 状态码
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('B1 workflow HTTP error:', response.status, errorText.substring(0, 500));
+                    
+                    if (errorText.includes('Unused Respond to Webhook node') || 
+                        errorText.includes('No Respond to Webhook node found')) {
+                        console.warn('B1 workflow configuration warning: Immediate response mode detected, workflow executing in background');
+                        const pollResult = await pollWorkflowStatus('B1', sessionId, 7, 5);
+                        if (pollResult.status === 'failed') {
+                            throw new Error(pollResult.error || pollResult.message || 'B1 workflow execution failed');
+                        }
+                        return pollResult;
+                    }
+                    
+                    throw new Error(`B1 workflow failed: HTTP ${response.status}, response: ${errorText.substring(0, 200)}`);
+                }
+                
+                const text = await response.text();
+                console.log('B1 workflow response text (first 200 chars):', text.substring(0, 200));
+                
+                // ✅ 有响应内容时尝试解析
+                if (text && text.trim()) {
+                    try {
+                        const parsed = JSON.parse(text);
+                        console.log('B1 workflow parsed response:', parsed);
+                        
+                        if (parsed.error || parsed.status === 'failed' || parsed.status === 'error') {
+                            throw new Error(`B1 workflow execution failed: ${parsed.error || parsed.message || JSON.stringify(parsed)}`);
+                        }
+                        
+                        return parsed;
+                    } catch (e) {
+                        if (e.message && e.message.includes('B1 workflow execution failed')) {
+                            throw e;
+                        }
+                        // Check if response text contains error indicators
+                        const lowerText = text.toLowerCase();
+                        if (lowerText.includes('error') || lowerText.includes('failed') || lowerText.includes('exception')) {
+                            console.error('[callWorkflowB1] Response text contains error indicators:', text.substring(0, 500));
+                            throw new Error(`B1 workflow may have failed. Response: ${text.substring(0, 200)}`);
+                        }
+                        // Non-JSON response with HTTP 200, treat as immediate mode
+                        console.warn('[callWorkflowB1] Non-JSON response with HTTP 200, treating as immediate mode:', text.substring(0, 100));
+                        const pollResult = await pollWorkflowStatus('B1', sessionId, 7, 5);
+                        if (pollResult.status === 'failed') {
+                            throw new Error(pollResult.error || pollResult.message || 'B1 workflow execution failed');
+                        }
+                        return pollResult;
+                    }
+                }
+                
+                // ✅ 空响应，可能是immediate mode，也可能是n8n报错
+                console.warn('[callWorkflowB1] Empty response received, waiting 10 seconds then checking n8n status...');
+                
+                // Wait 10 seconds to allow n8n to process and potentially fail
+                await new Promise(resolve => setTimeout(resolve, 10000));
+                
+                // Immediately check n8n status to detect failures early
+                try {
+                    const quickCheckResponse = await fetch(`${N8N_BASE_URL}/check-workflow-status`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ sessionId: sessionId, workflowName: 'B1' })
+                    });
+                    
+                    if (quickCheckResponse.ok) {
+                        const quickCheckText = await quickCheckResponse.text();
+                        if (quickCheckText && quickCheckText.trim()) {
+                            try {
+                                const quickStatus = JSON.parse(quickCheckText);
+                                if (quickStatus.status === 'failed' || quickStatus.status === 'error') {
+                                    const errorDetail = quickStatus.message || quickStatus.error || quickStatus.details || 'Unknown error';
+                                    const errorMsg = `B1 workflow execution failed in n8n: ${errorDetail}`;
+                                    console.error('[callWorkflowB1] n8n reports failure:', errorMsg);
+                                    addErrorMessage(errorMsg);
+                                    throw new Error(errorMsg);
+                                }
+                            } catch (parseErr) {
+                                // Ignore parse errors, continue to polling
+                            }
+                        }
+                    }
+                } catch (quickCheckErr) {
+                    // If quick check fails, continue to normal polling
+                    console.warn('[callWorkflowB1] Quick status check failed, will use normal polling:', quickCheckErr.message);
+                }
+                
+                // If no immediate failure detected, proceed with normal polling
+                console.warn('[callWorkflowB1] No immediate failure detected, starting normal polling...');
+                const pollResult = await pollWorkflowStatus('B1', sessionId, 7, 5);
+                if (pollResult.status === 'failed') {
+                    throw new Error(pollResult.error || pollResult.message || 'B1 workflow execution failed');
+                }
+                return pollResult;
+            } catch (error) {
+                console.error('B1 workflow failed:', error);
+                throw error;
+            }
+        }
+
+        async function callWorkflowB2(sessionId) {
+            updateProgress('B2', 'Storing statistical analysis plan... (Expected to take over 30 minutes, please be patient)');
+            try {
+                const response = await fetch(`${N8N_BASE_URL}/bochunxinprotocolb2`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        sessionId: sessionId
+                    })
+                });
+                
+                console.log('B2 workflow HTTP response status:', response.status, response.ok);
+                
+                // ✅ 先检查 HTTP 状态码
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('B2 workflow HTTP error:', response.status, errorText.substring(0, 500));
+                    
+                    if (errorText.includes('Unused Respond to Webhook node') || 
+                        errorText.includes('No Respond to Webhook node found')) {
+                        console.warn('B2 workflow configuration warning: Immediate response mode detected, workflow executing in background');
+                        const pollResult = await pollWorkflowStatus('B2', sessionId, 7, 5);
+                        if (pollResult.status === 'failed') {
+                            throw new Error(pollResult.error || pollResult.message || 'B2 workflow execution failed');
+                        }
+                        return pollResult;
+                    }
+                    
+                    throw new Error(`B2 workflow failed: HTTP ${response.status}, response: ${errorText.substring(0, 200)}`);
+                }
+                
+                const text = await response.text();
+                console.log('B2 workflow response text (first 200 chars):', text.substring(0, 200));
+                
+                // ✅ 有响应内容时尝试解析
+                if (text && text.trim()) {
+                    try {
+                        const parsed = JSON.parse(text);
+                        console.log('B2 workflow parsed response:', parsed);
+                        
+                        if (parsed.error || parsed.status === 'failed' || parsed.status === 'error') {
+                            throw new Error(`B2 workflow execution failed: ${parsed.error || parsed.message || JSON.stringify(parsed)}`);
+                        }
+                        
+                        return parsed;
+                    } catch (e) {
+                        if (e.message && e.message.includes('B2 workflow execution failed')) {
+                            throw e;
+                        }
+                        // Check if response text contains error indicators
+                        const lowerText = text.toLowerCase();
+                        if (lowerText.includes('error') || lowerText.includes('failed') || lowerText.includes('exception')) {
+                            console.error('[callWorkflowB2] Response text contains error indicators:', text.substring(0, 500));
+                            throw new Error(`B2 workflow may have failed. Response: ${text.substring(0, 200)}`);
+                        }
+                        // Non-JSON response with HTTP 200, treat as immediate mode
+                        console.warn('[callWorkflowB2] Non-JSON response with HTTP 200, treating as immediate mode:', text.substring(0, 100));
+                        const pollResult = await pollWorkflowStatus('B2', sessionId, 7, 5);
+                        if (pollResult.status === 'failed') {
+                            throw new Error(pollResult.error || pollResult.message || 'B2 workflow execution failed');
+                        }
+                        return pollResult;
+                    }
+                }
+                
+                // ✅ 空响应，可能是immediate mode，也可能是n8n报错
+                console.warn('[callWorkflowB2] Empty response received, waiting 10 seconds then checking n8n status...');
+                
+                // Wait 10 seconds to allow n8n to process and potentially fail
+                await new Promise(resolve => setTimeout(resolve, 10000));
+                
+                // Immediately check n8n status to detect failures early
+                try {
+                    const quickCheckResponse = await fetch(`${N8N_BASE_URL}/check-workflow-status`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ sessionId: sessionId, workflowName: 'B2' })
+                    });
+                    
+                    if (quickCheckResponse.ok) {
+                        const quickCheckText = await quickCheckResponse.text();
+                        if (quickCheckText && quickCheckText.trim()) {
+                            try {
+                                const quickStatus = JSON.parse(quickCheckText);
+                                if (quickStatus.status === 'failed' || quickStatus.status === 'error') {
+                                    const errorDetail = quickStatus.message || quickStatus.error || quickStatus.details || 'Unknown error';
+                                    const errorMsg = `B2 workflow execution failed in n8n: ${errorDetail}`;
+                                    console.error('[callWorkflowB2] n8n reports failure:', errorMsg);
+                                    addErrorMessage(errorMsg);
+                                    throw new Error(errorMsg);
+                                }
+                            } catch (parseErr) {
+                                // Ignore parse errors, continue to polling
+                            }
+                        }
+                    }
+                } catch (quickCheckErr) {
+                    // If quick check fails, continue to normal polling
+                    console.warn('[callWorkflowB2] Quick status check failed, will use normal polling:', quickCheckErr.message);
+                }
+                
+                // If no immediate failure detected, proceed with normal polling
+                console.warn('[callWorkflowB2] No immediate failure detected, starting normal polling...');
+                const pollResult = await pollWorkflowStatus('B2', sessionId, 7, 5);
+                if (pollResult.status === 'failed') {
+                    throw new Error(pollResult.error || pollResult.message || 'B2 workflow execution failed');
+                }
+                return pollResult;
+            } catch (error) {
+                console.error('B2 workflow failed:', error);
+                throw error;
+            }
+        }
+
+        async function callWorkflowB3(sessionId) {
+            updateProgress('B3', 'Storing validation and dissemination information... (Expected to take over 30 minutes, please be patient)');
+            try {
+                const response = await fetch(`${N8N_BASE_URL}/bochunxinprotocolb3`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        sessionId: sessionId
+                    })
+                });
+                
+                console.log('B3 workflow HTTP response status:', response.status, response.ok);
+                
+                // ✅ 先检查 HTTP 状态码
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('B3 workflow HTTP error:', response.status, errorText.substring(0, 500));
+                    
+                    if (errorText.includes('Unused Respond to Webhook node') || 
+                        errorText.includes('No Respond to Webhook node found')) {
+                        console.warn('B3 workflow configuration warning: Immediate response mode detected, workflow executing in background');
+                        const pollResult = await pollWorkflowStatus('B3', sessionId, 7, 5);
+                        if (pollResult.status === 'failed') {
+                            throw new Error(pollResult.error || pollResult.message || 'B3 workflow execution failed');
+                        }
+                        return pollResult;
+                    }
+                    
+                    throw new Error(`B3 workflow failed: HTTP ${response.status}, response: ${errorText.substring(0, 200)}`);
+                }
+                
+                const text = await response.text();
+                console.log('B3 workflow response text (first 200 chars):', text.substring(0, 200));
+                
+                // ✅ 有响应内容时尝试解析
+                if (text && text.trim()) {
+                    try {
+                        const parsed = JSON.parse(text);
+                        console.log('B3 workflow parsed response:', parsed);
+                        
+                        if (parsed.error || parsed.status === 'failed' || parsed.status === 'error') {
+                            throw new Error(`B3 workflow execution failed: ${parsed.error || parsed.message || JSON.stringify(parsed)}`);
+                        }
+                        
+                        return parsed;
+                    } catch (e) {
+                        if (e.message && e.message.includes('B3 workflow execution failed')) {
+                            throw e;
+                        }
+                        // Check if response text contains error indicators
+                        const lowerText = text.toLowerCase();
+                        if (lowerText.includes('error') || lowerText.includes('failed') || lowerText.includes('exception')) {
+                            console.error('[callWorkflowB3] Response text contains error indicators:', text.substring(0, 500));
+                            throw new Error(`B3 workflow may have failed. Response: ${text.substring(0, 200)}`);
+                        }
+                        // Non-JSON response with HTTP 200, treat as immediate mode
+                        console.warn('[callWorkflowB3] Non-JSON response with HTTP 200, treating as immediate mode:', text.substring(0, 100));
+                        const pollResult = await pollWorkflowStatus('B3', sessionId, 7, 5);
+                        if (pollResult.status === 'failed') {
+                            throw new Error(pollResult.error || pollResult.message || 'B3 workflow execution failed');
+                        }
+                        return pollResult;
+                    }
+                }
+                
+                // ✅ 空响应，可能是immediate mode，也可能是n8n报错
+                console.warn('[callWorkflowB3] Empty response received, waiting 10 seconds then checking n8n status...');
+                
+                // Wait 10 seconds to allow n8n to process and potentially fail
+                await new Promise(resolve => setTimeout(resolve, 10000));
+                
+                // Immediately check n8n status to detect failures early
+                try {
+                    const quickCheckResponse = await fetch(`${N8N_BASE_URL}/check-workflow-status`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ sessionId: sessionId, workflowName: 'B3' })
+                    });
+                    
+                    if (quickCheckResponse.ok) {
+                        const quickCheckText = await quickCheckResponse.text();
+                        if (quickCheckText && quickCheckText.trim()) {
+                            try {
+                                const quickStatus = JSON.parse(quickCheckText);
+                                if (quickStatus.status === 'failed' || quickStatus.status === 'error') {
+                                    const errorDetail = quickStatus.message || quickStatus.error || quickStatus.details || 'Unknown error';
+                                    const errorMsg = `B3 workflow execution failed in n8n: ${errorDetail}`;
+                                    console.error('[callWorkflowB3] n8n reports failure:', errorMsg);
+                                    addErrorMessage(errorMsg);
+                                    throw new Error(errorMsg);
+                                }
+                            } catch (parseErr) {
+                                // Ignore parse errors, continue to polling
+                            }
+                        }
+                    }
+                } catch (quickCheckErr) {
+                    // If quick check fails, continue to normal polling
+                    console.warn('[callWorkflowB3] Quick status check failed, will use normal polling:', quickCheckErr.message);
+                }
+                
+                // If no immediate failure detected, proceed with normal polling
+                console.warn('[callWorkflowB3] No immediate failure detected, starting normal polling...');
+                const pollResult = await pollWorkflowStatus('B3', sessionId, 7, 5);
+                if (pollResult.status === 'failed') {
+                    throw new Error(pollResult.error || pollResult.message || 'B3 workflow execution failed');
+                }
+                return pollResult;
+            } catch (error) {
+                console.error('B3 workflow failed:', error);
+                throw error;
+            }
+        }
+        async function callWorkflowC(sessionId) {
+            updateProgress('C', 'Triggering agent-generated protocol generation...');
+            
+            abortController = new AbortController();
+            const signal = abortController.signal;
+            
+            try {
+                const response = await fetch(`${N8N_BASE_URL}/bochunxinprotocolc`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        sessionId: sessionId
+                    }),
+                    signal: signal
+                });
+                
+                if (!response.ok) {
+                    const errorText = await response.text().catch(() => 'Unable to read error information');
+                    shouldStopWaiting = true; 
+                    throw new Error(`C workflow trigger failed: ${response.status}, response: ${errorText.substring(0, 200)}`);
+                }
+                
+                const text = await response.text();
+
+                if (!text || text.trim() === '') {
+                    console.log('C workflow triggered (immediate response mode, workflow executing in background)');
+                    return { status: 'triggered', message: 'C workflow triggered, executing in background' };
+                }
+
+                try {
+                    const parsed = JSON.parse(text);
+                    if (parsed.error || parsed.status === 'failed' || parsed.status === 'error') {
+                        throw new Error(`C workflow execution failed: ${parsed.error || parsed.message || JSON.stringify(parsed)}`);
+                    }
+                    
+                    if (parsed.status === 'completed') {
+                        console.log('C workflow completed, reading results from database...');
+                        const sessionData = await loadSessionData(sessionId);
+                        const cResult = sessionData?.research_proposal || 
+                                       sessionData?.protocol_markdown || 
+                                       sessionData?.chapters;
+                        
+                        if (sessionData && cResult) {
+                            console.log('Stage C results read from database');
+                            return {
+                                protocol_markdown: sessionData.research_proposal || sessionData.protocol_markdown,
+                                chapters: sessionData.chapters
+                            };
+                        } else {
+                            console.log('Database not yet updated, waiting 2 seconds before retry...');
+                            await new Promise(resolve => setTimeout(resolve, 2000));
+                            const retryData = await loadSessionData(sessionId);
+                            const retryResult = retryData?.research_proposal || 
+                                              retryData?.protocol_markdown || 
+                                              retryData?.chapters;
+                            if (retryData && retryResult) {
+                                return {
+                                    protocol_markdown: retryData.research_proposal || retryData.protocol_markdown,
+                                    chapters: retryData.chapters
+                                };
+                            }
+                            console.log('Database still not updated, will use polling method to wait for results');
+                            return { status: 'triggered', message: 'C workflow completed, waiting for database update' };
+                        }
+                    }
+                    
+                    console.log('C workflow triggered, received response:', parsed);
+                    return parsed;
+                } catch (jsonError) {
+                    console.log('C workflow triggered, received non-JSON response:', text.substring(0, 100));
+                    return { status: 'triggered', message: text };
+                }
+            } catch (error) {
+                if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+                    throw new Error('C workflow connection failed, please check network and n8n service status');
+                }
+                throw error;
+            }
+        }
+
+        async function handleFormSubmit() {
+            if (isProcessing) return;
+            
+            if (!checkUrlConfig()) {
+                alert('Please configure n8n URL first! Modify the N8N_BASE_URL variable in the code to your actual n8n address.');
+                return;
+            }
+            
+            if (!selectedFramework) {
+                alert('Please select a research question framework first!');
+                return;
+            }
+            
+            const fields = frameworkFields[selectedFramework] || [];
+            const formData = {};
+            let allContent = [];
+            
+            fields.forEach(field => {
+                const fieldElement = document.getElementById(field.id);
+                if (fieldElement) {
+                    const value = fieldElement.value.trim();
+                    formData[field.id] = value;
+                    if (value) {
+                        allContent.push(`${field.label}:\n${value}`);
+                    }
+                }
+            });
+            
+            if (allContent.length === 0) {
+                alert('Please fill in at least one framework component!');
+                return;
+            }
+            
+            frameworkData = allContent.join('\n\n');
+            
+            setFormDisabled(true);
+            isCancelled = false; // Reset cancellation flag
+            showLoading('Organizing research question...');
+            
+            try {
+                const response = await callWorkflowA(sessionId, selectedFramework, frameworkData);
+                
+                const finalQuestion = response?.final_question || response?.reply || '';
+                
+                if (finalQuestion) {
+                    workflowResults['A'] = {
+                        final_question: finalQuestion,
+                        framework: selectedFramework,
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    showResultInChat(finalQuestion);
+                    updateProgress('A', 'Research question framework confirmation completed');
+                    markStepCompleted('A');
+                    
+                    const continueButtonContainer = document.getElementById('continue-button-container');
+                    if (continueButtonContainer) {
+                        continueButtonContainer.classList.remove('hidden');
+                    }
+                } else {
+                    alert('Generation failed: Final research question not found. Please check n8n workflow configuration.');
+                }
+            } catch (error) {
+                console.error('Submission failed:', error);
+                let errorMsg = error.message;
+                if (errorMsg.includes('Unable to connect to server')) {
+                    errorMsg += '\n\nConfiguration tip: Please modify N8N_BASE_URL in the code to your actual n8n address.';
+                }
+                alert('Submission failed: ' + errorMsg);
+            } finally {
+                setFormDisabled(false);
+                hideLoading();
+            }
+        }
+
+        function showResultInChat(finalQuestion) {
+            if (formContainerWrapper) {
+                formContainerWrapper.classList.add('hidden');
+            }
+            
+            let chatContainerWrapper = document.getElementById('chat-container-wrapper');
+            if (!chatContainerWrapper) {
+                const middleArea = document.querySelector('.lg\\:col-span-4');
+                if (middleArea) {
+                    chatContainerWrapper = document.createElement('div');
+                    chatContainerWrapper.id = 'chat-container-wrapper';
+                    chatContainerWrapper.className = 'chat-area flex flex-col overflow-y-auto';
+                    chatContainerWrapper.style.maxHeight = 'calc(100vh - 64px - 4rem)';
+                    chatContainerWrapper.innerHTML = `
+                        <div class="chat-container p-6 rounded-t-2xl flex-1 overflow-y-auto" id="chat-container" style="min-height: 0;"></div>
+                    `;
+                    middleArea.appendChild(chatContainerWrapper);
+                }
+            }
+            
+            if (chatContainerWrapper) {
+                chatContainerWrapper.classList.remove('hidden');
+                const chatContainer = document.getElementById('chat-container');
+                if (chatContainer) {
+                    chatContainer.innerHTML = '';
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'message mb-6';
+                    const formattedContent = formatTextForDisplay(`Research question has been organized:\n\n${finalQuestion}`);
+                    messageDiv.innerHTML = `
+                        <div class="flex items-start space-x-4">
+                            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-robot text-white text-sm"></i>
+                            </div>
+                            <div class="bg-blue-50 rounded-2xl p-4 message-bubble">
+                                <p class="text-gray-800 leading-relaxed" style="font-size: 0.8125rem;">${formattedContent}</p>
+                            </div>
+                        </div>
+                    `;
+                    chatContainer.appendChild(messageDiv);
+                    scrollToBottom();
+                } else {
+                    console.error('chat-container element not found');
+                }
+            }
+        }
+
+        async function viewStepResult(step) {
+            let result = workflowResults[step];
+            
+            if (!result && step === 'C') {
+                try {
+                    const sessionData = await loadSessionData(sessionId);
+                    const cResult = sessionData?.research_proposal || 
+                                   sessionData?.protocol_markdown || 
+                                   sessionData?.chapters;
+                    if (sessionData && cResult) {
+                        result = {
+                            protocol_markdown: sessionData.research_proposal || sessionData.protocol_markdown,
+                            chapters: sessionData.chapters
+                        };
+                        workflowResults['C'] = result;
+                    }
+                } catch (e) {
+                    console.error('从数据库加载C阶段结果失败:', e);
+                }
+            }
+            
+            if (!result) {
+                if (step === 'A') {
+                    alert('This step has not been completed yet, unable to view results.');
+                } else {
+                    alert('This step has not been executed yet, unable to view results.');
+                }
+                return;
+            }
+            
+            if (step === 'A') {
+                showResultInChat(result.final_question);
+            } else if (step === 'C') {
+                await displayFinalResult(result);
+            } else {
+                const chatContainerWrapper = document.getElementById('chat-container-wrapper');
+                if (chatContainerWrapper) {
+                    chatContainerWrapper.classList.remove('hidden');
+                    const chatContainer = document.getElementById('chat-container');
+                    if (chatContainer) {
+                        chatContainer.innerHTML = '';
+                        addAssistantMessage(`${getStepName(step)} completed`);
+                    }
+                }
+            }
+        }
+        
+        function getStepName(step) {
+            const names = {
+                'A': 'Research Question Framework Confirmation',
+                'B1': 'Study Design Information Storage',
+                'B2': 'Statistical Analysis Plan Storage',
+                'B3': 'Validation and Dissemination Information Storage',
+                'C': 'Agent-Generated Protocol Writing'
+            };
+            return names[step] || step;
+        }
+        
+        function getCompletedSteps() {
+            const completed = [];
+            if (workflowResults['A'] && workflowResults['A'].status !== 'failed') {
+                completed.push('1. Research Question Framework Confirmation');
+            }
+            if (workflowResults['B1'] && workflowResults['B1'].status === 'completed') {
+                completed.push('2. Study Design Information Storage');
+            }
+            if (workflowResults['B2'] && workflowResults['B2'].status === 'completed') {
+                completed.push('3. Statistical Analysis Plan Storage');
+            }
+            if (workflowResults['B3'] && workflowResults['B3'].status === 'completed') {
+                completed.push('4. Validation and Dissemination Information Storage');
+            }
+            if (workflowResults['C'] && (workflowResults['C'].status === 'completed' || workflowResults['C'].protocol_markdown || workflowResults['C'].chapters)) {
+                completed.push('5. Agent-Generated Protocol Writing');
+            }
+            return completed.length > 0 ? completed.join(', ') : 'None';
+        }
+
+        async function startAutoWorkflows() {
+            const continueButtonContainer = document.getElementById('continue-button-container');
+            if (continueButtonContainer) {
+                continueButtonContainer.classList.add('hidden');
+            }
+            
+            isProcessing = true;
+            isCancelled = false; // Reset cancellation flag
+            shouldStopWaiting = false; 
+            showLoading('Auto-processing...');
+            
+            try {
+                const startStep = getFirstIncompleteStep();
+                
+                if (startStep === 'B1' || !workflowResults['B1'] || workflowResults['B1'].status !== 'completed') {
+                try {
+                await callWorkflowB1(sessionId);
+                    workflowResults['B1'] = { status: 'completed', timestamp: new Date().toISOString() };
+                markStepCompleted('B1');
+                addAssistantMessage('Study design information storage completed');
+                } catch (error) {
+                    console.error('B1 workflow failed:', error);
+                    failedWorkflow = 'B1';
+                    markStepFailed('B1');
+                    workflowResults['B1'] = { 
+                        status: 'failed', 
+                        error: error.message || 'Unknown error',
+                        timestamp: new Date().toISOString() 
+                    };
+                    // Don't add error message here to avoid duplicates, let outer catch handle it
+                    // Page will be refreshed by outer catch to show retry button
+                    throw error; 
+                    }
+                }
+                
+                if (startStep === 'B1' || startStep === 'B2' || !workflowResults['B2'] || workflowResults['B2'].status !== 'completed') {
+                try {
+                await callWorkflowB2(sessionId);
+                    workflowResults['B2'] = { status: 'completed', timestamp: new Date().toISOString() };
+                markStepCompleted('B2');
+                addAssistantMessage('Statistical analysis plan storage completed');
+                } catch (error) {
+                    console.error('B2 workflow failed:', error);
+                    failedWorkflow = 'B2';
+                    markStepFailed('B2');
+                    workflowResults['B2'] = { 
+                        status: 'failed', 
+                        error: error.message || 'Unknown error',
+                        timestamp: new Date().toISOString() 
+                    };
+                    // Don't add error message here to avoid duplicates, let outer catch handle it
+                    // Page will be refreshed by outer catch to show retry button
+                    throw error; 
+                    }
+                }
+                
+                if (startStep === 'B1' || startStep === 'B2' || startStep === 'B3' || !workflowResults['B3'] || workflowResults['B3'].status !== 'completed') {
+                try {
+                await callWorkflowB3(sessionId);
+                    workflowResults['B3'] = { status: 'completed', timestamp: new Date().toISOString() };
+                markStepCompleted('B3');
+                addAssistantMessage('Validation and dissemination information storage completed');
+                } catch (error) {
+                    console.error('B3 workflow failed:', error);
+                    failedWorkflow = 'B3';
+                    markStepFailed('B3');
+                    workflowResults['B3'] = { 
+                        status: 'failed', 
+                        error: error.message || 'Unknown error',
+                        timestamp: new Date().toISOString() 
+                    };
+                    // Don't add error message here to avoid duplicates, let outer catch handle it
+                    // Page will be refreshed by outer catch to show retry button
+                    throw error; 
+                    }
+                }
+                
+                const cResult = workflowResults['C'];
+                const isCCompleted = cResult && (
+                    cResult.status === 'completed' || 
+                    cResult.protocol_markdown || 
+                    cResult.chapters
+                );
+                
+                if (startStep === 'B1' || startStep === 'B2' || startStep === 'B3' || startStep === 'C' || !isCCompleted) {
+                try {
+                    updateProgress('C', 'Generating agent-generated protocol...');
+                    try {
+                        const cResponse = await callWorkflowC(sessionId);
+                        
+                        if (cResponse && (cResponse.protocol_markdown || cResponse.chapters)) {
+                            workflowResults['C'] = cResponse;
+                            markStepCompleted('C');
+                            addAssistantMessage('Agent-generated protocol generation completed!');
+                            await displayFinalResult(cResponse);
+                        } else {
+                            addAssistantMessage('Stage C triggered: Backend is writing complete agent-generated protocol, this process may take several tens of minutes, please be patient.');
+                            
+                            updateProgress('C', 'Waiting for agent-generated protocol generation to complete... (Checking every 5 seconds)');
+                            try {
+                                const result = await waitForProtocolResult(sessionId, 360, 5); 
+                                workflowResults['C'] = result;
+                                markStepCompleted('C');
+                                addAssistantMessage('Agent-generated protocol generation completed!');
+                                await displayFinalResult(result);
+                            } catch (e) {
+                                shouldStopWaiting = true; 
+                                throw e;
+                            }
+                        }
+                    } catch (e) {
+                        shouldStopWaiting = true; 
+                        throw e;
+                    }
+                } catch (error) {
+                    console.error('Stage C execution failed:', error);
+                        shouldStopWaiting = true; 
+                    failedWorkflow = 'C';
+                    markStepFailed('C');
+                    workflowResults['C'] = { 
+                        status: 'failed', 
+                        error: error.message || 'Unknown error',
+                        timestamp: new Date().toISOString() 
+                    };
+                    // Don't add error message here to avoid duplicates, let outer catch handle it
+                    // Page will be refreshed by outer catch to show retry button
+                    throw error;
+                    }
+                }
+                
+            } catch (error) {
+                console.error('Auto-workflow failed:', error);
+                shouldStopWaiting = true; 
+                
+                // Check if error is due to user cancellation
+                const isCancelledError = error.message && error.message.includes('cancelled by user');
+                
+                if (isCancelledError) {
+                    console.log('Workflow was cancelled by user, showing continue button');
+                    // Don't mark as failed, just show continue button
+                    const continueButtonContainer = document.getElementById('continue-button-container');
+                    if (continueButtonContainer) {
+                        continueButtonContainer.classList.remove('hidden');
+                    }
+                    return;
+                }
+                
+                // This is a real error, not a cancellation
+                if (!failedWorkflow) {
+                    const errorMessage = error.message || 'Unknown error';
+                    if (errorMessage.includes('B1') || errorMessage.includes('Study design information')) {
+                        failedWorkflow = 'B1';
+                    } else if (errorMessage.includes('B2') || errorMessage.includes('Statistical analysis plan')) {
+                        failedWorkflow = 'B2';
+                    } else if (errorMessage.includes('B3') || errorMessage.includes('Validation and dissemination')) {
+                        failedWorkflow = 'B3';
+                    } else if (errorMessage.includes('C workflow') || errorMessage.includes('C') || errorMessage.includes('agent-generated protocol')) {
+                        failedWorkflow = 'C';
+                    } else {
+                        const startStep = getFirstIncompleteStep();
+                        failedWorkflow = startStep || 'B1';
+                    }
+                }
+                
+                if (failedWorkflow) {
+                    if (!workflowResults[failedWorkflow]) {
+                        workflowResults[failedWorkflow] = {};
+                    }
+                    workflowResults[failedWorkflow].status = 'failed';
+                    workflowResults[failedWorkflow].error = error.message || 'Unknown error';
+                    workflowResults[failedWorkflow].timestamp = new Date().toISOString();
+                    markStepFailed(failedWorkflow);
+
+                    // Always display error in chat so the user can see n8n errors clearly (only once)
+                    const errorMsg = `${getStepName(failedWorkflow)} execution failed: ${error.message || 'Unknown error'}`;
+                    addErrorMessage(errorMsg);
+                    
+                    // Refresh page to automatically show retry button via loadSessionById
+                    // Save error info so it can be displayed after refresh
+                    console.log('Outer catch: workflow failed, refreshing page to show retry button...');
+                    refreshPageOnError(failedWorkflow, errorMsg);
+                } else {
+                    console.warn('Outer catch: failedWorkflow not set, cannot refresh. Error message:', error.message);
+                }
+                
+                const continueButtonContainer = document.getElementById('continue-button-container');
+                if (continueButtonContainer) {
+                    continueButtonContainer.classList.add('hidden');
+                }
+            } finally {
+                isProcessing = false;
+                shouldStopWaiting = false; 
+                if (abortController) {
+                    abortController.abort();
+                    abortController = null;
+                }
+                hideLoading();
+            }
+        }
+        
+        function getFirstIncompleteStep() {
+            if (!workflowResults['B1'] || workflowResults['B1'].status !== 'completed') {
+                return 'B1';
+            }
+            if (!workflowResults['B2'] || workflowResults['B2'].status !== 'completed') {
+                return 'B2';
+            }
+            if (!workflowResults['B3'] || workflowResults['B3'].status !== 'completed') {
+                return 'B3';
+            }
+            const cResult = workflowResults['C'];
+            if (!cResult || 
+                (cResult.status !== 'completed' && 
+                 !cResult.protocol_markdown && 
+                 !cResult.chapters)) {
+                return 'C';
+            }
+            return null;
+        }
+        
+        async function retryFailedWorkflow() {
+            if (!failedWorkflow) {
+                alert('No failed workflow detected');
+                return;
+            }
+            
+            const currentFailedWorkflow = failedWorkflow;
+            
+            const retryButtonContainer = document.getElementById('retry-button-container');
+            if (retryButtonContainer) {
+                retryButtonContainer.classList.add('hidden');
+            }
+            
+            isProcessing = true;
+            isCancelled = false; // Reset cancellation flag
+            showLoading(`Re-executing ${getStepName(currentFailedWorkflow)}...`);
+            
+            try {
+                let result;
+                switch (currentFailedWorkflow) {
+                    case 'B1':
+                        result = await callWorkflowB1(sessionId);
+                        workflowResults['B1'] = { status: 'completed', timestamp: new Date().toISOString() };
+                        markStepCompleted('B1');
+                        addAssistantMessage('Study design information storage completed');
+                        failedWorkflow = null; 
+                        const continueButtonContainer = document.getElementById('continue-button-container');
+                        if (continueButtonContainer) {
+                            continueButtonContainer.classList.remove('hidden');
+                        }
+                        break;
+                    case 'B2':
+                        result = await callWorkflowB2(sessionId);
+                        workflowResults['B2'] = { status: 'completed', timestamp: new Date().toISOString() };
+                        markStepCompleted('B2');
+                        addAssistantMessage('Statistical analysis plan storage completed');
+                        failedWorkflow = null; 
+                        const continueBtn = document.getElementById('continue-button-container');
+                        if (continueBtn) {
+                            continueBtn.classList.remove('hidden');
+                        }
+                        break;
+                    case 'B3':
+                        result = await callWorkflowB3(sessionId);
+                        workflowResults['B3'] = { status: 'completed', timestamp: new Date().toISOString() };
+                        markStepCompleted('B3');
+                        addAssistantMessage('Validation and dissemination information storage completed');
+                        failedWorkflow = null; 
+                        const contBtn = document.getElementById('continue-button-container');
+                        if (contBtn) {
+                            contBtn.classList.remove('hidden');
+                        }
+                        break;
+                    case 'C':
+                        updateProgress('C', 'Regenerating agent-generated protocol...');
+                        shouldStopWaiting = false; 
+                        try {
+                            result = await callWorkflowC(sessionId);
+                            
+                            if (result && (result.protocol_markdown || result.chapters)) {
+                                workflowResults['C'] = result;
+                                markStepCompleted('C');
+                                addAssistantMessage('Agent-generated protocol generation completed!');
+                                await displayFinalResult(result);
+                                failedWorkflow = null; 
+                            } else {
+                                addAssistantMessage('Stage C triggered: Backend is writing complete agent-generated protocol, this process may take several tens of minutes, please be patient.');
+                                
+                                updateProgress('C', 'Waiting for agent-generated protocol generation results... (Checking every 5 seconds)');
+                                try {
+                                    result = await waitForProtocolResult(sessionId, 360, 5); 
+                                    workflowResults['C'] = result;
+                                    markStepCompleted('C');
+                                    addAssistantMessage('Agent-generated protocol generation completed!');
+                                    await displayFinalResult(result);
+                                    failedWorkflow = null; 
+                                } catch (e) {
+                                    shouldStopWaiting = true; 
+                                    throw e;
+                                }
+                            }
+                        } catch (e) {
+                            shouldStopWaiting = true; 
+                            throw e; 
+                        }
+                        break;
+                }
+            } catch (error) {
+                console.error('Retry failed:', error);
+                const errorMessage = error.message || 'Unknown error';
+                
+                // Check if error is due to user cancellation
+                const isCancelledError = errorMessage.includes('cancelled by user');
+                
+                if (isCancelledError) {
+                    console.log('Retry was cancelled by user, showing continue button');
+                    // Mark as cancelled, not failed
+                    workflowResults[currentFailedWorkflow].status = 'cancelled';
+                    workflowResults[currentFailedWorkflow].error = 'Cancelled by user';
+                    workflowResults[currentFailedWorkflow].timestamp = new Date().toISOString();
+                    
+                    // Show continue button
+                    const continueButtonContainer = document.getElementById('continue-button-container');
+                    if (continueButtonContainer) {
+                        continueButtonContainer.classList.remove('hidden');
+                    }
+                    return;
+                }
+                
+                addErrorMessage(`Retry failed: ${errorMessage}. Please check network connection or contact administrator.`);
+                
+                let failedStep = currentFailedWorkflow;
+                if (errorMessage.includes('B1')) {
+                    failedStep = 'B1';
+                } else if (errorMessage.includes('B2')) {
+                    failedStep = 'B2';
+                } else if (errorMessage.includes('B3')) {
+                    failedStep = 'B3';
+                } else if (errorMessage.includes('C workflow') || errorMessage.includes('C')) {
+                    failedStep = 'C';
+                }
+                
+                failedWorkflow = failedStep;
+                markStepFailed(failedStep);
+                workflowResults[failedStep] = { 
+                    status: 'failed', 
+                    error: errorMessage,
+                    timestamp: new Date().toISOString() 
+                };
+                
+                showRetryButton();
+            } finally {
+                isProcessing = false;
+                if (abortController) {
+                    abortController.abort();
+                    abortController = null;
+                }
+                hideLoading();
+            }
+        }
+        
+        async function continueWorkflowsFrom(startStep) {
+            try {
+                if (startStep === 'B2') {
+                    await callWorkflowB2(sessionId);
+                    workflowResults['B2'] = { status: 'completed', timestamp: new Date().toISOString() };
+                    markStepCompleted('B2');
+                    addAssistantMessage('Statistical analysis plan storage completed');
+                    await continueWorkflowsFrom('B3');
+                } else if (startStep === 'B3') {
+                    await callWorkflowB3(sessionId);
+                    workflowResults['B3'] = { status: 'completed', timestamp: new Date().toISOString() };
+                    markStepCompleted('B3');
+                    addAssistantMessage('Validation and dissemination information storage completed');
+                    await continueWorkflowsFrom('C');
+                } else if (startStep === 'C') {
+                    updateProgress('C', 'Generating agent-generated protocol...');
+                    shouldStopWaiting = false; 
+                    try {
+                        const result = await callWorkflowC(sessionId);
+                        
+                        if (result && (result.protocol_markdown || result.chapters)) {
+                            workflowResults['C'] = result;
+                            markStepCompleted('C');
+                            addAssistantMessage('Agent-generated protocol generation completed!');
+                            displayFinalResult(result);
+                            failedWorkflow = null; 
+                        } else {
+                            addAssistantMessage('Stage C triggered: Backend is writing complete agent-generated protocol, this process may take several tens of minutes, please be patient.');
+                            
+                            updateProgress('C', 'Waiting for agent-generated protocol generation results... (Checking every 5 seconds)');
+                            try {
+                                const result = await waitForProtocolResult(sessionId, 360, 5); 
+                                workflowResults['C'] = result;
+                                markStepCompleted('C');
+                                addAssistantMessage('Agent-generated protocol generation completed!');
+                                await displayFinalResult(result);
+                                failedWorkflow = null; 
+                            } catch (e) {
+                                shouldStopWaiting = true; 
+                                throw e;
+                            }
+                        }
+                    } catch (e) {
+                        shouldStopWaiting = true; 
+                        throw e; 
+                    }
+                }
+            } catch (error) {
+                console.error(`Continuing from ${startStep} failed:`, error);
+                const errorMessage = error.message || 'Unknown error';
+                addErrorMessage(`${getStepName(startStep)} execution failed: ${errorMessage}. Please check network connection or contact administrator.`);
+                
+                failedWorkflow = startStep;
+                markStepFailed(startStep);
+                workflowResults[startStep] = { 
+                    status: 'failed', 
+                    error: errorMessage,
+                    timestamp: new Date().toISOString() 
+                };
+                
+                showRetryButton();
+                throw error; 
+            }
+        }
+        
+        function markStepFailed(stage) {
+            const step = document.querySelector(`[data-step="${stage}"]`);
+            if (step) {
+                step.classList.remove('step-active', 'step-pending', 'step-completed');
+                step.classList.add('step-failed');
+            }
+        }
+
+        function updateProgress(stage, statusText) {
+            currentStage = stage;
+            
+            const steps = document.querySelectorAll('.step-item');
+            steps.forEach(step => {
+                const stepData = step.getAttribute('data-step');
+                step.classList.remove('step-active', 'step-completed', 'step-pending');
+                
+                if (stepData === stage) {
+                    step.classList.add('step-active');
+                } else {
+                    const stageOrder = ['A', 'B1', 'B2', 'B3', 'C'];
+                    const currentIndex = stageOrder.indexOf(stage);
+                    const stepIndex = stageOrder.indexOf(stepData);
+                    
+                    if (stepIndex < currentIndex) {
+                        step.classList.add('step-completed');
+                    } else {
+                        step.classList.add('step-pending');
+                    }
+                }
+            });
+            
+            if (statusText) {
+                loadingText.textContent = statusText;
+            }
+        }
+
+        function markStepCompleted(stage) {
+            const step = document.querySelector(`[data-step="${stage}"]`);
+            if (step) {
+                step.classList.remove('step-active', 'step-pending');
+                step.classList.add('step-completed');
+            }
+        }
+
+        async function displayFinalResult(result) {
+            const chatContainerWrapper = document.getElementById('chat-container-wrapper');
+            if (chatContainerWrapper) {
+                chatContainerWrapper.classList.add('hidden');
+            }
+            resultArea.classList.remove('hidden');
+            hasDisplayedFinalResult = true;
+            
+            let protocolContent = '';
+            
+            if (result.protocol_markdown) {
+                protocolContent = typeof result.protocol_markdown === 'string' 
+                    ? result.protocol_markdown 
+                    : JSON.stringify(result.protocol_markdown, null, 2);
+            } else if (result.output && result.output.protocol_markdown) {
+                protocolContent = typeof result.output.protocol_markdown === 'string'
+                    ? result.output.protocol_markdown
+                    : JSON.stringify(result.output.protocol_markdown, null, 2);
+            } else if (result.chapters) {
+                protocolContent = formatChapters(result.chapters);
+            } else {
+                protocolContent = JSON.stringify(result, null, 2);
+            }
+            
+            const mathProtection = [];
+            let mathIdx = 0;
+            
+            protocolContent = protocolContent.replace(/\$\$([\s\S]+?)\$\$/g, (match) => {
+                const placeholder = `___PROTECTED_MATH_BLOCK_${mathIdx}___`;
+                mathProtection.push({ placeholder, content: match });
+                mathIdx++;
+                return placeholder;
+            });
+            
+            protocolContent = protocolContent.replace(/\$([^\$\n]+)\$/g, (match) => {
+                const placeholder = `___PROTECTED_MATH_INLINE_${mathIdx}___`;
+                mathProtection.push({ placeholder, content: match });
+                mathIdx++;
+                return placeholder;
+            });
+            
+            protocolContent = protocolContent.replace(/\\n/g, '\n')
+                                            .replace(/\\t/g, '\t')
+                                            .replace(/\\"/g, '"');
+            
+            mathProtection.forEach(({ placeholder, content }) => {
+                protocolContent = protocolContent.replace(placeholder, content);
+            });
+            
+            if (protocolContent.trim().startsWith('```markdown')) {
+                protocolContent = protocolContent.replace(/^```markdown\s*/, '')
+                                                .replace(/```\s*$/, '');
+            } else if (protocolContent.trim().startsWith('```')) {
+                protocolContent = protocolContent.replace(/^```\s*/, '')
+                                                .replace(/```\s*$/, '');
+            }
+            
+                console.log('Markdown content length to be rendered:', protocolContent.length);
+            console.log('First 500 characters:', protocolContent.substring(0, 500));
+            
+            const htmlContent = markdownToHtml(protocolContent);
+            resultContent.innerHTML = htmlContent;
+            
+            // 渲染数学公式
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                await MathJax.typesetPromise([resultContent])
+                    .catch(err => console.error('MathJax rendering failed:', err));
+            } else if (window.MathJax) {
+                // 如果 MathJax 还没加载完，等待一下
+                setTimeout(() => {
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        MathJax.typesetPromise([resultContent])
+                            .catch(err => console.error('MathJax rendering failed:', err));
+                    }
+                }, 1000);
+            }
+            
+            // resultArea.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function formatChapters(chapters) {
+            if (!Array.isArray(chapters)) return '';
+            
+            return chapters.map(ch => {
+                let content = `# ${ch.title}\n\n${ch.content_md_main || ''}`;
+                if (ch.content_md_appendix) {
+                    content += `\n\n${ch.content_md_appendix}`;
+                }
+                return content;
+            }).join('\n\n---\n\n');
+        }
+
+        function markdownToHtml(markdown) {
+            if (!markdown) return '';
+            
+            if (window.marked) {
+                try {
+                    marked.setOptions({
+                        gfm: true,
+                        breaks: true,
+                        headerIds: false,
+                        mangle: false,
+                        smartLists: true,
+                        smartypants: false  
+                    });
+                    
+                    const mathPlaceholders = [];
+                    let mathIndex = 0;
+                    
+                    let protectedMarkdown = markdown.replace(/\$([^\$\n]+)\$/g, (match) => {
+                        const placeholder = `<!--MATHFORMULA${mathIndex}-->`;
+                        mathPlaceholders.push({ placeholder, content: match });
+                        mathIndex++;
+                        return placeholder;
+                    });
+                    
+                    protectedMarkdown = protectedMarkdown.replace(/\$\$([\s\S]+?)\$\$/g, (match) => {
+                        const placeholder = `<!--MATHFORMULA${mathIndex}-->`;
+                        mathPlaceholders.push({ placeholder, content: match });
+                        mathIndex++;
+                        return placeholder;
+                    });
+                    
+                    let html = marked.parse(protectedMarkdown);
+                    
+                    mathPlaceholders.forEach(({ placeholder, content }) => {
+                        html = html.replace(new RegExp(placeholder, 'g'), content);
+                    });
+                    
+                    return html;
+                } catch (err) {
+                    console.warn('Marked rendering failed, using fallback parser.', err);
+                }
+            }
+            
+            if (markdown.trim().startsWith('<')) {
+                return markdown;
+            }
+            
+            let html = markdown;
+            
+            const mathPlaceholders = [];
+            let mathIndex = 0;
+            
+            html = html.replace(/\$([^\$\n]+)\$/g, (match, formula) => {
+                const placeholder = `__MATH_INLINE_${mathIndex}__`;
+                mathPlaceholders[mathIndex] = match;
+                mathIndex++;
+                return placeholder;
+            });
+            
+            html = html.replace(/\$\$([\s\S]+?)\$\$/g, (match, formula) => {
+                const placeholder = `__MATH_BLOCK_${mathIndex}__`;
+                mathPlaceholders[mathIndex] = match;
+                mathIndex++;
+                return placeholder;
+            });
+            
+            html = html.replace(/&/g, '&amp;')
+                      .replace(/</g, '&lt;')
+                      .replace(/>/g, '&gt;');
+            
+            html = html.replace(/```([\s\S]*?)```/g, function(match, code) {
+                return '<pre><code>' + code.trim() + '</code></pre>';
+            });
+            
+            html = html.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+            
+            html = html.replace(/^###### (.*$)/gm, '<h6>$1</h6>');
+            html = html.replace(/^##### (.*$)/gm, '<h5>$1</h5>');
+            html = html.replace(/^#### (.*$)/gm, '<h4>$1</h4>');
+            html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+            html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+            html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+            
+            html = html.replace(/^---$/gm, '<hr>');
+            html = html.replace(/^\*\*\*$/gm, '<hr>');
+            
+            html = html.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>');
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            
+            html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+            
+            html = html.replace(/^(\d+)\.\s+(.*)$/gm, function(match, num, content) {
+                return '<li>' + content + '</li>';
+            });
+            
+            html = html.replace(/^[\*\-\+]\s+(.*)$/gm, '<li>$1</li>');
+            
+            html = html.replace(/(<li>.*<\/li>\n?)+/g, function(match) {
+                if (match.match(/^\d+\./)) {
+                    return '<ol>' + match + '</ol>';
+                }
+                return '<ul>' + match + '</ul>';
+            });
+            
+            const lines = html.split('\n\n');
+            html = lines.map(para => {
+                para = para.trim();
+                if (!para) return '';
+                if (para.match(/^<(h[1-6]|p|ul|ol|li|pre|code|hr|a|strong|em)/)) {
+                    return para;
+                }
+                if (para.startsWith('<ul>') || para.startsWith('<ol>')) {
+                    return para;
+                }
+                return '<p>' + para + '</p>';
+            }).join('\n');
+            
+            html = html.replace(/<pre><code>([\s\S]*?)<\/code><\/pre>/g, function(match, code) {
+                const unescaped = code.replace(/&lt;/g, '<')
+                                     .replace(/&gt;/g, '>')
+                                     .replace(/&amp;/g, '&');
+                return '<pre><code>' + unescaped + '</code></pre>';
+            });
+            
+            html = html.replace(/<code>([^<]+)<\/code>/g, function(match, code) {
+                const unescaped = code.replace(/&lt;/g, '<')
+                                     .replace(/&gt;/g, '>')
+                                     .replace(/&amp;/g, '&');
+                return '<code>' + unescaped + '</code>';
+            });
+            
+            mathPlaceholders.forEach((formula, index) => {
+                html = html.replace(`__MATH_INLINE_${index}__`, formula);
+                html = html.replace(`__MATH_BLOCK_${index}__`, formula);
+            });
+            
+            return html;
+        }
+
+        async function downloadMarkdown() {
+            try {
+                const cResult = workflowResults['C'];
+                let markdownContent = '';
+                
+                if (cResult) {
+                    if (cResult.protocol_markdown) {
+                        markdownContent = typeof cResult.protocol_markdown === 'string' 
+                            ? cResult.protocol_markdown 
+                            : JSON.stringify(cResult.protocol_markdown, null, 2);
+                    } else if (cResult.chapters) {
+                        markdownContent = formatChapters(cResult.chapters);
+                    } else {
+                        const sessionData = await loadSessionData(sessionId);
+                        const dbResult = sessionData?.research_proposal || 
+                                        sessionData?.protocol_markdown || 
+                                        sessionData?.chapters;
+                        if (sessionData && dbResult) {
+                            if (typeof dbResult === 'string') {
+                                markdownContent = dbResult;
+                            } else if (sessionData.chapters) {
+                                markdownContent = formatChapters(sessionData.chapters);
+                            }
+                        }
+                    }
+                }
+                
+                if (!markdownContent) {
+                    alert('Agent-generated protocol content not found, please generate protocol first');
+                    return;
+                }
+                
+                markdownContent = markdownContent.replace(/\\n/g, '\n')
+                                                .replace(/\\t/g, '\t')
+                                                .replace(/\\"/g, '"');
+                
+                if (markdownContent.trim().startsWith('```markdown')) {
+                    markdownContent = markdownContent.replace(/^```markdown\s*/, '')
+                                                    .replace(/```\s*$/, '');
+                } else if (markdownContent.trim().startsWith('```')) {
+                    markdownContent = markdownContent.replace(/^```\s*/, '')
+                                                    .replace(/```\s*$/, '');
+                }
+                
+                const blob = new Blob([markdownContent], { type: 'text/markdown;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Agent_Generated_Protocol_${sessionId}_${new Date().toISOString().split('T')[0]}.md`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            } catch (error) {
+                console.error('Markdown download failed:', error);
+                alert('Markdown download failed: ' + error.message);
+            }
+        }
+
+        async function downloadProtocol() {
+            try {
+                    let htmlContent = resultContent.innerHTML;
+                
+                const fullHtml = `<!DOCTYPE html>
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+    <meta charset="UTF-8">
+    <meta name="ProgId" content="Word.Document">
+    <meta name="Generator" content="Microsoft Word">
+    <meta name="Originator" content="Microsoft Word">
+    <xml>
+        <w:WordDocument>
+            <w:View>Print</w:View>
+            <w:Zoom>90</w:Zoom>
+        </w:WordDocument>
+    </xml>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+        body {
+            font-family: '宋体', SimSun, serif;
+            font-size: 12pt;
+            line-height: 1.8;
+        }
+        h1 {
+            font-family: '宋体', SimSun, serif;
+            font-size: 18pt;
+            font-weight: bold;
+            margin-top: 18pt;
+            margin-bottom: 12pt;
+            text-align: left;
+        }
+        h2 {
+            font-family: '宋体', SimSun, serif;
+            font-size: 16pt;
+            font-weight: bold;
+            margin-top: 14pt;
+            margin-bottom: 8pt;
+            text-align: left;
+        }
+        h3 {
+            font-family: '宋体', SimSun, serif;
+            font-size: 14pt;
+            font-weight: bold;
+            margin-top: 10pt;
+            margin-bottom: 6pt;
+            text-align: left;
+        }
+        h4 {
+            font-family: '宋体', SimSun, serif;
+            font-size: 13pt;
+            font-weight: bold;
+            margin-top: 8pt;
+            margin-bottom: 4pt;
+            text-align: left;
+        }
+        p {
+            font-family: '宋体', SimSun, serif;
+            font-size: 12pt;
+            text-align: left;
+            text-indent: 0em;
+            margin-bottom: 8pt;
+            line-height: 1.8;
+        }
+        ul, ol {
+            font-family: '宋体', SimSun, serif;
+            font-size: 12pt;
+            margin-left: 30pt;
+            margin-bottom: 8pt;
+            padding-left: 10pt;
+        }
+        li {
+            font-family: '宋体', SimSun, serif;
+            font-size: 12pt;
+            margin-bottom: 4pt;
+            line-height: 1.8;
+        }
+        table {
+            font-family: '宋体', SimSun, serif;
+            font-size: 12pt;
+            border-collapse: collapse;
+            width: 100%;
+            margin: 12pt 0;
+            border: 1pt solid black;
+        }
+        th {
+            font-family: '宋体', SimSun, serif;
+            font-size: 12pt;
+            font-weight: bold;
+            border: 1pt solid black;
+            padding: 6pt 8pt;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+        td {
+            font-family: '宋体', SimSun, serif;
+            font-size: 12pt;
+            border: 1pt solid black;
+            padding: 6pt 8pt;
+            vertical-align: top;
+        }
+        code {
+            font-family: 'Courier New', monospace;
+            font-size: 10pt;
+            background-color: #f5f5f5;
+            padding: 2pt 4pt;
+        }
+        pre {
+            font-family: 'Courier New', monospace;
+            font-size: 10pt;
+            background-color: #f5f5f5;
+            padding: 8pt;
+            border: 1pt solid #ddd;
+            margin: 8pt 0;
+        }
+        strong {
+            font-weight: bold;
+        }
+        em {
+            font-style: italic;
+        }
+        hr {
+            border: none;
+            border-top: 1pt solid #333;
+            margin: 12pt 0;
+        }
+    </style>
+</head>
+<body>
+${htmlContent}
+</body>
+</html>`;
+                
+                const blob = new Blob(['\ufeff' + fullHtml], { 
+                    type: 'application/msword;charset=utf-8' 
+                });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Agent_Generated_Protocol_${sessionId}_${new Date().toISOString().split('T')[0]}.doc`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            } catch (error) {
+                console.error('Word document generation failed:', error);
+            const content = resultContent.innerText;
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Agent_Generated_Protocol_${sessionId}_${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+                alert('Word document generation failed, downloaded as text file. Error: ' + error.message);
+            }
+        }
+
+        function setFormDisabled(disabled) {
+            if (researchForm) {
+                const inputs = researchForm.querySelectorAll('input, textarea, button[type="submit"]');
+                inputs.forEach(input => {
+                    input.disabled = disabled;
+                });
+            }
+            isProcessing = disabled;
+        }
+
+        function showLoading(text = 'Processing...') {
+            loadingText.textContent = text;
+            loadingIndicator.classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            loadingIndicator.classList.add('hidden');
+        }
+        
+        function cancelWorkflow() {
+            if (!isProcessing) {
+                return;
+            }
+            
+            const confirmed = confirm('Are you sure you want to cancel the current workflow? This will stop all ongoing processes.');
+            if (!confirmed) {
+                return;
+            }
+            
+            console.log('User has requested to cancel workflow');
+            isCancelled = true;
+            shouldStopWaiting = true;
+            
+            if (abortController) {
+                abortController.abort();
+                abortController = null;
+            }
+            
+            // Determine which workflow was running when cancelled
+            const runningStep = getFirstIncompleteStep();
+            if (runningStep) {
+                failedWorkflow = runningStep;
+                console.log('User cancelled during step:', runningStep);
+                
+                // Mark as cancelled (not failed)
+                if (!workflowResults[runningStep]) {
+                    workflowResults[runningStep] = {};
+                }
+                workflowResults[runningStep].status = 'cancelled';
+                workflowResults[runningStep].error = 'Cancelled by user';
+                workflowResults[runningStep].timestamp = new Date().toISOString();
+                
+                // Show continue button instead of retry button
+                const continueButtonContainer = document.getElementById('continue-button-container');
+                if (continueButtonContainer) {
+                    continueButtonContainer.classList.remove('hidden');
+                }
+                
+                const retryButtonContainer = document.getElementById('retry-button-container');
+                if (retryButtonContainer) {
+                    retryButtonContainer.classList.add('hidden');
+                }
+            }
+            
+            // Add a message to inform user
+            addAssistantMessage('⚠️ Workflow has been cancelled by user. Click "Continue with Subsequent Workflows" button to resume from where you stopped.');
+            
+            // Hide loading indicator
+            hideLoading();
+            isProcessing = false;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,604 @@
+{
+  "name": "Check Workflow Status",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "check-workflow-status",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "13bfee33-21fb-4485-b374-e4355c23f620",
+      "name": "Webhook - Check Status",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -2112,
+        80
+      ],
+      "webhookId": "check-workflow-status-webhook"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "sessionId",
+              "name": "sessionId",
+              "value": "={{ $json.body.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "workflowName",
+              "name": "workflowName",
+              "value": "={{ $json.body.workflowName }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "69873abb-8c9d-4dd4-a32e-fce58a40f942",
+      "name": "Prepare Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1888,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT\n  session_id,\n  workflow_b1_completed,\n  workflow_b2_completed,\n  workflow_b3_completed,\n  workflow_c_completed\nFROM public.conversation_sessions\nWHERE session_id = '${$json.sessionId}'\nLIMIT 1;",
+        "options": {}
+      },
+      "id": "dce5f704-5d0c-48e6-979f-4f31547e638a",
+      "name": "Query Database",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -1664,
+        80
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "uaHhgTOU0gtpkeQ6",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "check-b1",
+              "leftValue": "={{ $('Prepare Input').item.json.workflowName }}",
+              "rightValue": "B1",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "4c2bdf20-c4f6-49df-bcd2-439f76304797",
+      "name": "Check if B1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.1,
+      "position": [
+        -1440,
+        -208
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "check-b2",
+              "leftValue": "={{ $('Prepare Input').item.json.workflowName }}",
+              "rightValue": "B2",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "30ef34c7-6b16-45fe-9f7e-b526827b128a",
+      "name": "Check if B2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.1,
+      "position": [
+        -1216,
+        -16
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "check-b3",
+              "leftValue": "={{ $('Prepare Input').item.json.workflowName }}",
+              "rightValue": "B3",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "68061239-07d9-4627-9781-1819abee871e",
+      "name": "Check if B3",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.1,
+      "position": [
+        -992,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "status",
+              "name": "status",
+              "value": "={{ $('Query Database').item && $('Query Database').item.json && $('Query Database').item.json.workflow_b1_completed ? 'completed' : 'running' }}",
+              "type": "string"
+            },
+            {
+              "id": "workflowName",
+              "name": "workflowName",
+              "value": "={{ $('Prepare Input').item.json.workflowName }}",
+              "type": "string"
+            },
+            {
+              "id": "sessionId",
+              "name": "sessionId",
+              "value": "={{ $('Prepare Input').item.json.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "message",
+              "name": "message",
+              "value": "={{ $('Query Database').item && $('Query Database').item.json && $('Query Database').item.json.workflow_b1_completed ? 'B1 workflow completed' : 'B1 workflow running' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "173322c0-096c-4847-8ace-43232200bb91",
+      "name": "Check B1 Status",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -544,
+        -256
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "status",
+              "name": "status",
+              "value": "={{ $('Query Database').item && $('Query Database').item.json && $('Query Database').item.json.workflow_b2_completed ? 'completed' : 'running' }}",
+              "type": "string"
+            },
+            {
+              "id": "workflowName",
+              "name": "workflowName",
+              "value": "={{ $('Prepare Input').item.json.workflowName }}",
+              "type": "string"
+            },
+            {
+              "id": "sessionId",
+              "name": "sessionId",
+              "value": "={{ $('Prepare Input').item.json.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "message",
+              "name": "message",
+              "value": "={{ $('Query Database').item && $('Query Database').item.json && $('Query Database').item.json.workflow_b2_completed ? 'B2 workflow completed' : 'B2 workflow running' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2a65c03d-eda3-4c0d-a77a-b64a680164de",
+      "name": "Check B2 Status",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -544,
+        -64
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "status",
+              "name": "status",
+              "value": "={{ $('Query Database').item && $('Query Database').item.json && $('Query Database').item.json.workflow_b3_completed ? 'completed' : 'running' }}",
+              "type": "string"
+            },
+            {
+              "id": "workflowName",
+              "name": "workflowName",
+              "value": "={{ $('Prepare Input').item.json.workflowName }}",
+              "type": "string"
+            },
+            {
+              "id": "sessionId",
+              "name": "sessionId",
+              "value": "={{ $('Prepare Input').item.json.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "message",
+              "name": "message",
+              "value": "={{ $('Query Database').item && $('Query Database').item.json && $('Query Database').item.json.workflow_b3_completed ? 'B3 workflow completed' : 'B3 workflow running' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1a433bbf-07eb-4e77-8d67-e75a4dbecbf6",
+      "name": "Check B3 Status",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -544,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "check-c",
+              "leftValue": "={{ $('Prepare Input').item.json.workflowName }}",
+              "rightValue": "C",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "dd50ca6d-71d3-4188-9e60-75d2728483f8",
+      "name": "Check if C",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.1,
+      "position": [
+        -768,
+        416
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "status",
+              "name": "status",
+              "value": "={{ $('Query Database').item && $('Query Database').item.json && $('Query Database').item.json.workflow_c_completed ? 'completed' : 'running' }}",
+              "type": "string"
+            },
+            {
+              "id": "workflowName",
+              "name": "workflowName",
+              "value": "={{ $('Prepare Input').item.json.workflowName }}",
+              "type": "string"
+            },
+            {
+              "id": "sessionId",
+              "name": "sessionId",
+              "value": "={{ $('Prepare Input').item.json.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "message",
+              "name": "message",
+              "value": "={{ $('Query Database').item && $('Query Database').item.json && $('Query Database').item.json.workflow_c_completed ? 'C workflow completed' : 'C workflow running' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6f5e5da2-9b30-441e-8ad2-d660eef925f5",
+      "name": "Check C Status",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -544,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "status",
+              "name": "status",
+              "value": "error",
+              "type": "string"
+            },
+            {
+              "id": "workflowName",
+              "name": "workflowName",
+              "value": "={{ $('Prepare Input').item ? $('Prepare Input').item.json.workflowName : 'unknown' }}",
+              "type": "string"
+            },
+            {
+              "id": "sessionId",
+              "name": "sessionId",
+              "value": "={{ $('Prepare Input').item ? $('Prepare Input').item.json.sessionId : 'unknown' }}",
+              "type": "string"
+            },
+            {
+              "id": "message",
+              "name": "message",
+              "value": "Invalid workflow name, session does not exist, or database query failed",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ac408fee-97a0-4e3a-abef-2e4381ca1a8b",
+      "name": "Error Handling",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -544,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ status: $json.status, workflowName: $json.workflowName, sessionId: $json.sessionId, message: $json.message || ($json.status === 'completed' ? 'Workflow completed' : 'Workflow running') }) }}",
+        "options": {}
+      },
+      "id": "1e779e23-fe42-4156-bf49-45ea27ed4fa9",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -320,
+        128
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook - Check Status": {
+      "main": [
+        [
+          {
+            "node": "Prepare Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Input": {
+      "main": [
+        [
+          {
+            "node": "Query Database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Database": {
+      "main": [
+        [
+          {
+            "node": "Check if B1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check if B2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check if B3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if B1": {
+      "main": [
+        [
+          {
+            "node": "Check B1 Status",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check if B2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if B2": {
+      "main": [
+        [
+          {
+            "node": "Check B2 Status",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check if B3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if B3": {
+      "main": [
+        [
+          {
+            "node": "Check B3 Status",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check if C",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if C": {
+      "main": [
+        [
+          {
+            "node": "Check C Status",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Handling",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check C Status": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check B1 Status": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check B2 Status": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check B3 Status": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Handling": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "81ecbd6a-7620-4f3f-a55f-12e97ef7e97e",
+  "meta": {
+    "instanceId": "80ba165fc158dff2241db7d1bcd6321181a547103579dbd3779b72b2fd728028"
+  },
+  "id": "HZgl5BOJHDjctFle",
+  "tags": []
+}

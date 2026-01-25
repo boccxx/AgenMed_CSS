@@ -1,0 +1,1526 @@
+2026-01-18 23:19:20,525 - INFO - src.core.orchestrator - Initializing modules...
+2026-01-18 23:19:20,619 - INFO - src.core.orchestrator - Using dynamic contract extraction mode (no static configuration file)
+2026-01-18 23:19:20,619 - INFO - src.core.orchestrator - Using dynamic data semantics analysis (no static configuration file)
+2026-01-18 23:19:20,619 - INFO - src.core.orchestrator - AnalysisOrchestrator initialized
+2026-01-18 23:19:20,619 - INFO - api_server - Task 751c9dfc-e987-4851-9829-423a1ae6f912 log file: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/analysis_20260118_231920.log
+2026-01-18 23:19:20,619 - INFO - src.core.orchestrator - ============================================================
+2026-01-18 23:19:20,619 - INFO - src.core.orchestrator - Starting statistical analysis process...
+2026-01-18 23:19:20,619 - INFO - src.core.orchestrator - ============================================================
+2026-01-18 23:19:20,619 - INFO - src.core.orchestrator - Stage 1: Parse research protocol document, generate sub prompts
+2026-01-18 23:19:21,002 - INFO - src.core.orchestrator - Detected encoding: None (confidence: 0.00)
+2026-01-18 23:19:21,002 - WARNING - src.core.orchestrator - Low confidence encoding detection, trying common encodings
+2026-01-18 23:19:21,016 - INFO - src.core.orchestrator - Research framework: descriptive
+2026-01-18 23:19:21,016 - INFO - src.modules.document_processor - Starting to parse research plan document...
+2026-01-18 23:19:21,143 - INFO - src.modules.document_processor - Successfully read Word document: protocol.docx
+2026-01-18 23:19:21,143 - INFO - src.modules.data_profiler - Reading data file for analysis: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/01_uploads/data.csv
+2026-01-18 23:19:21,169 - INFO - src.modules.data_profiler - Data analysis completed: 23 variables
+2026-01-18 23:19:21,172 - INFO - src.modules.document_processor - Calling LLM to parse research plan...
+2026-01-18 23:19:21,172 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-18 23:19:27,066 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-18 23:26:10,056 - INFO - src.modules.llm_client - LLM response completed, time taken: 408.9 seconds
+2026-01-18 23:26:10,056 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 56716)
+2026-01-18 23:26:10,057 - INFO - src.modules.document_processor - LLM response saved to: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/_temp/llm_response_20260118_232610.txt
+2026-01-18 23:26:10,058 - INFO - src.modules.document_processor - LLM response length: 83746 characters
+2026-01-18 23:26:10,058 - INFO - src.modules.document_processor - LLM response first 500 characters: # Statistical Analysis Sub-Prompts Generation
+
+Based on the research protocol Section 7.0 and actual data variables, I will generate independent sub-prompt files for each numbered subsection.
+
+---
+
+## File: prompt_7.1_data_preparation_quality_control.md
+
+```markdown
+# Statistical Analysis Task: SAP 7.1 - Data Preparation and Quality Control
+
+## Core Statistical Methods
+2026-01-18 23:26:10,062 - INFO - src.modules.document_processor - Extracted 8 sub prompts
+2026-01-18 23:26:10,063 - INFO - src.modules.document_processor - Saved sub prompt: prompt_7.1_Data Preparation and Quality Control.md (section: 7.1)
+2026-01-18 23:26:10,063 - INFO - src.modules.document_processor - Saved sub prompt: prompt_7.2_Missing Data Handling.md (section: 7.2)
+2026-01-18 23:26:10,063 - INFO - src.modules.document_processor - Saved sub prompt: prompt_7.3_Descriptive Statistics (Table 1).md (section: 7.3)
+2026-01-18 23:26:10,063 - INFO - src.modules.document_processor - Saved sub prompt: prompt_7.4_Bivariate Exploratory Analysis.md (section: 7.4)
+2026-01-18 23:26:10,064 - INFO - src.modules.document_processor - Saved sub prompt: prompt_7.5_Multivariable Modeling and Diagnostics.md (section: 7.5)
+2026-01-18 23:26:10,064 - INFO - src.modules.document_processor - Saved sub prompt: prompt_7.6_Interaction and Effect Modification Analysis.md (section: 7.6)
+2026-01-18 23:26:10,064 - INFO - src.modules.document_processor - Saved sub prompt: prompt_7.7_Dose-Response Relationship Analysis.md (section: 7.7)
+2026-01-18 23:26:10,064 - INFO - src.modules.document_processor - Saved sub prompt: prompt_7.8_Sensitivity Analysis.md (section: 7.8)
+2026-01-18 23:26:10,064 - INFO - src.modules.document_processor - Successfully generated 8 sub prompt files
+2026-01-18 23:26:10,065 - INFO - src.core.orchestrator - Successfully generated 8 sub prompts
+2026-01-18 23:26:10,065 - INFO - src.core.orchestrator - Stage 2: Process each analysis module
+2026-01-18 23:26:10,065 - INFO - src.core.orchestrator - 
+============================================================
+2026-01-18 23:26:10,065 - INFO - src.core.orchestrator - Stage 1/8: 7.1 - Data Preparation and Quality Control
+2026-01-18 23:26:10,065 - INFO - src.core.orchestrator - Current data path: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/01_uploads/data.csv
+2026-01-18 23:26:10,065 - INFO - src.core.orchestrator - ============================================================
+2026-01-18 23:26:10,065 - INFO - src.core.orchestrator - [7.1] Extract dynamic contract...
+2026-01-18 23:26:10,066 - INFO - src.modules.contract_extractor - Extract method contracts from sub prompt: 7.1 - Required methods=0, Alternative method groups=0, Recommended methods=0, Files=0
+2026-01-18 23:26:10,066 - INFO - src.core.orchestrator - [7.1] Dynamic contract: methods={}, recommended files=[]
+2026-01-18 23:26:10,066 - INFO - src.core.orchestrator - [7.1] Generate R code...
+2026-01-18 23:26:10,066 - INFO - src.modules.code_generator - Generating R code for /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/_temp/prompt_7.1_Data Preparation and Quality Control.md...
+2026-01-18 23:26:10,066 - INFO - src.modules.data_profiler - Using cached data profile: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/01_uploads/data.csv
+2026-01-18 23:26:10,078 - INFO - src.modules.code_generator - Current stage data snapshot:
+Current stage data snapshot (/Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/01_uploads/data.csv)
+- Sample size: 1265 rows
+- Number of variables: 23 columns
+
+Available variables (only use these):
+  - Gender: object, 2 levels → ['Female', 'Male']
+  - Age: int64, continuous variable
+  - BMI: float64, continuous variable
+  - Self_Rated_Health: object, 3 levels → ['Basically_Satisfied', 'Satisfied', 'Unsatisfied']
+  - Self_Care_Ability: object, 3 levels → ['Independent', 'Mild_Dependence', 'Moderate_Dependence']
+  - Exercise_Frequency: object, 4 levels → ['Daily', 'No_Exercise', 'Occasional', 'Weekly_Or_More']
+  - Dietary_Habits: object, 3 levels → ['Balanced', 'Mainly_Meat', 'Mainly_Vegetarian']
+  - Smoking_Status: object, 2 levels → ['Non_Smoker', 'Smoker']
+  - Alcohol_Frequency: object, 4 levels → ['Daily', 'Frequent', 'Never', 'Occasional']
+  - Physical_Function: object, 2 levels → ['Normal', 'Unable_To_Complete']
+  - Hemoglobin: int64, continuous variable
+  - Fasting_Glucose: float64, continuous variable
+  - Total_Bilirubin: float64, continuous variable
+  - Serum_Creatinine: int64, continuous variable
+  - Blood_Urea_Nitrogen: float64, continuous variable
+  - Total_Cholesterol: float64, continuous variable
+  - Triglycerides: float64, continuous variable
+  - Cerebrovascular_Disease: object, 5 levels → ['Ischemic_Stroke', 'Ischemic_Stroke_And_Other', 'Other', 'Stroke', 'Transient_Ischemic_Attack']
+  - Other_Neurological_Diseases: float64, 1 levels → ['Alzheimers_Disease']
+  - Bone_Mineral_Density: float64, continuous variable
+  - Osteoporosis_Status: object, 3 levels → ['Low_Bone_Mass', 'Normal', 'Osteoporosis']
+  - Geographic_Region: object, 3 levels → ['Boxing', 'Pingyi', 'West_Coast']
+  - Sampling_Weight: float64, 3 levels → [0.38, 0.83, 1.98]
+
+Validation tips:
+- The number of levels of factor variables may be different from expectations
+- Do not assume that variables are always binary or have specific number of levels
+- Use friendly data processing rather than strict stop() validation
+2026-01-18 23:26:10,079 - INFO - src.modules.code_generator - Preflight check: passed, issues=[]
+2026-01-18 23:26:10,087 - WARNING - src.modules.code_generator - [7.1] Detected sparse variables: ['Self_Rated_Health', 'Self_Care_Ability', 'Dietary_Habits', 'Physical_Function', 'Cerebrovascular_Disease', 'Other_Neurological_Diseases']
+2026-01-18 23:26:10,088 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-18 23:26:13,109 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-18 23:27:37,819 - INFO - src.modules.llm_client - LLM response completed, time taken: 87.7 seconds
+2026-01-18 23:27:37,819 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 15937)
+2026-01-18 23:27:37,820 - INFO - src.modules.code_generator - Code generation successful (attempt 1/3)
+2026-01-18 23:27:37,821 - INFO - src.core.orchestrator - [7.1] R code saved: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/02_r_scripts/7.1_Data Preparation and Quality Control.R
+2026-01-18 23:27:37,822 - INFO - src.core.orchestrator - [7.1] R will read data: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/01_uploads/data.csv
+2026-01-18 23:27:37,822 - INFO - src.core.orchestrator - [7.1] Execute R code...
+2026-01-18 23:27:37,822 - INFO - src.modules.code_executor - Executing R code for Data Preparation and Quality Control (section 7.1)...
+2026-01-18 23:27:37,822 - INFO - src.modules.code_executor - Stage execution environment prepared: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.1
+2026-01-18 23:27:39,650 - INFO - src.modules.code_executor - Data Preparation and Quality Control (section 7.1) execution successful, generated 7 files
+2026-01-18 23:27:39,656 - INFO - src.core.orchestrator - [7.1] Survey design: exploratory
+2026-01-18 23:27:39,657 - INFO - src.modules.decision_manager - Global decisions updated: 7.1
+2026-01-18 23:27:39,657 - INFO - src.core.orchestrator - [7.1] Running data quality controller...
+2026-01-18 23:27:39,680 - ERROR - src.modules.data_quality_controller - Data quality control failed: Object of type int64 is not JSON serializable
+2026-01-18 23:27:39,680 - WARNING - src.core.orchestrator - [7.1] Quality control encountered issues
+2026-01-18 23:27:39,680 - INFO - src.core.orchestrator - [7.1] Update data path to: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.1/main_output.csv
+2026-01-18 23:27:39,680 - INFO - src.core.orchestrator - [7.1] Execution successful
+2026-01-18 23:27:39,680 - INFO - src.core.orchestrator - 
+============================================================
+2026-01-18 23:27:39,680 - INFO - src.core.orchestrator - Stage 2/8: 7.2 - Missing Data Handling
+2026-01-18 23:27:39,680 - INFO - src.core.orchestrator - Current data path: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.1/main_output.csv
+2026-01-18 23:27:39,680 - INFO - src.core.orchestrator - ============================================================
+2026-01-18 23:27:39,680 - INFO - src.core.orchestrator - [7.2] Extract dynamic contract...
+2026-01-18 23:27:39,680 - INFO - src.modules.contract_extractor - Extract method contracts from sub prompt: 7.2 - Required methods=0, Alternative method groups=0, Recommended methods=0, Files=0
+2026-01-18 23:27:39,680 - INFO - src.core.orchestrator - [7.2] Dynamic contract: methods={}, recommended files=[]
+2026-01-18 23:27:39,680 - INFO - src.core.orchestrator - [7.2] Generate R code...
+2026-01-18 23:27:39,680 - INFO - src.modules.code_generator - Generating R code for /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/_temp/prompt_7.2_Missing Data Handling.md...
+2026-01-18 23:27:39,680 - INFO - src.modules.data_profiler - Reading data file for analysis: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.1/main_output.csv
+2026-01-18 23:27:39,685 - INFO - src.modules.data_profiler - Data analysis completed: 23 variables
+2026-01-18 23:27:39,689 - INFO - src.modules.code_generator - Current stage data snapshot:
+Current stage data snapshot (/Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.1/main_output.csv)
+- Sample size: 1263 rows
+- Number of variables: 23 columns
+
+Available variables (only use these):
+  - Gender: object, 2 levels → ['Female', 'Male']
+  - Age: int64, continuous variable
+  - BMI: float64, continuous variable
+  - Self_Rated_Health: object, 3 levels → ['Basically_Satisfied', 'Satisfied', 'Unsatisfied']
+  - Self_Care_Ability: object, 3 levels → ['Independent', 'Mild_Dependence', 'Moderate_Dependence']
+  - Exercise_Frequency: object, 4 levels → ['Daily', 'No_Exercise', 'Occasional', 'Weekly_Or_More']
+  - Dietary_Habits: object, 3 levels → ['Balanced', 'Mainly_Meat', 'Mainly_Vegetarian']
+  - Smoking_Status: object, 2 levels → ['Non_Smoker', 'Smoker']
+  - Alcohol_Frequency: object, 4 levels → ['Daily', 'Frequent', 'Never', 'Occasional']
+  - Physical_Function: object, 2 levels → ['Normal', 'Unable_To_Complete']
+  - Hemoglobin: float64, continuous variable
+  - Fasting_Glucose: float64, continuous variable
+  - Total_Bilirubin: float64, continuous variable
+  - Serum_Creatinine: float64, continuous variable
+  - Blood_Urea_Nitrogen: float64, continuous variable
+  - Total_Cholesterol: float64, continuous variable
+  - Triglycerides: float64, continuous variable
+  - Cerebrovascular_Disease: object, 5 levels → ['Ischemic_Stroke', 'Ischemic_Stroke_And_Other', 'Other', 'Stroke', 'Transient_Ischemic_Attack']
+  - Other_Neurological_Diseases: float64, 1 levels → ['Alzheimers_Disease']
+  - Bone_Mineral_Density: float64, continuous variable
+  - Osteoporosis_Status: object, 3 levels → ['Low_Bone_Mass', 'Normal', 'Osteoporosis']
+  - Geographic_Region: object, 3 levels → ['Boxing', 'Pingyi', 'West_Coast']
+  - Sampling_Weight: float64, 3 levels → [0.38, 0.83, 1.98]
+
+Validation tips:
+- The number of levels of factor variables may be different from expectations
+- Do not assume that variables are always binary or have specific number of levels
+- Use friendly data processing rather than strict stop() validation
+2026-01-18 23:27:39,689 - INFO - src.modules.code_generator - Preflight check: passed, issues=[]
+2026-01-18 23:27:39,692 - WARNING - src.modules.code_generator - [7.2] Detected sparse variables: ['Self_Rated_Health', 'Self_Care_Ability', 'Dietary_Habits', 'Physical_Function', 'Cerebrovascular_Disease', 'Other_Neurological_Diseases']
+2026-01-18 23:27:39,693 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-18 23:27:41,533 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-18 23:28:55,538 - INFO - src.modules.llm_client - LLM response completed, time taken: 75.8 seconds
+2026-01-18 23:28:55,539 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 15134)
+2026-01-18 23:28:55,540 - INFO - src.modules.code_generator - Code generation successful (attempt 1/3)
+2026-01-18 23:28:55,541 - INFO - src.core.orchestrator - [7.2] R code saved: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/02_r_scripts/7.2_Missing Data Handling.R
+2026-01-18 23:28:55,541 - INFO - src.core.orchestrator - [7.2] R will read data: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.1/main_output.csv
+2026-01-18 23:28:55,541 - INFO - src.core.orchestrator - [7.2] Execute R code...
+2026-01-18 23:28:55,541 - INFO - src.modules.code_executor - Executing R code for Missing Data Handling (section 7.2)...
+2026-01-18 23:28:55,542 - INFO - src.modules.code_executor - Stage execution environment prepared: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.2
+2026-01-18 23:29:00,718 - WARNING - src.modules.code_executor - Missing Data Handling execution failed (attempt 1/10): 错误: ERROR: Failed to save aggr plot
+停止执行
+
+2026-01-18 23:29:00,718 - INFO - src.modules.code_executor - Attempting to fix R code error... (attempt 1)
+2026-01-18 23:29:00,725 - INFO - src.modules.code_executor - Current data snapshot obtained for error repair
+2026-01-18 23:29:00,725 - INFO - src.modules.code_executor - Calling attempt_fix (force_llm=False, has_llm_function=True)
+2026-01-18 23:29:00,725 - INFO - src.modules.error_fix_manager - Using LLM repair
+2026-01-18 23:29:00,725 - INFO - src.modules.error_fix_manager - Building fix prompt...
+2026-01-18 23:29:00,725 - INFO - src.modules.error_fix_manager - Fix prompt built, length: 27516 characters
+2026-01-18 23:29:00,726 - INFO - src.modules.error_fix_manager - Calling LLM fix function...
+2026-01-18 23:29:00,726 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-18 23:29:05,146 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-18 23:30:00,474 - INFO - src.modules.llm_client - LLM response completed, time taken: 59.7 seconds
+2026-01-18 23:30:00,475 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 15287)
+2026-01-18 23:30:00,475 - INFO - src.modules.code_executor - attempt_fix returned: success=True, method=llm_fix
+2026-01-18 23:30:00,475 - INFO - src.modules.error_fix_manager - Repair successful: llm_fix - 错误: ERROR: Failed to save aggr plot
+停止执行
+...
+2026-01-18 23:30:00,475 - INFO - src.modules.code_executor - Error repair successful, method: llm_fix
+2026-01-18 23:30:00,475 - INFO - src.modules.code_executor - R code corrected and file updated
+2026-01-18 23:30:04,752 - INFO - src.modules.code_executor - Missing Data Handling (section 7.2) execution successful, generated 28 files
+2026-01-18 23:30:04,789 - ERROR - src.core.orchestrator - [7.2] Statistical consistency check failed
+2026-01-18 23:30:04,789 - ERROR - src.core.orchestrator -   - SEPARATION: 1 rows with N_Original > 1000 (likely separation issue)
+2026-01-18 23:30:04,789 - ERROR - src.core.orchestrator -   - ACTION REQUIRED: Filter out or apply Firth correction
+2026-01-18 23:30:04,790 - INFO - src.core.orchestrator - [7.2] Survey design: exploratory
+2026-01-18 23:30:04,791 - INFO - src.modules.decision_manager - Global decisions updated: 7.2
+2026-01-18 23:30:04,791 - INFO - src.core.orchestrator - [7.2] Update data path to: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.2/main_output.csv
+2026-01-18 23:30:04,791 - INFO - src.core.orchestrator - [7.2] Execution successful
+2026-01-18 23:30:04,791 - INFO - src.core.orchestrator - 
+============================================================
+2026-01-18 23:30:04,791 - INFO - src.core.orchestrator - Stage 3/8: 7.3 - Descriptive Statistics (Table 1)
+2026-01-18 23:30:04,791 - INFO - src.core.orchestrator - Current data path: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.2/main_output.csv
+2026-01-18 23:30:04,791 - INFO - src.core.orchestrator - ============================================================
+2026-01-18 23:30:04,791 - INFO - src.core.orchestrator - [7.3] Extract dynamic contract...
+2026-01-18 23:30:04,792 - INFO - src.modules.contract_extractor - Extract method contracts from sub prompt: 7.3 - Required methods=0, Alternative method groups=0, Recommended methods=0, Files=0
+2026-01-18 23:30:04,792 - INFO - src.core.orchestrator - [7.3] Dynamic contract: methods={}, recommended files=[]
+2026-01-18 23:30:04,792 - INFO - src.core.orchestrator - [7.3] Generate R code...
+2026-01-18 23:30:04,792 - INFO - src.modules.code_generator - Generating R code for /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/_temp/prompt_7.3_Descriptive Statistics (Table 1).md...
+2026-01-18 23:30:04,792 - INFO - src.modules.data_profiler - Reading data file for analysis: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.2/main_output.csv
+2026-01-18 23:30:04,797 - INFO - src.modules.data_profiler - Data analysis completed: 23 variables
+2026-01-18 23:30:04,801 - INFO - src.modules.code_generator - Current stage data snapshot:
+Current stage data snapshot (/Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.2/main_output.csv)
+- Sample size: 1263 rows
+- Number of variables: 23 columns
+
+Available variables (only use these):
+  - Gender: object, 2 levels → ['Female', 'Male']
+  - Age: int64, continuous variable
+  - BMI: float64, continuous variable
+  - Self_Rated_Health: object, 3 levels → ['Basically_Satisfied', 'Satisfied', 'Unsatisfied']
+  - Self_Care_Ability: object, 3 levels → ['Independent', 'Mild_Dependence', 'Moderate_Dependence']
+  - Exercise_Frequency: object, 4 levels → ['Daily', 'No_Exercise', 'Occasional', 'Weekly_Or_More']
+  - Dietary_Habits: object, 3 levels → ['Balanced', 'Mainly_Meat', 'Mainly_Vegetarian']
+  - Smoking_Status: object, 2 levels → ['Non_Smoker', 'Smoker']
+  - Alcohol_Frequency: object, 4 levels → ['Daily', 'Frequent', 'Never', 'Occasional']
+  - Physical_Function: object, 2 levels → ['Normal', 'Unable_To_Complete']
+  - Hemoglobin: int64, continuous variable
+  - Fasting_Glucose: float64, continuous variable
+  - Total_Bilirubin: float64, continuous variable
+  - Serum_Creatinine: int64, continuous variable
+  - Blood_Urea_Nitrogen: float64, continuous variable
+  - Total_Cholesterol: float64, continuous variable
+  - Triglycerides: float64, continuous variable
+  - Cerebrovascular_Disease: object, 5 levels → ['Ischemic_Stroke', 'Ischemic_Stroke_And_Other', 'Other', 'Stroke', 'Transient_Ischemic_Attack']
+  - Other_Neurological_Diseases: float64, 1 levels → ['Alzheimers_Disease']
+  - Bone_Mineral_Density: float64, continuous variable
+  - Osteoporosis_Status: object, 3 levels → ['Low_Bone_Mass', 'Normal', 'Osteoporosis']
+  - Geographic_Region: object, 3 levels → ['Boxing', 'Pingyi', 'West_Coast']
+  - Sampling_Weight: float64, 3 levels → [0.38, 0.83, 1.98]
+
+Validation tips:
+- The number of levels of factor variables may be different from expectations
+- Do not assume that variables are always binary or have specific number of levels
+- Use friendly data processing rather than strict stop() validation
+2026-01-18 23:30:04,801 - INFO - src.modules.code_generator - Preflight check: passed, issues=[]
+2026-01-18 23:30:04,805 - WARNING - src.modules.code_generator - [7.3] Detected sparse variables: ['Self_Rated_Health', 'Self_Care_Ability', 'Dietary_Habits', 'Physical_Function', 'Cerebrovascular_Disease', 'Other_Neurological_Diseases']
+2026-01-18 23:30:04,805 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-18 23:30:07,365 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-18 23:31:28,739 - INFO - src.modules.llm_client - LLM response completed, time taken: 83.9 seconds
+2026-01-18 23:31:28,739 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 16189)
+2026-01-18 23:31:28,739 - INFO - src.modules.code_generator - Code generation successful (attempt 1/3)
+2026-01-18 23:31:28,740 - INFO - src.core.orchestrator - [7.3] R code saved: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/02_r_scripts/7.3_Descriptive Statistics (Table 1).R
+2026-01-18 23:31:28,740 - INFO - src.core.orchestrator - [7.3] R will read data: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.2/main_output.csv
+2026-01-18 23:31:28,740 - INFO - src.core.orchestrator - [7.3] Execute R code...
+2026-01-18 23:31:28,741 - INFO - src.modules.code_executor - Executing R code for Descriptive Statistics (Table 1) (section 7.3)...
+2026-01-18 23:31:28,741 - INFO - src.modules.code_executor - Stage execution environment prepared: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.3
+2026-01-18 23:31:29,492 - WARNING - src.modules.code_executor - Descriptive Statistics (Table 1) execution failed (attempt 1/10): 载入需要的程序包：grid
+载入需要的程序包：Matrix
+载入需要的程序包：survival
+
+载入程序包：‘survey’
+
+The following object is masked from ‘package:graphics’:
+
+    dotchart
+
+错误于numeric_cat_candidates[sapply(numeric_cat_candidates, function(v) {: 
+  类别为'list'的下标无效
+停止执行
+
+2026-01-18 23:31:29,492 - INFO - src.modules.code_executor - Attempting to fix R code error... (attempt 1)
+2026-01-18 23:31:29,497 - INFO - src.modules.code_executor - Current data snapshot obtained for error repair
+2026-01-18 23:31:29,497 - INFO - src.modules.code_executor - Calling attempt_fix (force_llm=False, has_llm_function=True)
+2026-01-18 23:31:29,497 - INFO - src.modules.error_fix_manager - Using LLM repair
+2026-01-18 23:31:29,497 - INFO - src.modules.error_fix_manager - Building fix prompt...
+2026-01-18 23:31:29,497 - INFO - src.modules.error_fix_manager - Fix prompt built, length: 31985 characters
+2026-01-18 23:31:29,497 - INFO - src.modules.error_fix_manager - Calling LLM fix function...
+2026-01-18 23:31:29,497 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-18 23:31:31,152 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-18 23:32:55,034 - INFO - src.modules.llm_client - LLM response completed, time taken: 85.5 seconds
+2026-01-18 23:32:55,034 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 17067)
+2026-01-18 23:32:55,034 - INFO - src.modules.code_executor - attempt_fix returned: success=True, method=llm_fix
+2026-01-18 23:32:55,034 - INFO - src.modules.error_fix_manager - Repair successful: llm_fix - 载入需要的程序包：grid
+载入需要的程序包：Matrix
+载入需要的程序包：survival
+
+载...
+2026-01-18 23:32:55,034 - INFO - src.modules.code_executor - Error repair successful, method: llm_fix
+2026-01-18 23:32:55,035 - INFO - src.modules.code_executor - R code corrected and file updated
+2026-01-18 23:32:56,383 - WARNING - src.modules.code_executor - Descriptive Statistics (Table 1) execution failed (attempt 2/10): 载入需要的程序包：grid
+载入需要的程序包：Matrix
+载入需要的程序包：survival
+
+载入程序包：‘survey’
+
+The following object is masked from ‘package:graphics’:
+
+    dotchart
+
+错误于round(n_below, 0): 数学函数中用了非数值参数
+Calls: cat
+停止执行
+
+2026-01-18 23:32:56,383 - INFO - src.modules.code_executor - Attempting to fix R code error... (attempt 2)
+2026-01-18 23:32:56,389 - INFO - src.modules.code_executor - Current data snapshot obtained for error repair
+2026-01-18 23:32:56,389 - INFO - src.modules.code_executor - Calling attempt_fix (force_llm=False, has_llm_function=True)
+2026-01-18 23:32:56,389 - INFO - src.modules.error_fix_manager - Using LLM repair
+2026-01-18 23:32:56,389 - INFO - src.modules.error_fix_manager - Building fix prompt...
+2026-01-18 23:32:56,389 - INFO - src.modules.error_fix_manager - Fix prompt built, length: 32180 characters
+2026-01-18 23:32:56,389 - INFO - src.modules.error_fix_manager - Calling LLM fix function...
+2026-01-18 23:32:56,389 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-18 23:32:57,517 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-18 23:34:24,291 - INFO - src.modules.llm_client - LLM response completed, time taken: 87.9 seconds
+2026-01-18 23:34:24,291 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 17267)
+2026-01-18 23:34:24,291 - INFO - src.modules.code_executor - attempt_fix returned: success=True, method=llm_fix
+2026-01-18 23:34:24,291 - INFO - src.modules.error_fix_manager - Repair successful: llm_fix - 载入需要的程序包：grid
+载入需要的程序包：Matrix
+载入需要的程序包：survival
+
+载...
+2026-01-18 23:34:24,292 - INFO - src.modules.code_executor - Error repair successful, method: llm_fix
+2026-01-18 23:34:24,294 - INFO - src.modules.code_executor - R code corrected and file updated
+2026-01-18 23:34:25,612 - INFO - src.modules.code_executor - Descriptive Statistics (Table 1) (section 7.3) execution successful, generated 6 files
+2026-01-18 23:34:25,617 - INFO - src.core.orchestrator - [7.3] Survey design: exploratory
+2026-01-18 23:34:25,618 - INFO - src.modules.decision_manager - Global decisions updated: 7.3
+2026-01-18 23:34:25,618 - INFO - src.core.orchestrator - [7.3] Update data path to: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.3/main_output.csv
+2026-01-18 23:34:25,618 - INFO - src.core.orchestrator - [7.3] Execution successful
+2026-01-18 23:34:25,618 - INFO - src.core.orchestrator - 
+============================================================
+2026-01-18 23:34:25,618 - INFO - src.core.orchestrator - Stage 4/8: 7.4 - Bivariate Exploratory Analysis
+2026-01-18 23:34:25,618 - INFO - src.core.orchestrator - Current data path: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.3/main_output.csv
+2026-01-18 23:34:25,618 - INFO - src.core.orchestrator - ============================================================
+2026-01-18 23:34:25,618 - INFO - src.core.orchestrator - [7.4] Extract dynamic contract...
+2026-01-18 23:34:25,618 - INFO - src.modules.contract_extractor - Extract method contracts from sub prompt: 7.4 - Required methods=0, Alternative method groups=0, Recommended methods=0, Files=0
+2026-01-18 23:34:25,618 - INFO - src.core.orchestrator - [7.4] Dynamic contract: methods={}, recommended files=[]
+2026-01-18 23:34:25,618 - INFO - src.core.orchestrator - [7.4] Generate R code...
+2026-01-18 23:34:25,618 - INFO - src.modules.code_generator - Generating R code for /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/_temp/prompt_7.4_Bivariate Exploratory Analysis.md...
+2026-01-18 23:34:25,618 - INFO - src.modules.data_profiler - Reading data file for analysis: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.3/main_output.csv
+2026-01-18 23:34:25,624 - INFO - src.modules.data_profiler - Data analysis completed: 24 variables
+2026-01-18 23:34:25,628 - INFO - src.modules.code_generator - Current stage data snapshot:
+Current stage data snapshot (/Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.3/main_output.csv)
+- Sample size: 1263 rows
+- Number of variables: 24 columns
+
+Available variables (only use these):
+  - Gender: object, 2 levels → ['Female', 'Male']
+  - Age: int64, continuous variable
+  - BMI: float64, continuous variable
+  - Self_Rated_Health: object, 3 levels → ['Basically_Satisfied', 'Satisfied', 'Unsatisfied']
+  - Self_Care_Ability: object, 3 levels → ['Independent', 'Mild_Dependence', 'Moderate_Dependence']
+  - Exercise_Frequency: object, 4 levels → ['Daily', 'No_Exercise', 'Occasional', 'Weekly_Or_More']
+  - Dietary_Habits: object, 3 levels → ['Balanced', 'Mainly_Meat', 'Mainly_Vegetarian']
+  - Smoking_Status: object, 2 levels → ['Non_Smoker', 'Smoker']
+  - Alcohol_Frequency: object, 4 levels → ['Daily', 'Frequent', 'Never', 'Occasional']
+  - Physical_Function: object, 2 levels → ['Normal', 'Unable_To_Complete']
+  - Hemoglobin: int64, continuous variable
+  - Fasting_Glucose: float64, continuous variable
+  - Total_Bilirubin: float64, continuous variable
+  - Serum_Creatinine: int64, continuous variable
+  - Blood_Urea_Nitrogen: float64, continuous variable
+  - Total_Cholesterol: float64, continuous variable
+  - Triglycerides: float64, continuous variable
+  - Cerebrovascular_Disease: object, 5 levels → ['Ischemic_Stroke', 'Ischemic_Stroke_And_Other', 'Other', 'Stroke', 'Transient_Ischemic_Attack']
+  - Other_Neurological_Diseases: float64, 1 levels → ['Alzheimers_Disease']
+  - Bone_Mineral_Density: float64, continuous variable
+  - Osteoporosis_Status: object, 3 levels → ['Low_Bone_Mass', 'Normal', 'Osteoporosis']
+  - Geographic_Region: object, 3 levels → ['Boxing', 'Pingyi', 'West_Coast']
+  - Sampling_Weight: float64, 3 levels → [0.38, 0.83, 1.98]
+  - Exercise_Group: object, 2 levels → ['At_Above_Recommended', 'Below_Recommended']
+
+Validation tips:
+- The number of levels of factor variables may be different from expectations
+- Do not assume that variables are always binary or have specific number of levels
+- Use friendly data processing rather than strict stop() validation
+2026-01-18 23:34:25,628 - INFO - src.modules.code_generator - Preflight check: passed, issues=[]
+2026-01-18 23:34:25,632 - WARNING - src.modules.code_generator - [7.4] Detected sparse variables: ['Self_Rated_Health', 'Self_Care_Ability', 'Dietary_Habits', 'Physical_Function', 'Cerebrovascular_Disease', 'Other_Neurological_Diseases']
+2026-01-18 23:34:25,633 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-18 23:34:28,074 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-18 23:36:17,720 - INFO - src.modules.llm_client - LLM response completed, time taken: 112.1 seconds
+2026-01-18 23:36:17,720 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 19389)
+2026-01-18 23:36:17,720 - INFO - src.modules.code_generator - Code generation successful (attempt 1/3)
+2026-01-18 23:36:17,722 - INFO - src.core.orchestrator - [7.4] R code saved: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/02_r_scripts/7.4_Bivariate Exploratory Analysis.R
+2026-01-18 23:36:17,722 - INFO - src.core.orchestrator - [7.4] R will read data: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.3/main_output.csv
+2026-01-18 23:36:17,722 - INFO - src.core.orchestrator - [7.4] Execute R code...
+2026-01-18 23:36:17,722 - INFO - src.modules.code_executor - Executing R code for Bivariate Exploratory Analysis (section 7.4)...
+2026-01-18 23:36:17,723 - INFO - src.modules.code_executor - Stage execution environment prepared: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.4
+2026-01-18 23:36:18,593 - WARNING - src.modules.code_executor - Bivariate Exploratory Analysis execution failed (attempt 1/10): 警告信息:
+程序包‘ggplot2’是用R版本4.5.2 来建造的 
+载入需要的程序包：grid
+载入需要的程序包：Matrix
+载入需要的程序包：survival
+
+载入程序包：‘survey’
+
+The following object is masked from ‘package:graphics’:
+
+    dotchart
+
+错误于match.names(clabs, names(xi)): 名称同原来已有的名称不相对
+Calls: do.call -> <Anonymous> -> rbind -> match.names
+停止执行
+
+2026-01-18 23:36:18,593 - INFO - src.modules.code_executor - Attempting to fix R code error... (attempt 1)
+2026-01-18 23:36:18,598 - INFO - src.modules.code_executor - Current data snapshot obtained for error repair
+2026-01-18 23:36:18,598 - INFO - src.modules.code_executor - Calling attempt_fix (force_llm=False, has_llm_function=True)
+2026-01-18 23:36:18,598 - INFO - src.modules.error_fix_manager - Using LLM repair
+2026-01-18 23:36:18,598 - INFO - src.modules.error_fix_manager - Building fix prompt...
+2026-01-18 23:36:18,598 - INFO - src.modules.error_fix_manager - Fix prompt built, length: 41228 characters
+2026-01-18 23:36:18,598 - INFO - src.modules.error_fix_manager - Calling LLM fix function...
+2026-01-18 23:36:18,598 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-18 23:36:20,148 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-18 23:38:10,647 - INFO - src.modules.llm_client - LLM response completed, time taken: 112.0 seconds
+2026-01-18 23:38:10,647 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 22800)
+2026-01-18 23:38:10,647 - INFO - src.modules.code_executor - attempt_fix returned: success=True, method=llm_fix
+2026-01-18 23:38:10,647 - INFO - src.modules.error_fix_manager - Repair successful: llm_fix - 警告信息:
+程序包‘ggplot2’是用R版本4.5.2 来建造的 
+载入需要的程序包：grid
+载...
+2026-01-18 23:38:10,647 - INFO - src.modules.code_executor - Error repair successful, method: llm_fix
+2026-01-18 23:38:10,650 - INFO - src.modules.code_executor - R code corrected and file updated
+2026-01-18 23:38:11,550 - WARNING - src.modules.code_executor - Bivariate Exploratory Analysis execution failed (attempt 2/10): 警告信息:
+程序包‘ggplot2’是用R版本4.5.2 来建造的 
+载入需要的程序包：grid
+载入需要的程序包：Matrix
+载入需要的程序包：survival
+
+载入程序包：‘survey’
+
+The following object is masked from ‘package:graphics’:
+
+    dotchart
+
+错误于prev_summary$design$usable_weight && !is.null(prev_summary$design$weight_variable): 
+  'x && y'里的'x'类型无效
+停止执行
+
+2026-01-18 23:38:11,550 - INFO - src.modules.code_executor - Attempting to fix R code error... (attempt 2)
+2026-01-18 23:38:11,555 - INFO - src.modules.code_executor - Current data snapshot obtained for error repair
+2026-01-18 23:38:11,555 - INFO - src.modules.code_executor - Calling attempt_fix (force_llm=False, has_llm_function=True)
+2026-01-18 23:38:11,555 - INFO - src.modules.error_fix_manager - Using LLM repair
+2026-01-18 23:38:11,555 - INFO - src.modules.error_fix_manager - Building fix prompt...
+2026-01-18 23:38:11,555 - INFO - src.modules.error_fix_manager - Fix prompt built, length: 42540 characters
+2026-01-18 23:38:11,555 - INFO - src.modules.error_fix_manager - Calling LLM fix function...
+2026-01-18 23:38:11,555 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-18 23:38:13,077 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-18 23:40:04,764 - INFO - src.modules.llm_client - LLM response completed, time taken: 113.2 seconds
+2026-01-18 23:40:04,764 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 23425)
+2026-01-18 23:40:04,764 - INFO - src.modules.code_executor - attempt_fix returned: success=True, method=llm_fix
+2026-01-18 23:40:04,764 - INFO - src.modules.error_fix_manager - Repair successful: llm_fix - 警告信息:
+程序包‘ggplot2’是用R版本4.5.2 来建造的 
+载入需要的程序包：grid
+载...
+2026-01-18 23:40:04,764 - INFO - src.modules.code_executor - Error repair successful, method: llm_fix
+2026-01-18 23:40:04,765 - INFO - src.modules.code_executor - R code corrected and file updated
+2026-01-18 23:40:06,613 - INFO - src.modules.code_executor - Bivariate Exploratory Analysis (section 7.4) execution successful, generated 10 files
+2026-01-18 23:40:06,621 - INFO - src.core.orchestrator - [7.4] Survey design: exploratory
+2026-01-18 23:40:06,622 - INFO - src.modules.decision_manager - Global decisions updated: 7.4
+2026-01-18 23:40:06,622 - INFO - src.core.orchestrator - [7.4] Update data path to: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.4/main_output.csv
+2026-01-18 23:40:06,622 - INFO - src.core.orchestrator - [7.4] Execution successful
+2026-01-18 23:40:06,622 - INFO - src.core.orchestrator - 
+============================================================
+2026-01-18 23:40:06,622 - INFO - src.core.orchestrator - Stage 5/8: 7.5 - Multivariable Modeling and Diagnostics
+2026-01-18 23:40:06,622 - INFO - src.core.orchestrator - Current data path: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.4/main_output.csv
+2026-01-18 23:40:06,622 - INFO - src.core.orchestrator - ============================================================
+2026-01-18 23:40:06,622 - INFO - src.core.orchestrator - [7.5] Extract dynamic contract...
+2026-01-18 23:40:06,623 - INFO - src.modules.contract_extractor - Extract method contracts from sub prompt: 7.5 - Required methods=0, Alternative method groups=0, Recommended methods=0, Files=0
+2026-01-18 23:40:06,623 - INFO - src.core.orchestrator - [7.5] Dynamic contract: methods={}, recommended files=[]
+2026-01-18 23:40:06,623 - INFO - src.core.orchestrator - [7.5] Generate R code...
+2026-01-18 23:40:06,623 - INFO - src.modules.code_generator - Generating R code for /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/_temp/prompt_7.5_Multivariable Modeling and Diagnostics.md...
+2026-01-18 23:40:06,623 - INFO - src.modules.data_profiler - Reading data file for analysis: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.4/main_output.csv
+2026-01-18 23:40:06,629 - INFO - src.modules.data_profiler - Data analysis completed: 24 variables
+2026-01-18 23:40:06,633 - INFO - src.modules.code_generator - Current stage data snapshot:
+Current stage data snapshot (/Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.4/main_output.csv)
+- Sample size: 1263 rows
+- Number of variables: 24 columns
+
+Available variables (only use these):
+  - Gender: object, 2 levels → ['Female', 'Male']
+  - Age: int64, continuous variable
+  - BMI: float64, continuous variable
+  - Self_Rated_Health: object, 3 levels → ['Basically_Satisfied', 'Satisfied', 'Unsatisfied']
+  - Self_Care_Ability: object, 3 levels → ['Independent', 'Mild_Dependence', 'Moderate_Dependence']
+  - Exercise_Frequency: object, 4 levels → ['Daily', 'No_Exercise', 'Occasional', 'Weekly_Or_More']
+  - Dietary_Habits: object, 3 levels → ['Balanced', 'Mainly_Meat', 'Mainly_Vegetarian']
+  - Smoking_Status: object, 2 levels → ['Non_Smoker', 'Smoker']
+  - Alcohol_Frequency: object, 4 levels → ['Daily', 'Frequent', 'Never', 'Occasional']
+  - Physical_Function: object, 2 levels → ['Normal', 'Unable_To_Complete']
+  - Hemoglobin: int64, continuous variable
+  - Fasting_Glucose: float64, continuous variable
+  - Total_Bilirubin: float64, continuous variable
+  - Serum_Creatinine: int64, continuous variable
+  - Blood_Urea_Nitrogen: float64, continuous variable
+  - Total_Cholesterol: float64, continuous variable
+  - Triglycerides: float64, continuous variable
+  - Cerebrovascular_Disease: object, 5 levels → ['Ischemic_Stroke', 'Ischemic_Stroke_And_Other', 'Other', 'Stroke', 'Transient_Ischemic_Attack']
+  - Other_Neurological_Diseases: float64, 1 levels → ['Alzheimers_Disease']
+  - Bone_Mineral_Density: float64, continuous variable
+  - Osteoporosis_Status: object, 3 levels → ['Low_Bone_Mass', 'Normal', 'Osteoporosis']
+  - Geographic_Region: object, 3 levels → ['Boxing', 'Pingyi', 'West_Coast']
+  - Sampling_Weight: float64, 3 levels → [0.38, 0.83, 1.98]
+  - Exercise_Group: object, 2 levels → ['At_Above_Recommended', 'Below_Recommended']
+
+Validation tips:
+- The number of levels of factor variables may be different from expectations
+- Do not assume that variables are always binary or have specific number of levels
+- Use friendly data processing rather than strict stop() validation
+2026-01-18 23:40:06,634 - INFO - src.modules.code_generator - Preflight check: passed, issues=[]
+2026-01-18 23:40:06,637 - WARNING - src.modules.code_generator - [7.5] Detected sparse variables: ['Self_Rated_Health', 'Self_Care_Ability', 'Dietary_Habits', 'Physical_Function', 'Cerebrovascular_Disease', 'Other_Neurological_Diseases']
+2026-01-18 23:40:06,638 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-18 23:40:08,715 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-18 23:41:57,228 - INFO - src.modules.llm_client - LLM response completed, time taken: 110.6 seconds
+2026-01-18 23:41:57,228 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 19109)
+2026-01-18 23:41:57,230 - INFO - src.core.orchestrator - [7.5] R code saved: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/02_r_scripts/7.5_Multivariable Modeling and Diagnostics.R
+2026-01-18 23:41:57,230 - INFO - src.core.orchestrator - [7.5] R will read data: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.4/main_output.csv
+2026-01-18 23:41:57,230 - INFO - src.core.orchestrator - [7.5] Execute R code...
+2026-01-18 23:41:57,230 - INFO - src.modules.code_executor - Executing R code for Multivariable Modeling and Diagnostics (section 7.5)...
+2026-01-18 23:41:57,230 - INFO - src.modules.code_executor - Stage execution environment prepared: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.5
+2026-01-18 23:41:58,389 - WARNING - src.modules.code_executor - Multivariable Modeling and Diagnostics execution failed (attempt 1/10): 错误: ERROR: All Poisson models failed to converge
+停止执行
+
+2026-01-18 23:41:58,389 - INFO - src.modules.code_executor - Attempting to fix R code error... (attempt 1)
+2026-01-18 23:41:58,397 - INFO - src.modules.code_executor - Current data snapshot obtained for error repair
+2026-01-18 23:41:58,397 - INFO - src.modules.code_executor - Calling attempt_fix (force_llm=False, has_llm_function=True)
+2026-01-18 23:41:58,397 - INFO - src.modules.error_fix_manager - Using LLM repair
+2026-01-18 23:41:58,397 - INFO - src.modules.error_fix_manager - Building fix prompt...
+2026-01-18 23:41:58,397 - INFO - src.modules.error_fix_manager - Fix prompt built, length: 44248 characters
+2026-01-18 23:41:58,397 - INFO - src.modules.error_fix_manager - Calling LLM fix function...
+2026-01-18 23:41:58,397 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-18 23:42:00,454 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-18 23:43:53,481 - INFO - src.modules.llm_client - LLM response completed, time taken: 115.1 seconds
+2026-01-18 23:43:53,484 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 23447)
+2026-01-18 23:43:53,484 - INFO - src.modules.code_executor - attempt_fix returned: success=True, method=llm_fix
+2026-01-18 23:43:53,484 - INFO - src.modules.error_fix_manager - Repair successful: llm_fix - 错误: ERROR: All Poisson models failed to converge
+停...
+2026-01-18 23:43:53,484 - INFO - src.modules.code_executor - Error repair successful, method: llm_fix
+2026-01-18 23:43:53,485 - INFO - src.modules.code_executor - R code corrected and file updated
+2026-01-18 23:43:54,687 - WARNING - src.modules.code_executor - Multivariable Modeling and Diagnostics execution failed (attempt 2/10): 错误: ERROR: All models (Poisson, Log-binomial, Logistic) failed to converge
+停止执行
+
+2026-01-18 23:43:54,687 - INFO - src.modules.code_executor - Attempting to fix R code error... (attempt 2)
+2026-01-18 23:43:54,692 - INFO - src.modules.code_executor - Current data snapshot obtained for error repair
+2026-01-18 23:43:54,692 - INFO - src.modules.code_executor - Calling attempt_fix (force_llm=False, has_llm_function=True)
+2026-01-18 23:43:54,692 - INFO - src.modules.error_fix_manager - Using LLM repair
+2026-01-18 23:43:54,692 - INFO - src.modules.error_fix_manager - Building fix prompt...
+2026-01-18 23:43:54,692 - INFO - src.modules.error_fix_manager - Fix prompt built, length: 46258 characters
+2026-01-18 23:43:54,692 - INFO - src.modules.error_fix_manager - Calling LLM fix function...
+2026-01-18 23:43:54,692 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-18 23:43:57,083 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-18 23:45:34,597 - INFO - src.modules.llm_client - LLM response completed, time taken: 99.9 seconds
+2026-01-18 23:45:34,598 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 25169)
+2026-01-18 23:45:34,598 - INFO - src.modules.code_executor - attempt_fix returned: success=True, method=llm_fix
+2026-01-18 23:45:34,598 - INFO - src.modules.error_fix_manager - Repair successful: llm_fix - 错误: ERROR: All models (Poisson, Log-binomial, Logi...
+2026-01-18 23:45:34,598 - INFO - src.modules.code_executor - Error repair successful, method: llm_fix
+2026-01-18 23:45:34,599 - INFO - src.modules.code_executor - R code corrected and file updated
+2026-01-18 23:45:35,827 - WARNING - src.modules.code_executor - Multivariable Modeling and Diagnostics execution failed (attempt 3/10): 错误于value[[3L]](cond): 
+  ERROR: All models including fallback failed to converge
+Calls: tryCatch -> tryCatchList -> tryCatchOne -> <Anonymous>
+停止执行
+
+2026-01-18 23:45:35,827 - INFO - src.modules.code_executor - Attempting to fix R code error... (attempt 3)
+2026-01-18 23:45:35,833 - INFO - src.modules.code_executor - Current data snapshot obtained for error repair
+2026-01-18 23:45:35,833 - INFO - src.modules.code_executor - Enabling enhanced LLM repair strategy (including data snapshot)
+2026-01-18 23:45:35,833 - INFO - src.modules.code_executor - Calling attempt_fix (force_llm=True, has_llm_function=True)
+2026-01-18 23:45:35,833 - INFO - src.modules.error_fix_manager - Using LLM repair
+2026-01-18 23:45:35,833 - INFO - src.modules.error_fix_manager - Building fix prompt...
+2026-01-18 23:45:35,833 - INFO - src.modules.error_fix_manager - Fix prompt built, length: 49038 characters
+2026-01-18 23:45:35,833 - INFO - src.modules.error_fix_manager - Calling LLM fix function...
+2026-01-18 23:45:35,833 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-18 23:45:37,593 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-18 23:47:54,338 - INFO - src.modules.llm_client - LLM response completed, time taken: 138.5 seconds
+2026-01-18 23:47:54,339 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 27239)
+2026-01-18 23:47:54,341 - INFO - src.modules.code_executor - attempt_fix returned: success=True, method=llm_fix
+2026-01-18 23:47:54,341 - INFO - src.modules.error_fix_manager - Repair successful: llm_fix - 错误于value[[3L]](cond): 
+  ERROR: All models includi...
+2026-01-18 23:47:54,341 - INFO - src.modules.code_executor - Error repair successful, method: llm_fix
+2026-01-18 23:47:54,342 - INFO - src.modules.code_executor - R code corrected and file updated
+2026-01-18 23:47:55,574 - WARNING - src.modules.code_executor - Multivariable Modeling and Diagnostics execution failed (attempt 4/10): 错误于value[[3L]](cond): 
+  ERROR: All models including fallback failed to converge
+Calls: tryCatch -> tryCatchList -> tryCatchOne -> <Anonymous>
+停止执行
+
+2026-01-18 23:47:55,574 - INFO - src.modules.code_executor - Attempting to fix R code error... (attempt 4)
+2026-01-18 23:47:55,581 - INFO - src.modules.code_executor - Current data snapshot obtained for error repair
+2026-01-18 23:47:55,581 - INFO - src.modules.code_executor - Enabling enhanced LLM repair strategy (including data snapshot)
+2026-01-18 23:47:55,581 - INFO - src.modules.code_executor - Calling attempt_fix (force_llm=True, has_llm_function=True)
+2026-01-18 23:47:55,581 - INFO - src.modules.error_fix_manager - Using LLM repair
+2026-01-18 23:47:55,581 - INFO - src.modules.error_fix_manager - Building fix prompt...
+2026-01-18 23:47:55,582 - INFO - src.modules.error_fix_manager - Fix prompt built, length: 51996 characters
+2026-01-18 23:47:55,582 - INFO - src.modules.error_fix_manager - Calling LLM fix function...
+2026-01-18 23:47:55,582 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-18 23:47:57,119 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-18 23:50:18,455 - INFO - src.modules.llm_client - LLM response completed, time taken: 142.9 seconds
+2026-01-18 23:50:18,456 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4,
+2026-01-18 23:50:18,456 - INFO - src.modules.code_executor - attempt_fix returned: success=True, method=llm_fix
+2026-01-18 23:50:18,456 - INFO - src.modules.error_fix_manager - Repair successful: llm_fix - 错误于value[[3L]](cond): 
+  ERROR: All models includi...
+2026-01-18 23:50:18,456 - INFO - src.modules.code_executor - Error repair successful, method: llm_fix
+2026-01-18 23:50:18,457 - INFO - src.modules.code_executor - R code corrected and file updated
+2026-01-18 23:50:19,806 - WARNING - src.modules.code_executor - Multivariable Modeling and Diagnostics execution failed (attempt 5/10): 错误: ERROR: All models including fallback failed to converge
+停止执行
+
+2026-01-18 23:50:19,807 - INFO - src.modules.code_executor - Attempting to fix R code error... (attempt 5)
+2026-01-18 23:50:19,812 - INFO - src.modules.code_executor - Current data snapshot obtained for error repair
+2026-01-18 23:50:19,812 - INFO - src.modules.code_executor - Enabling enhanced LLM repair strategy (including data snapshot)
+2026-01-18 23:50:19,812 - INFO - src.modules.code_executor - Calling attempt_fix (force_llm=True, has_llm_function=True)
+2026-01-18 23:50:19,812 - INFO - src.modules.error_fix_manager - Using LLM repair
+2026-01-18 23:50:19,812 - INFO - src.modules.error_fix_manager - Building fix prompt...
+2026-01-18 23:50:19,812 - INFO - src.modules.error_fix_manager - Fix prompt built, length: 53176 characters
+2026-01-18 23:50:19,812 - INFO - src.modules.error_fix_manager - Calling LLM fix function...
+2026-01-18 23:50:19,812 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-18 23:50:21,701 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-18 23:52:52,000 - INFO - src.modules.llm_client - LLM response completed, time taken: 152.2 seconds
+2026-01-18 23:52:52,000 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 29857)
+2026-01-18 23:52:52,001 - INFO - src.modules.code_executor - attempt_fix returned: success=True, method=llm_fix
+2026-01-18 23:52:52,001 - INFO - src.modules.error_fix_manager - Repair successful: llm_fix - 错误: ERROR: All models including fallback failed to...
+2026-01-18 23:52:52,001 - INFO - src.modules.code_executor - Error repair successful, method: llm_fix
+2026-01-18 23:52:52,002 - INFO - src.modules.code_executor - R code corrected and file updated
+2026-01-18 23:52:53,290 - INFO - src.modules.code_executor - Multivariable Modeling and Diagnostics (section 7.5) execution successful, generated 11 files
+2026-01-18 23:52:53,296 - ERROR - src.core.orchestrator - [7.5] Statistical consistency check failed
+2026-01-18 23:52:53,296 - ERROR - src.core.orchestrator -   - CRITICAL: Point estimate outside CI at row 1
+2026-01-18 23:52:53,296 - ERROR - src.core.orchestrator -   - CRITICAL: Point estimate outside CI at row 1
+2026-01-18 23:52:53,298 - INFO - src.core.orchestrator - [7.5] Survey design: exploratory
+2026-01-18 23:52:53,299 - INFO - src.modules.decision_manager - Global decisions updated: 7.5
+2026-01-18 23:52:53,299 - INFO - src.core.orchestrator - [7.5] Update data path to: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.5/main_output.csv
+2026-01-18 23:52:53,299 - INFO - src.core.orchestrator - [7.5] Execution successful
+2026-01-18 23:52:53,299 - INFO - src.core.orchestrator - 
+============================================================
+2026-01-18 23:52:53,299 - INFO - src.core.orchestrator - Stage 6/8: 7.6 - Interaction and Effect Modification Analysis
+2026-01-18 23:52:53,299 - INFO - src.core.orchestrator - Current data path: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.5/main_output.csv
+2026-01-18 23:52:53,299 - INFO - src.core.orchestrator - ============================================================
+2026-01-18 23:52:53,299 - INFO - src.core.orchestrator - [7.6] Extract dynamic contract...
+2026-01-18 23:52:53,299 - INFO - src.modules.contract_extractor - Extract method contracts from sub prompt: 7.6 - Required methods=0, Alternative method groups=0, Recommended methods=0, Files=0
+2026-01-18 23:52:53,299 - INFO - src.core.orchestrator - [7.6] Dynamic contract: methods={}, recommended files=[]
+2026-01-18 23:52:53,299 - INFO - src.core.orchestrator - [7.6] Generate R code...
+2026-01-18 23:52:53,299 - INFO - src.modules.code_generator - Generating R code for /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/_temp/prompt_7.6_Interaction and Effect Modification Analysis.md...
+2026-01-18 23:52:53,299 - INFO - src.modules.data_profiler - Reading data file for analysis: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.5/main_output.csv
+2026-01-18 23:52:53,305 - INFO - src.modules.data_profiler - Data analysis completed: 22 variables
+2026-01-18 23:52:53,310 - INFO - src.modules.code_generator - Current stage data snapshot:
+Current stage data snapshot (/Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.5/main_output.csv)
+- Sample size: 1265 rows
+- Number of variables: 22 columns
+
+Available variables (only use these):
+  - Gender: object, 2 levels → ['Female', 'Male']
+  - Age: int64, continuous variable
+  - BMI: float64, continuous variable
+  - Self_Rated_Health: object, 3 levels → ['Basically_Satisfied', 'Satisfied', 'Unsatisfied']
+  - Self_Care_Ability: object, 2 levels → ['Independent', 'Mild_Dependence']
+  - Exercise_Frequency: object, 4 levels → ['Daily', 'No_Exercise', 'Occasional', 'Weekly_Or_More']
+  - Dietary_Habits: object, 3 levels → ['Balanced', 'Mainly_Meat', 'Mainly_Vegetarian']
+  - Smoking_Status: object, 2 levels → ['Non_Smoker', 'Smoker']
+  - Alcohol_Frequency: object, 4 levels → ['Daily', 'Frequent', 'Never', 'Occasional']
+  - Physical_Function: object, 2 levels → ['Normal', 'Unable_To_Complete']
+  - Hemoglobin: int64, continuous variable
+  - Fasting_Glucose: float64, continuous variable
+  - Total_Bilirubin: float64, continuous variable
+  - Serum_Creatinine: int64, continuous variable
+  - Blood_Urea_Nitrogen: float64, continuous variable
+  - Total_Cholesterol: float64, continuous variable
+  - Triglycerides: float64, continuous variable
+  - Bone_Mineral_Density: float64, continuous variable
+  - Osteoporosis_Status: object, 3 levels → ['Low_Bone_Mass', 'Normal', 'Osteoporosis']
+  - Geographic_Region: object, 3 levels → ['Boxing', 'Pingyi', 'West_Coast']
+  - Sampling_Weight: float64, 3 levels → [0.38, 0.83, 1.98]
+  - Osteoporosis_Binary: int64, 2 levels → [0, 1]
+
+Validation tips:
+- The number of levels of factor variables may be different from expectations
+- Do not assume that variables are always binary or have specific number of levels
+- Use friendly data processing rather than strict stop() validation
+2026-01-18 23:52:53,311 - INFO - src.modules.code_generator - Preflight check: passed, issues=[]
+2026-01-18 23:52:53,335 - WARNING - src.modules.code_generator - [7.6] Detected sparse variables: ['Self_Rated_Health', 'Dietary_Habits', 'Physical_Function']
+2026-01-18 23:52:53,337 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-18 23:52:56,359 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-18 23:54:03,164 - INFO - src.modules.llm_client - LLM response completed, time taken: 69.8 seconds
+2026-01-18 23:54:03,165 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 17596)
+2026-01-18 23:54:03,166 - INFO - src.modules.code_generator - Code generation successful (attempt 1/3)
+2026-01-18 23:54:03,168 - INFO - src.core.orchestrator - [7.6] R code saved: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/02_r_scripts/7.6_Interaction and Effect Modification Analysis.R
+2026-01-18 23:54:03,168 - INFO - src.core.orchestrator - [7.6] R will read data: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.5/main_output.csv
+2026-01-18 23:54:03,168 - INFO - src.core.orchestrator - [7.6] Execute R code...
+2026-01-18 23:54:03,169 - INFO - src.modules.code_executor - Executing R code for Interaction and Effect Modification Analysis (section 7.6)...
+2026-01-18 23:54:03,170 - INFO - src.modules.code_executor - Stage execution environment prepared: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.6/main_output.csv
+2026-01-18 23:54:04,295 - INFO - src.modules.code_executor - Interaction and Effect Modification Analysis (section 7.6) execution successful, generated 4 files
+2026-01-18 23:54:04,301 - INFO - src.core.orchestrator - [7.6] Survey design: exploratory
+2026-01-18 23:54:04,302 - INFO - src.modules.decision_manager - Global decisions updated: 7.6
+2026-01-18 23:54:04,302 - INFO - src.core.orchestrator - [7.6] Update data path to: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.6/main_output.csv
+2026-01-18 23:54:04,302 - INFO - src.core.orchestrator - [7.6] Execution successful
+2026-01-18 23:54:04,302 - INFO - src.core.orchestrator - 
+============================================================
+2026-01-18 23:54:04,302 - INFO - src.core.orchestrator - Stage 7/8: 7.7 - Dose-Response Relationship Analysis
+2026-01-18 23:54:04,302 - INFO - src.core.orchestrator - Current data path: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.6/main_output.csv
+2026-01-18 23:54:04,302 - INFO - src.core.orchestrator - ============================================================
+2026-01-18 23:54:04,302 - INFO - src.core.orchestrator - [7.7] Extract dynamic contract...
+2026-01-18 23:54:04,302 - INFO - src.modules.contract_extractor - Extract method contracts from sub prompt: 7.7 - Required methods=0, Alternative method groups=0, Recommended methods=0, Files=0
+2026-01-18 23:54:04,302 - INFO - src.core.orchestrator - [7.7] Dynamic contract: methods={}, recommended files=[]
+2026-01-18 23:54:04,302 - INFO - src.core.orchestrator - [7.7] Generate R code...
+2026-01-18 23:54:04,302 - INFO - src.modules.code_generator - Generating R code for /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/_temp/prompt_7.7_Dose-Response Relationship Analysis.md...
+2026-01-18 23:54:04,303 - INFO - src.modules.data_profiler - Reading data file for analysis: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.6/main_output.csv
+2026-01-18 23:54:04,308 - INFO - src.modules.data_profiler - Data analysis completed: 22 variables
+2026-01-18 23:54:04,312 - INFO - src.modules.code_generator - Current stage data snapshot:
+Current stage data snapshot (/Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.6/main_output.csv)
+- Sample size: 1265 rows
+- Number of variables: 22 columns
+
+Available variables (only use these):
+  - Gender: object, 2 levels → ['Female', 'Male']
+  - Age: int64, continuous variable
+  - BMI: float64, continuous variable
+  - Self_Rated_Health: object, 3 levels → ['Basically_Satisfied', 'Satisfied', 'Unsatisfied']
+  - Self_Care_Ability: object, 3 levels → ['Independent', 'Mild_Dependence', 'Moderate_Dependence']
+  - Exercise_Frequency: object, 4 levels → ['Daily', 'No_Exercise', 'Occasional', 'Weekly_Or_More']
+  - Dietary_Habits: object, 3 levels → ['Balanced', 'Mainly_Vegetarian', 'Other']
+  - Smoking_Status: object, 2 levels → ['Non_Smoker', 'Smoker']
+  - Alcohol_Frequency: object, 4 levels → ['Daily', 'Frequent', 'Never', 'Occasional']
+  - Physical_Function: object, 2 levels → ['Normal', 'Unable_To_Complete']
+  - Hemoglobin: int64, continuous variable
+  - Fasting_Glucose: float64, continuous variable
+  - Total_Bilirubin: float64, continuous variable
+  - Serum_Creatinine: int64, continuous variable
+  - Blood_Urea_Nitrogen: float64, continuous variable
+  - Total_Cholesterol: float64, continuous variable
+  - Triglycerides: float64, continuous variable
+  - Bone_Mineral_Density: float64, continuous variable
+  - Osteoporosis_Status: object, 3 levels → ['Low_Bone_Mass', 'Normal', 'Osteoporosis']
+  - Geographic_Region: object, 3 levels → ['Boxing', 'Pingyi', 'West_Coast']
+  - Sampling_Weight: float64, 3 levels → [0.38, 0.83, 1.98]
+  - Age_Group: object, 3 levels → ['65-74', '75-84', '>=85']
+
+Validation tips:
+- The number of levels of factor variables may be different from expectations
+- Do not assume that variables are always binary or have specific number of levels
+- Use friendly data processing rather than strict stop() validation
+2026-01-18 23:54:04,313 - INFO - src.modules.code_generator - Preflight check: passed, issues=[]
+2026-01-18 23:54:04,316 - WARNING - src.modules.code_generator - [7.7] Detected sparse variables: ['Self_Rated_Health', 'Self_Care_Ability', 'Dietary_Habits', 'Physical_Function']
+2026-01-18 23:54:04,317 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-18 23:54:09,450 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-18 23:56:26,826 - INFO - src.modules.llm_client - LLM response completed, time taken: 142.5 seconds
+2026-01-18 23:56:26,826 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 21298)
+2026-01-18 23:56:26,829 - INFO - src.core.orchestrator - [7.7] R code saved: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/02_r_scripts/7.7_Dose-Response Relationship Analysis.R
+2026-01-18 23:56:26,829 - INFO - src.core.orchestrator - [7.7] R will read data: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.6/main_output.csv
+2026-01-18 23:56:26,829 - INFO - src.core.orchestrator - [7.7] Execute R code...
+2026-01-18 23:56:26,830 - INFO - src.modules.code_executor - Executing R code for Dose-Response Relationship Analysis (section 7.7)...
+2026-01-18 23:56:26,830 - INFO - src.modules.code_executor - Stage execution environment prepared: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.6/main_output.csv
+2026-01-18 23:56:31,841 - WARNING - src.modules.code_executor - Dose-Response Relationship Analysis execution failed (attempt 1/10): Loading required package: ggplot2
+Warning: package ‘ggplot2’ was built under R version 4.5.2
+Loading required package: survey
+Loading required package: grid
+Loading required package: Matrix
+Loading required package: survival
+
+Attaching package: ‘survey’
+
+The following object is masked from ‘package:graphics’:
+
+    dotchart
+
+Loading required package: rms
+Loading required package: Hmisc
+
+Attaching package: ‘Hmisc’
+
+The following object is masked from ‘package:survey’:
+
+    deff
+
+The following objects are masked from ‘package:base’:
+
+    format.pval, units
+
+
+Attaching package: ‘rms’
+
+The following object is masked from ‘package:survey’:
+
+    calibrate
+
+Loading required package: jsonlite
+
+Attaching package: ‘jsonlite’
+
+The following object is masked from ‘package:rms’:
+
+    validate
+
+Error in MIcombine(pooled_results) : could not find function "MIcombine"
+Calls: ordinal_trend_test
+Execution halted
+
+2026-01-18 23:56:31,842 - INFO - src.modules.code_executor - Attempting to fix R code error... (attempt 1)
+2026-01-18 23:56:31,848 - INFO - src.modules.code_executor - Current data snapshot obtained for error repair
+2026-01-18 23:56:31,848 - INFO - src.modules.code_executor - Calling attempt_fix (force_llm=False, has_llm_function=True)
+2026-01-18 23:56:31,848 - INFO - src.modules.error_fix_manager - Identified error type: function_not_found
+2026-01-18 23:56:31,848 - INFO - src.modules.error_fix_manager - Using LLM repair
+2026-01-18 23:56:31,848 - INFO - src.modules.error_fix_manager - Building fix prompt...
+2026-01-18 23:56:31,848 - INFO - src.modules.error_fix_manager - Fix prompt built, length: 43638 characters
+2026-01-18 23:56:31,848 - INFO - src.modules.error_fix_manager - Calling LLM fix function...
+2026-01-18 23:56:31,848 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-18 23:56:40,689 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-18 23:58:53,951 - INFO - src.modules.llm_client - LLM response completed, time taken: 142.1 seconds
+2026-01-18 23:58:53,951 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 25773)
+2026-01-18 23:58:53,952 - INFO - src.modules.code_executor - attempt_fix returned: success=True, method=llm_fix
+2026-01-18 23:58:53,952 - INFO - src.modules.error_fix_manager - Repair successful: llm_fix - Loading required package: ggplot2
+Warning: package...
+2026-01-18 23:58:53,952 - INFO - src.modules.code_executor - Error repair successful, method: llm_fix
+2026-01-18 23:58:53,953 - INFO - src.modules.code_executor - R code corrected and file updated
+2026-01-18 23:58:55,929 - WARNING - src.modules.code_executor - Dose-Response Relationship Analysis execution failed (attempt 2/10): Loading required package: ggplot2
+Warning: package ‘ggplot2’ was built under R version 4.5.2
+Loading required package: survey
+Loading required package: grid
+Loading required package: Matrix
+Loading required package: survival
+
+Attaching package: ‘survey’
+
+The following object is masked from ‘package:graphics’:
+
+    dotchart
+
+Loading required package: rms
+Loading required package: Hmisc
+
+Attaching package: ‘Hmisc’
+
+The following object is masked from ‘package:survey’:
+
+    deff
+
+The following objects are masked from ‘package:base’:
+
+    format.pval, units
+
+
+Attaching package: ‘rms’
+
+The following object is masked from ‘package:survey’:
+
+    calibrate
+
+Loading required package: jsonlite
+
+Attaching package: ‘jsonlite’
+
+The following object is masked from ‘package:rms’:
+
+    validate
+
+Error in pred_i$fit : $ operator is invalid for atomic vectors
+Calls: predict_ordinal_dose_response -> data.frame
+Execution halted
+
+2026-01-18 23:58:55,929 - INFO - src.modules.code_executor - Attempting to fix R code error... (attempt 2)
+2026-01-18 23:58:55,935 - INFO - src.modules.code_executor - Current data snapshot obtained for error repair
+2026-01-18 23:58:55,935 - INFO - src.modules.code_executor - Calling attempt_fix (force_llm=False, has_llm_function=True)
+2026-01-18 23:58:55,935 - INFO - src.modules.error_fix_manager - Identified error type: invalid_dollar_operator
+2026-01-18 23:58:55,936 - INFO - src.modules.error_fix_manager - Using LLM repair
+2026-01-18 23:58:55,936 - INFO - src.modules.error_fix_manager - Building fix prompt...
+2026-01-18 23:58:55,936 - INFO - src.modules.error_fix_manager - Fix prompt built, length: 45536 characters
+2026-01-18 23:58:55,936 - INFO - src.modules.error_fix_manager - Calling LLM fix function...
+2026-01-18 23:58:55,936 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-18 23:58:58,559 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-19 00:01:18,972 - INFO - src.modules.llm_client - LLM response completed, time taken: 143.0 seconds
+2026-01-19 00:01:18,972 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 26614)
+2026-01-19 00:01:18,972 - INFO - src.modules.code_executor - attempt_fix returned: success=True, method=llm_fix
+2026-01-19 00:01:18,972 - INFO - src.modules.error_fix_manager - Repair successful: llm_fix - Loading required package: ggplot2
+Warning: package...
+2026-01-19 00:01:18,972 - INFO - src.modules.code_executor - Error repair successful, method: llm_fix
+2026-01-19 00:01:18,973 - INFO - src.modules.code_executor - R code corrected and file updated
+2026-01-19 00:01:22,031 - INFO - src.modules.code_executor - Dose-Response Relationship Analysis (section 7.7) execution successful, generated 7 files
+2026-01-19 00:01:22,045 - INFO - src.core.orchestrator - [7.7] Survey design: exploratory
+2026-01-19 00:01:22,046 - INFO - src.modules.decision_manager - Global decisions updated: 7.7
+2026-01-19 00:01:22,046 - INFO - src.core.orchestrator - [7.7] Update data path to: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.7/main_output.csv
+2026-01-19 00:01:22,046 - INFO - src.core.orchestrator - [7.7] Execution successful
+2026-01-19 00:01:22,046 - INFO - src.core.orchestrator - 
+============================================================
+2026-01-19 00:01:22,046 - INFO - src.core.orchestrator - Stage 8/8: 7.8 - Sensitivity Analysis
+2026-01-19 00:01:22,046 - INFO - src.core.orchestrator - Current data path: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.7/main_output.csv
+2026-01-19 00:01:22,046 - INFO - src.core.orchestrator - ============================================================
+2026-01-19 00:01:22,046 - INFO - src.core.orchestrator - [7.8] Extract dynamic contract...
+2026-01-19 00:01:22,046 - INFO - src.modules.contract_extractor - Extract method contracts from sub prompt: 7.8 - Required methods=0, Alternative method groups=0, Recommended methods=0, Files=0
+2026-01-19 00:01:22,046 - INFO - src.core.orchestrator - [7.8] Dynamic contract: methods={}, recommended files=[]
+2026-01-19 00:01:22,046 - INFO - src.core.orchestrator - [7.8] Generate R code...
+2026-01-19 00:01:22,046 - INFO - src.modules.code_generator - Generating R code for /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/_temp/prompt_7.8_Sensitivity Analysis.md...
+2026-01-19 00:01:22,046 - INFO - src.modules.data_profiler - Reading data file for analysis: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.7/main_output.csv
+2026-01-19 00:01:22,052 - INFO - src.modules.data_profiler - Data analysis completed: 21 variables
+2026-01-19 00:01:22,055 - INFO - src.modules.code_generator - Current stage data snapshot:
+Current stage data snapshot (/Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.7/main_output.csv)
+- Sample size: 1265 rows
+- Number of variables: 21 columns
+
+Available variables (only use these):
+  - Gender: object, 2 levels → ['Female', 'Male']
+  - Age: int64, continuous variable
+  - BMI: float64, continuous variable
+  - Self_Rated_Health: object, 3 levels → ['Basically_Satisfied', 'Satisfied', 'Unsatisfied']
+  - Self_Care_Ability: object, 3 levels → ['Independent', 'Mild_Dependence', 'Moderate_Dependence']
+  - Exercise_Frequency: object, 4 levels → ['Daily', 'No_Exercise', 'Occasional', 'Weekly_Or_More']
+  - Dietary_Habits: object, 3 levels → ['Balanced', 'Mainly_Meat', 'Mainly_Vegetarian']
+  - Smoking_Status: object, 2 levels → ['Non_Smoker', 'Smoker']
+  - Alcohol_Frequency: object, 4 levels → ['Daily', 'Frequent', 'Never', 'Occasional']
+  - Physical_Function: object, 2 levels → ['Normal', 'Unable_To_Complete']
+  - Hemoglobin: int64, continuous variable
+  - Fasting_Glucose: float64, continuous variable
+  - Total_Bilirubin: float64, continuous variable
+  - Serum_Creatinine: int64, continuous variable
+  - Blood_Urea_Nitrogen: float64, continuous variable
+  - Total_Cholesterol: float64, continuous variable
+  - Triglycerides: float64, continuous variable
+  - Bone_Mineral_Density: float64, continuous variable
+  - Osteoporosis_Status: object, 3 levels → ['Low_Bone_Mass', 'Normal', 'Osteoporosis']
+  - Geographic_Region: object, 3 levels → ['Boxing', 'Pingyi', 'West_Coast']
+  - Sampling_Weight: float64, 3 levels → [0.38, 0.83, 1.98]
+
+Validation tips:
+- The number of levels of factor variables may be different from expectations
+- Do not assume that variables are always binary or have specific number of levels
+- Use friendly data processing rather than strict stop() validation
+2026-01-19 00:01:22,055 - INFO - src.modules.code_generator - Preflight check: passed, issues=[]
+2026-01-19 00:01:22,060 - WARNING - src.modules.code_generator - [7.8] Detected sparse variables: ['Self_Rated_Health', 'Self_Care_Ability', 'Dietary_Habits', 'Physical_Function']
+2026-01-19 00:01:22,061 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-19 00:01:26,279 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-19 00:03:13,750 - INFO - src.modules.llm_client - LLM response completed, time taken: 111.7 seconds
+2026-01-19 00:03:13,751 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 20273)
+2026-01-19 00:03:13,753 - INFO - src.modules.code_generator - Code generation successful (attempt 1/3)
+2026-01-19 00:03:13,754 - INFO - src.core.orchestrator - [7.8] R code saved: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/02_r_scripts/7.8_Sensitivity Analysis.R
+2026-01-19 00:03:13,754 - INFO - src.core.orchestrator - [7.8] R will read data: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.7/main_output.csv
+2026-01-19 00:03:13,754 - INFO - src.core.orchestrator - [7.8] Execute R code...
+2026-01-19 00:03:13,755 - INFO - src.modules.code_executor - Executing R code for Sensitivity Analysis (section 7.8)...
+2026-01-19 00:03:13,755 - INFO - src.modules.code_executor - Stage execution environment prepared: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.8
+2026-01-19 00:03:14,812 - WARNING - src.modules.code_executor - Sensitivity Analysis execution failed (attempt 1/10): 警告信息:
+程序包‘ggplot2’是用R版本4.5.2 来建造的 
+
+载入程序包：‘EValue’
+
+The following object is masked from ‘package:survey’:
+
+    HR
+
+错误于evalue.default(RR = 1/pr, rare = FALSE): 找不到对象'measure'
+Calls: evalue -> evalue.default
+停止执行
+
+2026-01-19 00:03:14,813 - INFO - src.modules.code_executor - Attempting to fix R code error... (attempt 1)
+2026-01-19 00:03:14,820 - INFO - src.modules.code_executor - Current data snapshot obtained for error repair
+2026-01-19 00:03:14,820 - INFO - src.modules.code_executor - Calling attempt_fix (force_llm=False, has_llm_function=True)
+2026-01-19 00:03:14,821 - INFO - src.modules.error_fix_manager - Identified error type: ggplot_missing_column
+2026-01-19 00:03:14,821 - INFO - src.modules.error_fix_manager - Using LLM repair
+2026-01-19 00:03:14,821 - INFO - src.modules.error_fix_manager - Building fix prompt...
+2026-01-19 00:03:14,821 - INFO - src.modules.error_fix_manager - Fix prompt built, length: 48296 characters
+2026-01-19 00:03:14,821 - INFO - src.modules.error_fix_manager - Calling LLM fix function...
+2026-01-19 00:03:14,821 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-19 00:03:17,598 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-19 00:05:02,347 - INFO - src.modules.llm_client - LLM response completed, time taken: 107.5 seconds
+2026-01-19 00:05:02,348 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 24424)
+2026-01-19 00:05:02,348 - INFO - src.modules.code_executor - attempt_fix returned: success=True, method=llm_fix
+2026-01-19 00:05:02,348 - INFO - src.modules.error_fix_manager - Repair successful: llm_fix - 警告信息:
+程序包‘ggplot2’是用R版本4.5.2 来建造的 
+
+载入程序包：‘EValue’...
+2026-01-19 00:05:02,348 - INFO - src.modules.code_executor - Error repair successful, method: llm_fix
+2026-01-19 00:05:02,349 - INFO - src.modules.code_executor - R code corrected and file updated
+2026-01-19 00:05:03,457 - WARNING - src.modules.code_executor - Sensitivity Analysis execution failed (attempt 2/10): 警告信息:
+程序包‘ggplot2’是用R版本4.5.2 来建造的 
+
+载入程序包：‘EValue’
+
+The following object is masked from ‘package:survey’:
+
+    HR
+
+错误于evalue.default(est = 1/pr, lo = NA, hi = NA, rare = FALSE): 
+  找不到对象'measure'
+Calls: evalue -> evalue.default
+停止执行
+
+2026-01-19 00:05:03,457 - INFO - src.modules.code_executor - Attempting to fix R code error... (attempt 2)
+2026-01-19 00:05:03,464 - INFO - src.modules.code_executor - Current data snapshot obtained for error repair
+2026-01-19 00:05:03,464 - INFO - src.modules.code_executor - Calling attempt_fix (force_llm=False, has_llm_function=True)
+2026-01-19 00:05:03,464 - INFO - src.modules.error_fix_manager - Identified error type: ggplot_missing_column
+2026-01-19 00:05:03,464 - INFO - src.modules.error_fix_manager - Using LLM repair
+2026-01-19 00:05:03,464 - INFO - src.modules.error_fix_manager - Building fix prompt...
+2026-01-19 00:05:03,464 - INFO - src.modules.error_fix_manager - Fix prompt built, length: 42076 characters
+2026-01-19 00:05:03,464 - INFO - src.modules.error_fix_manager - Calling LLM fix function...
+2026-01-19 00:05:03,465 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-19 00:05:06,416 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-19 00:06:52,462 - INFO - src.modules.llm_client - LLM response completed, time taken: 109.0 seconds
+2026-01-19 00:06:52,463 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 22874)
+2026-01-19 00:06:52,463 - INFO - src.modules.code_executor - attempt_fix returned: success=True, method=llm_fix
+2026-01-19 00:06:52,463 - INFO - src.modules.error_fix_manager - Repair successful: llm_fix - 警告信息:
+程序包‘ggplot2’是用R版本4.5.2 来建造的 
+
+载入程序包：‘EValue’...
+2026-01-19 00:06:52,463 - INFO - src.modules.code_executor - Error repair successful, method: llm_fix
+2026-01-19 00:06:52,464 - INFO - src.modules.code_executor - R code corrected and file updated
+2026-01-19 00:06:53,696 - WARNING - src.modules.code_executor - Sensitivity Analysis execution failed (attempt 3/10): 警告信息:
+程序包‘ggplot2’是用R版本4.5.2 来建造的 
+
+载入程序包：‘EValue’
+
+The following object is masked from ‘package:survey’:
+
+    HR
+
+错误于evalue.default(RR = 1/pr, rare = FALSE): 找不到对象'measure'
+Calls: evalue -> evalue.default
+停止执行
+
+2026-01-19 00:06:53,696 - INFO - src.modules.code_executor - Attempting to fix R code error... (attempt 3)
+2026-01-19 00:06:53,701 - INFO - src.modules.code_executor - Current data snapshot obtained for error repair
+2026-01-19 00:06:53,701 - INFO - src.modules.code_executor - Enabling enhanced LLM repair strategy (including data snapshot)
+2026-01-19 00:06:53,701 - INFO - src.modules.code_executor - Calling attempt_fix (force_llm=True, has_llm_function=True)
+2026-01-19 00:06:53,701 - INFO - src.modules.error_fix_manager - Using LLM repair
+2026-01-19 00:06:53,701 - INFO - src.modules.error_fix_manager - Building fix prompt...
+2026-01-19 00:06:53,701 - INFO - src.modules.error_fix_manager - Fix prompt built, length: 42750 characters
+2026-01-19 00:06:53,701 - INFO - src.modules.error_fix_manager - Calling LLM fix function...
+2026-01-19 00:06:53,701 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-19 00:06:57,619 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-19 00:08:41,896 - INFO - src.modules.llm_client - LLM response completed, time taken: 108.2 seconds
+2026-01-19 00:08:41,896 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 23067)
+2026-01-19 00:08:41,897 - INFO - src.modules.code_executor - attempt_fix returned: success=True, method=llm_fix
+2026-01-19 00:08:41,897 - INFO - src.modules.error_fix_manager - Repair successful: llm_fix - 警告信息:
+程序包‘ggplot2’是用R版本4.5.2 来建造的 
+
+载入程序包：‘EValue’...
+2026-01-19 00:08:41,897 - INFO - src.modules.code_executor - Error repair successful, method: llm_fix
+2026-01-19 00:08:41,897 - INFO - src.modules.code_executor - R code corrected and file updated
+2026-01-19 00:08:42,887 - WARNING - src.modules.code_executor - Sensitivity Analysis execution failed (attempt 4/10): 警告信息:
+程序包‘ggplot2’是用R版本4.5.2 来建造的 
+
+载入程序包：‘EValue’
+
+The following object is masked from ‘package:survey’:
+
+    HR
+
+错误于evalue.default(RR = 1/pr, rare = FALSE): 找不到对象'measure'
+Calls: evalue -> evalue.default
+停止执行
+
+2026-01-19 00:08:42,887 - INFO - src.modules.code_executor - Attempting to fix R code error... (attempt 4)
+2026-01-19 00:08:42,894 - INFO - src.modules.code_executor - Current data snapshot obtained for error repair
+2026-01-19 00:08:42,894 - INFO - src.modules.code_executor - Enabling enhanced LLM repair strategy (including data snapshot)
+2026-01-19 00:08:42,894 - INFO - src.modules.code_executor - Calling attempt_fix (force_llm=True, has_llm_function=True)
+2026-01-19 00:08:42,894 - INFO - src.modules.error_fix_manager - Using LLM repair
+2026-01-19 00:08:42,894 - INFO - src.modules.error_fix_manager - Building fix prompt...
+2026-01-19 00:08:42,894 - INFO - src.modules.error_fix_manager - Fix prompt built, length: 42765 characters
+2026-01-19 00:08:42,894 - INFO - src.modules.error_fix_manager - Calling LLM fix function...
+2026-01-19 00:08:42,894 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-19 00:08:45,581 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-19 00:10:31,477 - INFO - src.modules.llm_client - LLM response completed, time taken: 108.6 seconds
+2026-01-19 00:10:31,477 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 23140)
+2026-01-19 00:10:31,478 - INFO - src.modules.code_executor - attempt_fix returned: success=True, method=llm_fix
+2026-01-19 00:10:31,478 - INFO - src.modules.error_fix_manager - Repair successful: llm_fix - 警告信息:
+程序包‘ggplot2’是用R版本4.5.2 来建造的 
+
+载入程序包：‘EValue’...
+2026-01-19 00:10:31,478 - INFO - src.modules.code_executor - Error repair successful, method: llm_fix
+2026-01-19 00:10:31,480 - INFO - src.modules.code_executor - R code corrected and file updated
+2026-01-19 00:10:32,593 - WARNING - src.modules.code_executor - Sensitivity Analysis execution failed (attempt 5/10): 警告信息:
+程序包‘ggplot2’是用R版本4.5.2 来建造的 
+
+载入程序包：‘EValue’
+
+The following object is masked from ‘package:survey’:
+
+    HR
+
+错误于evalue.default(RR = 1/pr, rare = FALSE): 找不到对象'measure'
+Calls: evalue -> evalue.default
+停止执行
+
+2026-01-19 00:10:32,594 - INFO - src.modules.code_executor - Attempting to fix R code error... (attempt 5)
+2026-01-19 00:10:32,601 - INFO - src.modules.code_executor - Current data snapshot obtained for error repair
+2026-01-19 00:10:32,601 - INFO - src.modules.code_executor - Enabling enhanced LLM repair strategy (including data snapshot)
+2026-01-19 00:10:32,601 - INFO - src.modules.code_executor - Calling attempt_fix (force_llm=True, has_llm_function=True)
+2026-01-19 00:10:32,601 - INFO - src.modules.error_fix_manager - Using LLM repair
+2026-01-19 00:10:32,601 - INFO - src.modules.error_fix_manager - Building fix prompt...
+2026-01-19 00:10:32,601 - INFO - src.modules.error_fix_manager - Fix prompt built, length: 42971 characters
+2026-01-19 00:10:32,601 - INFO - src.modules.error_fix_manager - Calling LLM fix function...
+2026-01-19 00:10:32,601 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-19 00:10:36,694 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-19 00:12:06,128 - INFO - src.modules.llm_client - LLM response completed, time taken: 93.5 seconds
+2026-01-19 00:12:06,128 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 23400)
+2026-01-19 00:12:06,128 - INFO - src.modules.code_executor - attempt_fix returned: success=True, method=llm_fix
+2026-01-19 00:12:06,128 - INFO - src.modules.error_fix_manager - Repair successful: llm_fix - 警告信息:
+程序包‘ggplot2’是用R版本4.5.2 来建造的 
+
+载入程序包：‘EValue’...
+2026-01-19 00:12:06,128 - INFO - src.modules.code_executor - Error repair successful, method: llm_fix
+2026-01-19 00:12:06,128 - INFO - src.modules.code_executor - R code corrected and file updated
+2026-01-19 00:12:07,133 - WARNING - src.modules.code_executor - Sensitivity Analysis execution failed (attempt 6/10): 警告信息:
+程序包‘ggplot2’是用R版本4.5.2 来建造的 
+
+载入程序包：‘EValue’
+
+The following object is masked from ‘package:survey’:
+
+    HR
+
+错误于evalue.default(RR = 1/pr, rare = FALSE): 找不到对象'measure'
+Calls: evalue -> evalue.default
+停止执行
+
+2026-01-19 00:12:07,134 - INFO - src.modules.code_executor - Attempting to fix R code error... (attempt 6)
+2026-01-19 00:12:07,140 - INFO - src.modules.code_executor - Current data snapshot obtained for error repair
+2026-01-19 00:12:07,140 - INFO - src.modules.code_executor - Enabling enhanced LLM repair strategy (including data snapshot)
+2026-01-19 00:12:07,140 - INFO - src.modules.code_executor - Enabling advanced LLM repair strategy (including repair history)
+2026-01-19 00:12:07,140 - INFO - src.modules.code_executor - Calling attempt_fix (force_llm=True, has_llm_function=True)
+2026-01-19 00:12:07,140 - INFO - src.modules.error_fix_manager - Using LLM repair（enhanced mode）
+2026-01-19 00:12:07,141 - INFO - src.modules.error_fix_manager - Building fix prompt...
+2026-01-19 00:12:07,141 - INFO - src.modules.error_fix_manager - Fix prompt built, length: 44237 characters
+2026-01-19 00:12:07,141 - INFO - src.modules.error_fix_manager - Calling LLM fix function...
+2026-01-19 00:12:07,141 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-19 00:12:13,746 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-19 00:14:02,569 - INFO - src.modules.llm_client - LLM response completed, time taken: 115.4 seconds
+2026-01-19 00:14:02,569 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 24091)
+2026-01-19 00:14:02,571 - INFO - src.modules.code_executor - attempt_fix returned: success=True, method=llm_fix
+2026-01-19 00:14:02,572 - INFO - src.modules.error_fix_manager - Repair successful: llm_fix - 警告信息:
+程序包‘ggplot2’是用R版本4.5.2 来建造的 
+
+载入程序包：‘EValue’...
+2026-01-19 00:14:02,572 - INFO - src.modules.code_executor - Error repair successful, method: llm_fix
+2026-01-19 00:14:02,572 - INFO - src.modules.code_executor - R code corrected and file updated
+2026-01-19 00:14:03,632 - WARNING - src.modules.code_executor - Sensitivity Analysis execution failed (attempt 7/10): 警告信息:
+程序包‘ggplot2’是用R版本4.5.2 来建造的 
+
+载入程序包：‘EValue’
+
+The following object is masked from ‘package:survey’:
+
+    HR
+
+错误于evalue.default(RR = 1/pr, rare = FALSE): 找不到对象'measure'
+Calls: evalue -> evalue.default
+停止执行
+
+2026-01-19 00:14:03,632 - INFO - src.modules.code_executor - Attempting to fix R code error... (attempt 7)
+2026-01-19 00:14:03,638 - INFO - src.modules.code_executor - Current data snapshot obtained for error repair
+2026-01-19 00:14:03,638 - INFO - src.modules.code_executor - Enabling enhanced LLM repair strategy (including data snapshot)
+2026-01-19 00:14:03,638 - INFO - src.modules.code_executor - Enabling advanced LLM repair strategy (including repair history)
+2026-01-19 00:14:03,638 - INFO - src.modules.code_executor - Calling attempt_fix (force_llm=True, has_llm_function=True)
+2026-01-19 00:14:03,638 - INFO - src.modules.error_fix_manager - Using LLM repair（enhanced mode）
+2026-01-19 00:14:03,638 - INFO - src.modules.error_fix_manager - Building fix prompt...
+2026-01-19 00:14:03,638 - INFO - src.modules.error_fix_manager - Fix prompt built, length: 44962 characters
+2026-01-19 00:14:03,638 - INFO - src.modules.error_fix_manager - Calling LLM fix function...
+2026-01-19 00:14:03,638 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-19 00:14:06,653 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-19 00:16:04,190 - INFO - src.modules.llm_client - LLM response completed, time taken: 120.6 seconds
+2026-01-19 00:16:04,190 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 24761)
+2026-01-19 00:16:04,191 - INFO - src.modules.code_executor - attempt_fix returned: success=True, method=llm_fix
+2026-01-19 00:16:04,191 - INFO - src.modules.error_fix_manager - Repair successful: llm_fix - 警告信息:
+程序包‘ggplot2’是用R版本4.5.2 来建造的 
+
+载入程序包：‘EValue’...
+2026-01-19 00:16:04,191 - INFO - src.modules.code_executor - Error repair successful, method: llm_fix
+2026-01-19 00:16:04,191 - INFO - src.modules.code_executor - R code corrected and file updated
+2026-01-19 00:16:05,259 - WARNING - src.modules.code_executor - Sensitivity Analysis execution failed (attempt 8/10): 警告信息:
+程序包‘ggplot2’是用R版本4.5.2 来建造的 
+
+载入程序包：‘EValue’
+
+The following object is masked from ‘package:survey’:
+
+    HR
+
+错误于evalue.default(est = 1/pr, lo = NA, hi = NA, true_rr = 1): 
+  找不到对象'measure'
+Calls: evalue -> evalue.default
+停止执行
+
+2026-01-19 00:16:05,260 - INFO - src.modules.code_executor - Attempting to fix R code error... (attempt 8)
+2026-01-19 00:16:05,266 - INFO - src.modules.code_executor - Current data snapshot obtained for error repair
+2026-01-19 00:16:05,266 - INFO - src.modules.code_executor - Enabling enhanced LLM repair strategy (including data snapshot)
+2026-01-19 00:16:05,266 - INFO - src.modules.code_executor - Enabling advanced LLM repair strategy (including repair history)
+2026-01-19 00:16:05,266 - INFO - src.modules.code_executor - Calling attempt_fix (force_llm=True, has_llm_function=True)
+2026-01-19 00:16:05,266 - INFO - src.modules.error_fix_manager - Using LLM repair（enhanced mode）
+2026-01-19 00:16:05,266 - INFO - src.modules.error_fix_manager - Building fix prompt...
+2026-01-19 00:16:05,266 - INFO - src.modules.error_fix_manager - Fix prompt built, length: 46123 characters
+2026-01-19 00:16:05,266 - INFO - src.modules.error_fix_manager - Calling LLM fix function...
+2026-01-19 00:16:05,266 - INFO - src.modules.llm_client - Starting LLM call (model=anthropic/claude-sonnet-4, attempt=1/10)...
+2026-01-19 00:16:07,754 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-19 00:17:57,154 - INFO - src.modules.llm_client - LLM response completed, time taken: 111.9 seconds
+2026-01-19 00:17:57,155 - INFO - src.modules.llm_client - LLM call successful (model=anthropic/claude-sonnet-4, attempt=1, tokens: 24582)
+2026-01-19 00:17:57,155 - INFO - src.modules.code_executor - attempt_fix returned: success=True, method=llm_fix
+2026-01-19 00:17:57,155 - INFO - src.modules.error_fix_manager - Repair successful: llm_fix - 警告信息:
+程序包‘ggplot2’是用R版本4.5.2 来建造的 
+
+载入程序包：‘EValue’...
+2026-01-19 00:17:57,155 - INFO - src.modules.code_executor - Error repair successful, method: llm_fix
+2026-01-19 00:17:57,156 - INFO - src.modules.code_executor - R code corrected and file updated
+2026-01-19 00:17:58,928 - INFO - src.modules.code_executor - Sensitivity Analysis (section 7.8) execution successful, generated 6 files
+2026-01-19 00:17:58,933 - ERROR - src.core.orchestrator - [7.8] Statistical consistency check failed
+2026-01-19 00:17:58,933 - ERROR - src.core.orchestrator -   - INVALID: 2 rows with invalid p-values in E_Value_Point
+2026-01-19 00:17:58,935 - INFO - src.core.orchestrator - [7.8] Survey design: exploratory
+2026-01-19 00:17:58,936 - INFO - src.modules.decision_manager - Global decisions updated: 7.8
+2026-01-19 00:17:58,936 - INFO - src.core.orchestrator - [7.8] Update data path to: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/7.8/main_output.csv
+2026-01-19 00:17:58,936 - INFO - src.core.orchestrator - [7.8] Execution successful
+2026-01-19 00:17:58,936 - INFO - src.core.orchestrator - ============================================================
+2026-01-19 00:17:58,936 - INFO - src.core.orchestrator - Analysis execution completed
+2026-01-19 00:17:58,936 - INFO - src.core.orchestrator - Total modules: 8
+2026-01-19 00:17:58,936 - INFO - src.core.orchestrator - Successful modules: 8
+2026-01-19 00:17:58,936 - INFO - src.core.orchestrator - Failed modules: 0
+2026-01-19 00:17:58,936 - INFO - src.core.orchestrator - Duration: 3108.87 seconds
+2026-01-19 00:17:58,936 - INFO - src.core.orchestrator - ============================================================
+2026-01-19 00:19:40,206 - INFO - api_server - Task 751c9dfc-e987-4851-9829-423a1ae6f912 starting post-processing in main thread...
+2026-01-19 00:19:40,207 - INFO - src.core.orchestrator - ============================================================
+2026-01-19 00:19:40,207 - INFO - src.core.orchestrator - Starting post-processing: cleanup and report generation
+2026-01-19 00:19:40,207 - INFO - src.core.orchestrator - ============================================================
+2026-01-19 00:19:40,207 - INFO - src.core.orchestrator - Running data_cleaner as subprocess: /usr/local/bin/python3 /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/src/modules/data_cleaner.py /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec --verbose
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] returncode=0
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] ============================================================
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] Data cleanup completed 
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] ============================================================
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] Moved sensitive files: 28 files
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] Kept safe files: 53 files
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] Skipped files: 0 files
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] Failed files: 0 files
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] Moved to /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/_private:
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner]   - 7.1/outlier_log.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner]   - 7.1/main_output.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner]   - 7.2/imputed_data_20.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner]   - 7.2/imputed_data_18.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner]   - 7.2/imputed_data_8.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner]   - 7.2/imputed_data_9.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner]   - 7.2/imputed_data_19.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner]   - 7.2/imputed_data_14.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner]   - 7.2/main_output.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner]   - 7.2/imputed_data_4.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner]   ... 还有 18 个
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] ============================================================
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] Data cleanup completed
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,442 - INFO - ============================================================
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,443 - INFO - Starting data cleanup process...
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,443 - INFO - Results directory: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,443 - INFO - Private directory: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/_private
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,443 - INFO - ============================================================
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,443 - INFO - Found 9 stage directories to process
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,443 - INFO - 
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] Processing stage 1/9: 7.0
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,443 - INFO -   Found 0 files in 7.0
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,443 - INFO -   Stage 7.0 has no files, skipping
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,443 - INFO - 
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] Processing stage 2/9: 7.1
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,443 - INFO -   Found 9 files in 7.1
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,443 - INFO -   Processing file 1/9: outlier_log.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,444 - INFO -   Sensitive file: outlier_log.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,445 - INFO -     Moved
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,445 - INFO -   Processing file 2/9: data_quality_control_report.json
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,445 - INFO -   Safe file: data_quality_control_report.json (retained)
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,445 - INFO -   Processing file 3/9: boxplot_outliers_continuous.png
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,445 - INFO -   Safe file: boxplot_outliers_continuous.png (retained)
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,445 - INFO -   Processing file 4/9: missing_summary.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,445 - INFO -   Safe file: missing_summary.csv (retained)
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,445 - INFO -   Processing file 5/9: main_output.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,445 - INFO -   Sensitive file: main_output.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,445 - INFO -     Moved
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,445 - INFO -   Processing file 6/9: distribution_categorical.png
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,445 - INFO -   Safe file: distribution_categorical.png (retained)
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,445 - INFO -   Processing file 7/9: distribution_continuous.png
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,445 - INFO -   Safe file: distribution_continuous.png (retained)
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,445 - INFO -   Processing file 8/9: data_dictionary.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,446 - INFO -   Safe file: data_dictionary.csv (retained)
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,446 - INFO -   Processing file 9/9: analysis_summary.json
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,446 - INFO -   Safe file: analysis_summary.json (retained)
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,446 - INFO -   Completed processing stage 7.1
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,446 - INFO - 
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] Processing stage 3/9: 7.2
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,446 - INFO -   Found 28 files in 7.2
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,446 - INFO -   Processing file 1/28: missing_data_matrixplot.png
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,446 - INFO -   Safe file: missing_data_matrixplot.png (retained)
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,446 - INFO -   Processing file 2/28: cca_comparison.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,447 - INFO -   Safe file: cca_comparison.csv (retained)
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,447 - INFO -   Processing file 3/28: imputed_data_20.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,447 - INFO -   Sensitive file: imputed_data_20.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,448 - INFO -     Moved
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,448 - INFO -   Processing file 4/28: imputed_data_18.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,448 - INFO -   Sensitive file: imputed_data_18.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,448 - INFO -     Moved
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,448 - INFO -   Processing file 5/28: imputed_data_8.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,449 - INFO -   Sensitive file: imputed_data_8.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,449 - INFO -     Moved
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,449 - INFO -   Processing file 6/28: imputed_data_9.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,450 - INFO -   Sensitive file: imputed_data_9.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,450 - INFO -     Moved
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,450 - INFO -   Processing file 7/28: imputed_data_19.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,451 - INFO -   Sensitive file: imputed_data_19.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,451 - INFO -     Moved
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,451 - INFO -   Processing file 8/28: imputed_data_14.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,452 - INFO -   Sensitive file: imputed_data_14.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,452 - INFO -     Moved
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,452 - INFO -   Processing file 9/28: main_output.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,452 - INFO -   Sensitive file: main_output.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,452 - INFO -     Moved
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,452 - INFO -   Processing file 10/28: imputed_data_4.csv
+2026-01-19 00:19:40,498 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,453 - INFO -   Sensitive file: imputed_data_4.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,453 - INFO -     Moved
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,453 - INFO -   Processing file 11/28: imputed_data_5.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,453 - INFO -   Sensitive file: imputed_data_5.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,454 - INFO -     Moved
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,454 - INFO -   Processing file 12/28: imputed_data_15.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,454 - INFO -   Sensitive file: imputed_data_15.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,454 - INFO -     Moved
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,455 - INFO -   Processing file 13/28: imputed_data_17.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,455 - INFO -   Sensitive file: imputed_data_17.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,455 - INFO -     Moved
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,455 - INFO -   Processing file 14/28: imputed_data_7.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,456 - INFO -   Sensitive file: imputed_data_7.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,457 - INFO -     Moved
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,457 - INFO -   Processing file 15/28: imputed_data_6.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,458 - INFO -   Sensitive file: imputed_data_6.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,458 - INFO -     Moved
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,458 - INFO -   Processing file 16/28: imputed_data_16.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,459 - INFO -   Sensitive file: imputed_data_16.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,459 - INFO -     Moved
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,459 - INFO -   Processing file 17/28: imputed_data_12.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,459 - INFO -   Sensitive file: imputed_data_12.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,460 - INFO -     Moved
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,460 - INFO -   Processing file 18/28: imputed_data_2.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,460 - INFO -   Sensitive file: imputed_data_2.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,460 - INFO -     Moved
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,460 - INFO -   Processing file 19/28: imputed_data_3.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,461 - INFO -   Sensitive file: imputed_data_3.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,461 - INFO -     Moved
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,461 - INFO -   Processing file 20/28: imputed_data_13.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,462 - INFO -   Sensitive file: imputed_data_13.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,462 - INFO -     Moved
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,462 - INFO -   Processing file 21/28: imputed_data_11.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,463 - INFO -   Sensitive file: imputed_data_11.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,463 - INFO -     Moved
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,463 - INFO -   Processing file 22/28: imputed_data_1.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,464 - INFO -   Sensitive file: imputed_data_1.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,464 - INFO -     Moved
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,464 - INFO -   Processing file 23/28: mice_convergence_trace_plots.png
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,464 - INFO -   Safe file: mice_convergence_trace_plots.png (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,464 - INFO -   Processing file 24/28: imputed_data_10.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,465 - INFO -   Sensitive file: imputed_data_10.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,465 - INFO -     Moved
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,465 - INFO -   Processing file 25/28: missing_data_aggr_plot.png
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,465 - INFO -   Safe file: missing_data_aggr_plot.png (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,465 - INFO -   Processing file 26/28: analysis_summary.json
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,465 - INFO -   Safe file: analysis_summary.json (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,465 - INFO -   Processing file 27/28: mice_density_plots.png
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,465 - INFO -   Safe file: mice_density_plots.png (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,465 - INFO -   Processing file 28/28: missing_data_pattern.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,465 - INFO -   Safe file: missing_data_pattern.csv (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,465 - INFO -   Completed processing stage 7.2
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,465 - INFO - 
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] Processing stage 4/9: 7.3
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,465 - INFO -   Found 6 files in 7.3
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,465 - INFO -   Processing file 1/6: table1_smd.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,466 - INFO -   Safe file: table1_smd.csv (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,466 - INFO -   Processing file 2/6: table1_variable_dictionary.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,466 - INFO -   Safe file: table1_variable_dictionary.csv (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,466 - INFO -   Processing file 3/6: table1_smd_plot.png
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,466 - INFO -   Safe file: table1_smd_plot.png (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,466 - INFO -   Processing file 4/6: main_output.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,466 - INFO -   Sensitive file: main_output.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,466 - INFO -     Moved
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,466 - INFO -   Processing file 5/6: table1_weighted_baseline.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,467 - INFO -   Safe file: table1_weighted_baseline.csv (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,467 - INFO -   Processing file 6/6: analysis_summary.json
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,467 - INFO -   Safe file: analysis_summary.json (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,467 - INFO -   Completed processing stage 7.3
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,467 - INFO - 
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] Processing stage 5/9: 7.4
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,467 - INFO -   Found 10 files in 7.4
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,467 - INFO -   Processing file 1/10: bivariate_correlation_results.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,467 - INFO -   Safe file: bivariate_correlation_results.csv (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,468 - INFO -   Processing file 2/10: bivariate_boxplot_exercise_bmd.png
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,468 - INFO -   Safe file: bivariate_boxplot_exercise_bmd.png (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,468 - INFO -   Processing file 3/10: main_output.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,468 - INFO -   Sensitive file: main_output.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,468 - INFO -     Moved
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,468 - INFO -   Processing file 4/10: correlation_heatmap.png
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,468 - INFO -   Safe file: correlation_heatmap.png (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,468 - INFO -   Processing file 5/10: bivariate_bmd_age_loess.png
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,468 - INFO -   Safe file: bivariate_bmd_age_loess.png (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,468 - INFO -   Processing file 6/10: bivariate_cont_cat_results.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,468 - INFO -   Safe file: bivariate_cont_cat_results.csv (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,468 - INFO -   Processing file 7/10: bivariate_chisq_results.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,469 - INFO -   Safe file: bivariate_chisq_results.csv (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,469 - INFO -   Processing file 8/10: analysis_summary.json
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,469 - INFO -   Safe file: analysis_summary.json (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,469 - INFO -   Processing file 9/10: bivariate_bmd_bmi_loess.png
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,469 - INFO -   Safe file: bivariate_bmd_bmi_loess.png (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,469 - INFO -   Processing file 10/10: correlation_matrix.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,469 - INFO -   Safe file: correlation_matrix.csv (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,469 - INFO -   Completed processing stage 7.4
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,469 - INFO - 
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] Processing stage 6/9: 7.5
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,469 - INFO -   Found 12 files in 7.5
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,469 - INFO -   Processing file 1/12: model_results_linear.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,469 - INFO -   Safe file: model_results_linear.csv (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,469 - INFO -   Processing file 2/12: all_variables_forest_plot_osteoporosis.png
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,469 - INFO -   Safe file: all_variables_forest_plot_osteoporosis.png (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,469 - INFO -   Processing file 3/12: model_vif.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,470 - INFO -   Safe file: model_vif.csv (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,470 - INFO -   Processing file 4/12: main_output.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,470 - INFO -   Sensitive file: main_output.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,470 - INFO -     Moved
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,470 - INFO -   Processing file 5/12: model_forest_plot_bmd.png
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,470 - INFO -   Safe file: model_forest_plot_bmd.png (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,470 - INFO -   Processing file 6/12: model_results_poisson.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,470 - INFO -   Safe file: model_results_poisson.csv (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,470 - INFO -   Processing file 7/12: all_variables_results.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,471 - INFO -   Safe file: all_variables_results.csv (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,471 - INFO -   Processing file 8/12: model_forest_plot_osteoporosis.png
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,471 - INFO -   Safe file: model_forest_plot_osteoporosis.png (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,471 - INFO -   Processing file 9/12: analysis_summary.json
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,471 - INFO -   Safe file: analysis_summary.json (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,471 - INFO -   Processing file 10/12: model_influential_points.csv
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,471 - INFO -   Safe file: model_influential_points.csv (retained)
+2026-01-19 00:19:40,499 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,471 - INFO -   Processing file 11/12: Rplots.pdf
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,471 - INFO -   Safe file: Rplots.pdf (retained)
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,471 - INFO -   Processing file 12/12: model_goodness_of_fit.csv
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,471 - INFO -   Safe file: model_goodness_of_fit.csv (retained)
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,471 - INFO -   Completed processing stage 7.5
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,471 - INFO - 
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] Processing stage 7/9: 7.6
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,472 - INFO -   Found 4 files in 7.6
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,472 - INFO -   Processing file 1/4: interaction_results.csv
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,472 - INFO -   Safe file: interaction_results.csv (retained)
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,472 - INFO -   Processing file 2/4: main_output.csv
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,472 - INFO -   Sensitive file: main_output.csv
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,473 - INFO -     Moved
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,473 - INFO -   Processing file 3/4: analysis_summary.json
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,473 - INFO -   Safe file: analysis_summary.json (retained)
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,473 - INFO -   Processing file 4/4: stratified_results.csv
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,473 - INFO -   Safe file: stratified_results.csv (retained)
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,473 - INFO -   Completed processing stage 7.6
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,473 - INFO - 
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] Processing stage 8/9: 7.7
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,473 - INFO -   Found 7 files in 7.7
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,473 - INFO -   Processing file 1/7: dose_response_exercise.png
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,473 - INFO -   Safe file: dose_response_exercise.png (retained)
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,473 - INFO -   Processing file 2/7: dose_response_alcohol.png
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,473 - INFO -   Safe file: dose_response_alcohol.png (retained)
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,473 - INFO -   Processing file 3/7: dose_response_glucose.png
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,473 - INFO -   Safe file: dose_response_glucose.png (retained)
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,473 - INFO -   Processing file 4/7: main_output.csv
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,473 - INFO -   Sensitive file: main_output.csv
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,474 - INFO -     Moved
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,474 - INFO -   Processing file 5/7: dose_response_hemoglobin.png
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,474 - INFO -   Safe file: dose_response_hemoglobin.png (retained)
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,474 - INFO -   Processing file 6/7: dose_response_results.csv
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,474 - INFO -   Safe file: dose_response_results.csv (retained)
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,474 - INFO -   Processing file 7/7: analysis_summary.json
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,474 - INFO -   Safe file: analysis_summary.json (retained)
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,474 - INFO -   Completed processing stage 7.7
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,474 - INFO - 
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] Processing stage 9/9: 7.8
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,474 - INFO -   Found 5 files in 7.8
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,474 - INFO -   Processing file 1/5: sensitivity_alt_adjustment_results.csv
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,474 - INFO -   Safe file: sensitivity_alt_adjustment_results.csv (retained)
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,474 - INFO -   Processing file 2/5: sensitivity_pr_or_comparison.csv
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,475 - INFO -   Safe file: sensitivity_pr_or_comparison.csv (retained)
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,475 - INFO -   Processing file 3/5: sensitivity_evalue.csv
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,475 - INFO -   Safe file: sensitivity_evalue.csv (retained)
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,475 - INFO -   Processing file 4/5: sensitivity_log_bmd_results.csv
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,475 - INFO -   Safe file: sensitivity_log_bmd_results.csv (retained)
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,475 - INFO -   Processing file 5/5: sensitivity_trim_bmd_results.csv
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,475 - INFO -   Safe file: sensitivity_trim_bmd_results.csv (retained)
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,475 - INFO -   Completed processing stage 7.8
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,475 - INFO - Writing cleanup record...
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,475 - INFO - Preparing to write cleanup record to: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/_private/cleanup_record.json
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,475 - INFO - Writing cleanup record (moved: 28, kept: 53, failed: 0)...
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,475 - INFO - Cleanup record saved successfully: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/_private/cleanup_record.json
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,475 - INFO - Cleanup record written successfully
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,475 - INFO - Printing cleanup summary...
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,475 - INFO - Cleanup summary printed
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - [data_cleaner] 2026-01-19 00:19:40,475 - INFO - Data cleanup process completed, returning results
+2026-01-19 00:19:40,500 - INFO - src.core.orchestrator - Data cleanup completed: DataCleaner subprocess finished successfully
+2026-01-19 00:19:40,501 - INFO - src.core.orchestrator - Report contract generated: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results/report_contract.json
+2026-01-19 00:19:40,502 - INFO - src.core.orchestrator - Running report_generator as subprocess: /usr/local/bin/python3 /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/src/modules/report_generator.py --protocol /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/01_uploads/protocol.docx --output-dir /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results --config /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/config.json
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] returncode=0
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] 
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] ============================================================
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] Statistical Analysis Report Generator
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] ============================================================
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] Research protocol: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/01_uploads/protocol.docx
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] Output directory: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/03_results
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] Configuration file: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/config.json
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] ============================================================
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] 
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] Generating cover and summary...
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] 
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] Generating section 1/9: Stage 7.0 (stage 7.0)...
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] 
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] Generating section 2/9: Analysis Stage 7.1 (stage 7.1)...
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] 
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] Generating section 3/9: Analysis Stage 7.2 (stage 7.2)...
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] 
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] Generating section 4/9: Analysis Stage 7.3 (stage 7.3)...
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] 
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] Generating section 5/9: Analysis Stage 7.4 (stage 7.4)...
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] 
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] Generating section 6/9: Analysis Stage 7.5 (stage 7.5)...
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] 
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] Generating section 7/9: Analysis Stage 7.6 (stage 7.6)...
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] 
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] Generating section 8/9: Analysis Stage 7.7 (stage 7.7)...
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] 
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] Generating section 9/9: Stage 7.8 (stage 7.8)...
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] 
+2026-01-19 00:25:48,463 - INFO - src.core.orchestrator - [report_generator] Generating discussion and conclusion...
+2026-01-19 00:25:48,464 - INFO - src.core.orchestrator - [report_generator] 
+2026-01-19 00:25:48,464 - INFO - src.core.orchestrator - [report_generator] Generating Word document...
+2026-01-19 00:25:48,464 - INFO - src.core.orchestrator - [report_generator] 
+2026-01-19 00:25:48,464 - INFO - src.core.orchestrator - [report_generator] ============================================================
+2026-01-19 00:25:48,464 - INFO - src.core.orchestrator - [report_generator] Report generation completed!
+2026-01-19 00:25:48,464 - INFO - src.core.orchestrator - [report_generator] File location: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/04_reports/statistical_analysis_report.docx
+2026-01-19 00:25:48,464 - INFO - src.core.orchestrator - [report_generator] Number of report sections: 9
+2026-01-19 00:25:48,464 - INFO - src.core.orchestrator - [report_generator] Audit warnings: 2
+2026-01-19 00:25:48,464 - INFO - src.core.orchestrator - [report_generator] ============================================================
+2026-01-19 00:25:48,464 - INFO - src.core.orchestrator - [report_generator] 
+2026-01-19 00:25:48,464 - INFO - src.core.orchestrator - [report_generator] Report generation successful!
+2026-01-19 00:25:48,464 - INFO - src.core.orchestrator - [report_generator] Location: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/04_reports/statistical_analysis_report.docx
+2026-01-19 00:25:48,464 - WARNING - src.core.orchestrator - [report_generator] Report audit found issues: ["Contradictory language: 'design-based' with sample-based inference", "Contradictory language: 'weighted estimation' with sample-based inference"]
+2026-01-19 00:25:48,464 - INFO - src.core.orchestrator - Analysis report generated: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/04_reports/statistical_analysis_report.docx
+2026-01-19 00:25:48,464 - INFO - src.core.orchestrator - ============================================================
+2026-01-19 00:25:48,464 - INFO - src.core.orchestrator - Post-processing completed
+2026-01-19 00:25:48,464 - INFO - src.core.orchestrator - Report location: /Users/bcx/Desktop/1206/Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)/workspace/analysis_20260118_231920_219565ec/04_reports/statistical_analysis_report.docx
+2026-01-19 00:25:48,464 - INFO - src.core.orchestrator - Data cleanup: DataCleaner subprocess finished successfully
+2026-01-19 00:25:48,464 - INFO - src.core.orchestrator - ============================================================
+2026-01-19 00:25:48,464 - INFO - api_server - Task 751c9dfc-e987-4851-9829-423a1ae6f912 postprocess() returned successfully
+2026-01-19 00:25:48,464 - INFO - api_server - Task 751c9dfc-e987-4851-9829-423a1ae6f912 post-processing completed
+2026-01-19 00:25:48,464 - INFO - api_server - Task 751c9dfc-e987-4851-9829-423a1ae6f912 analysis execution completed, status: completed

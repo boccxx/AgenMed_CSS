@@ -1,0 +1,2033 @@
+{
+  "name": "C_Write_Intelligent_Design_Proposal",
+  "nodes": [
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"assignments\": [\n    { \"name\": \"sessionId\", \"value\": \"{{ $json.body.sessionId }}\", \"type\": \"string\" }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1952,
+        1424
+      ],
+      "id": "d0d1f7ee-e5bc-4de5-aa36-20fab44d7767",
+      "name": "2.Prepare Input"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT\n  session_id,\n  classified_framework,\n  final_structured_memory,\n  goal_hypothesises,\n  target_source_population_sampling_frame,\n  probability_non_sampling,\n  sampling_statistical_toolkit,\n  verified_tool,\n  develop_new_tools,\n  potential_ariables_sem,\n  dag_construction,\n  mixed_mediation_collision,\n  adjustment_set,\n  dagitty,\n  Data_Preparation_Quality_Control,\n  Missing_data_handling,\n  descriptive_statistics,\n  Bivariate_exploration,\n  Main_Model,\n  Model_diagnosis,\n  PSM,\n  Mediation,\n  Moderation,\n  SEM,\n  LCA,\n  Sensitivity_analysis,\n  Reporting_standards,\n  Results_Publication_Dissemination\n\nFROM public.conversation_sessions\nWHERE session_id = '{{ $json.assignments[0].value }}';",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -1728,
+        1424
+      ],
+      "id": "7a190736-4dc6-403d-86d7-205e2b15f606",
+      "name": "3.Read Research Design Info",
+      "credentials": {
+        "postgres": {
+          "id": "uaHhgTOU0gtpkeQ6",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const row = $json;\n\nconst GLOBAL_WRITING_RULES = `【Global Writing Style Conventions】\n- Style: Objective, compact, leaning towards a \"research protocol\" rather than a \"textbook explanation\". Focus on \"how this study will be designed/implemented/analyzed\", not on explaining disciplinary concepts.\n- Sentence Length: Prioritize short sentences; single sentences should not exceed 20-30 English words; avoid more than three layers of subordinate clauses; unfold long logic using paragraph breaks and lists.\n- Chapter Titles: Do not output chapter main titles (like \"# 1. Title and Abstract\") in content_md_main. Start directly with level 2 titles (##) or the body text. Chapter numbers and main titles are added by the system.\n- Appendix Format: In content_md_appendix, write only the appendix content. Do not write general titles like \"Appendix X\". Start directly with small headers like \"#### Appendix 6.A ...\".\n\n【Information Utilization and Length Requirements】\n- Do not arbitrarily compress source information: Any key technical details already present in the input fields (sampling stages, weight construction, missing data handling methods, DAG adjustment sets, sample size parameters, diagnostic steps, etc.) must be written into the main text or appendix in some form. Merging and de-duplicating is allowed, but simply skimming over it with one sentence is not.\n- Prioritize \"Rewriting and Reorganizing\": Your task is to rewrite structured information and draft text into a coherent, readable protocol document; deleting obviously repetitive or contradictory sentences is allowed, but compressing long technical content into one or two vague summaries is prohibited.\n- Length Benchmarks:\n  - Core Methodology Chapters (3. Research Design, 5. Variables & Measurement, 6. Bias & Sample Size, 7. Statistical Methods): Suggested 3000-4000 words per chapter. Each main subsection (e.g., 3.1 / 3.2 / 6.1 / 6.3 / 7.3 / 7.5) should be at least 600-800 words. If input information is scarce, it can be shortened appropriately, but all existing details must be exhausted.\n  - Other Chapters (1, 2, 4, 8, 9): Suggested 2000-3000 words per chapter, covering all key points, not just one or two paragraphs.\n- If input fields are severely insufficient: You may point out the \"information gap\" in one or two sentences (e.g., \"Specific implementation details will be supplemented by the research team later\"), but strictly NO fabricating data, values, or specific results.\n\n【Prohibited or Restricted Content】\n- No long \"Textbook Paragraphs\": E.g., \"Cross-sectional studies are...\" \"Multiple imputation is a method...\" \"The STROBE statement requires...\", etc. Only 1-2 sentences explaining the background are allowed; do not occupy entire paragraphs.\n- Do not repeat introductions of research design types, sample size formulas, etc.: The same content should appear only once in a chapter; mention it again using brief references (e.g., \"the aforementioned sample size calculation\"), do not rewrite it.\n- Do not use cross-references with specific chapter numbers (e.g., \"see section 3.2\", \"as mentioned in 6.3\"). Change to descriptive references (e.g., \"according to the aforementioned sampling design\", \"based on the DAG framework described above\").\n- Avoid empty clichés: Phrases like \"This study has important public health significance\" or \"will provide a scientific basis for...\" should not exceed 2 sentences in the entire full text, and should only appear in the abstract or conclusion.\n\n【Output Requirements】\n- Strictly adhere to JSON structure requirements (field names, types, hierarchy must follow instructions).\n- Heading levels in Markdown must be clear and continuous, avoiding skipping levels (do not jump directly from ## to #### then back to ###).\n- Bullet points and tables are allowed to enhance readability, but keep the style consistent with a \"Research Protocol\"; avoid flashy formatting.\n`;\n\nreturn {\n  json: {\n    session_id: row.session_id,\n\n    classified_framework: row.classified_framework || {},\n    final_structured_memory: row.final_structured_memory || {},\n    goal_hypothesises: row.goal_hypothesises || {},\n\n    target_source_population_sampling_frame: row.target_source_population_sampling_frame || {},\n    probability_non_sampling: row.probability_non_sampling || {},\n    sampling_statistical_toolkit: row.sampling_statistical_toolkit || {},\n\n    verified_tool: row.verified_tool || {},\n    develop_new_tools: row.develop_new_tools || {},\n    potential_ariables_sem: row.potential_ariables_sem || {},\n\n    dag_construction: row.dag_construction || {},\n    mixed_mediation_collision: row.mixed_mediation_collision || {},\n    adjustment_set: row.adjustment_set || {},\n    dagitty: row.dagitty || {},\n\n    data_preparation_quality_control: row.data_preparation_quality_control || {},\n    missing_data_handling: row.missing_data_handling || {},\n\n    descriptive_statistics: row.descriptive_statistics || {},\n    bivariate_exploration: row.bivariate_exploration || {},\n\n    main_model: row.main_model || {},\n    model_diagnosis: row.model_diagnosis || {},\n\n    psm: row.psm || {},\n    mediation: row.mediation || {},\n    moderation: row.moderation || {},\n    sem: row.sem || {},\n    lca: row.lca || {},\n\n    sensitivity_analysis: row.sensitivity_analysis || {},\n    reporting_standards: row.reporting_standards || {},\n    results_publication_dissemination: row.results_publication_dissemination || {},\n\n    GLOBAL_WRITING_RULES,\n  },\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1504,
+        1424
+      ],
+      "id": "4e61aa50-259d-4d0a-aa29-b7b2fe016d44",
+      "name": "4.Organize Input"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.GLOBAL_WRITING_RULES }}\n\nYou are an expert in medical and epidemiological writing, acting as one of the lead authors for this research protocol. Your task is to generate an academic, information-rich 【Title + Structured Abstract】 based on the core research information provided, ensuring full alignment with the subsequent text.\n\nCore Writing Instructions\nIn this workflow, many input fields (e.g., goal_hypothesises, sampling_statistical_toolkit) may contain professional wording that can be 【published directly】.\n\nFor this chapter (Title and Abstract), your main task is to 【Write】 and 【Refine】, as there is no ready-made abstract in the source data.\n\nYou need to 【Synthesize】 all available information to write a high-quality structured abstract.\n\nWhen writing the \"Methods\" section of the abstract, please 【Reuse】 the 【Keywords and Professional Terminology】 from `sampling_statistical_toolkit` and `main_model` as much as possible (e.g., \"stratified multi-stage sampling\", \"modified Poisson regression\", \"Prevalence Ratio\") to ensure consistency with subsequent chapters.\n\nAvailable Information\nFinal Research Question/Core Elements: {{ JSON.stringify($json.final_structured_memory) }}\nResearch Goals & Hypotheses: {{ JSON.stringify($json.goal_hypothesises) }}\nFramework: {{ JSON.stringify($json.classified_framework) }}\nTarget/Source Population & Sampling Frame: {{ JSON.stringify($json.target_source_population_sampling_frame) }}\nProbability/Non-probability Sampling: {{ JSON.stringify($json.probability_non_sampling) }}\nSampling Statistical Toolkit: {{ JSON.stringify($json.sampling_statistical_toolkit) }}\nMain Model and Effect Size: {{ JSON.stringify($json.main_model) }}\nDAG/Causal Statements (Briefly for thematic focus): {{ JSON.stringify($json.dag_construction) }}\n\nWriting Requirements\n1. The Title must explicitly include terms like \"Cross-sectional Study/Survey\" and reflect as much as possible:\n   - Study Population and Location (e.g., Community-dwelling elderly in a certain region of Shandong Province)\n   - Core Exposure and Outcome (expand as per final_structured_memory and main_model)\n   - If necessary, specify the effect size form (e.g., Prevalence Ratio).\n2. The Abstract must be a 【Structured Abstract】, including: Background, Objectives, Methods, Expected Results, Conclusion, and 3–5 Keywords.\n3. The Methods section must fully utilize all information regarding design, population, sampling, and main models.\n4. Expected Results should be phrased as \"Expected to find...\", specific values cannot be fabricated, but direction can be indicated based on hypotheses.\n5. The Conclusion section should tie back to the significance of the study, emphasizing potential contributions to disease burden assessment, risk stratification, or policy making.\n6. Keywords should be written according to journal conventions (3–5 words), covering population, exposure, outcome, and design type.\n\n【Output Format Requirements】\nPlease strictly output a JSON object as follows:\n{\n  \"chapter\": 1,\n  \"title\": \"1. Title and Abstract\",\n  \"content_md_main\": \"Output the Markdown format body text here. Use # (Level 1 heading) for the Title, and bold for Abstract subsections (e.g., **Background**). Do not output extra pleasantries or characters outside the JSON.\",\n  \"content_md_appendix\": \"\",\n  \"needs\": []\n}\nProhibit outputting any text outside the JSON, and do not use ``` code blocks to wrap the JSON.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -352,
+        0
+      ],
+      "id": "1cc4a566-024f-45ec-9c8c-c5abfc1a8fa0",
+      "name": "6_1.Title and Abstract"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=={{ $json.GLOBAL_WRITING_RULES }}\n\nYou are an expert in academic writing for epidemiology and public health, responsible for compiling the \"2. Background and Objectives\" section of the research protocol.\n\nCore Writing Instructions\nYour task is to 【Output in Layers】, strictly distinguishing between \"Protocol Main Text\" and \"Supplementary Materials\". You are a \"Lead Author\" responsible for 【Compiling and Fusing】 source information into fluent chapters. You are only responsible for explaining \"Why this study is being done\" (Background and Objectives), not writing specific research design, population, sample size, or statistical methods. You can cite disease burden data, previous literature conclusions, evidence gaps, theoretical frameworks, and causal pathways, but do not expand on variable definitions or sampling details. Do not write technical descriptions like \"This study will use a cross-sectional design\" or \"will use complex sampling\".\n\n1. content_md_main (Protocol Main Text)\nTask: 【Compile and Fuse】\nThe 【Focus】 of this chapter is answering the \"Why\" of the study.\nYour main information sources are:\n- `goal_hypothesises`: This is the 【Core】 of this chapter. You must use `primary_objectives`, `secondary_objectives`, `research_hypotheses` (H0/H1), and `methodological_contracts` as the main body of the 【2.2 Research Objectives and Hypotheses】 section.\n- `final_structured_memory`: Used at the beginning of 【2.1 Background】 to write the epidemiological background introduction regarding disease burden and population.\n- `dag_construction`: You *may* extract 【High-level Reasons】 regarding \"Why a DAG is needed\" or \"Theoretical Framework\" from `protocol_text` or `dag_text_summary` and fuse them into 【2.1 Background】.\n\nProhibitions:\n- Do not include 【Specific Methods】 from `dag_construction` (like `dagitty_model` code, detailed variable role lists, minimal adjustment sets) in this chapter (Main Text). These technical details belong to subsequent methodology chapters.\n- Your task is \"Compiling\", not \"Splicing\". You must rewrite transition sentences, unify tense and terminology, ensuring 【2.1】 and 【2.2】 read as a coherent whole.\n\n2. content_md_appendix (Supplementary Materials)\nTask: 【Copy Verbatim】\nThe appendix of this chapter 【Only】 stores those \"raw materials\" mentioned in the main text but are too trivial.\n- If `dag_construction` contains `dagitty_model` (DAG code), **do not place it here**. It should be placed in the appendix of Chapter 6 (Bias) or Chapter 7 (Statistics).\n- The appendix for this chapter will likely be empty. If `goal_hypothesises` contains a particularly long list of \"methodological contracts\" not detailed in the main text, you might consider placing it here.\n\nAvailable Information\nResearch Goals/Hypotheses (Core Source): {{ JSON.stringify($json.goal_hypothesises) }}\nDAG/Causal Logic (Secondary Source, only for extracting \"reasons\"): {{ JSON.stringify($json.dag_construction) }}\nFinal Research Question (Source): {{ JSON.stringify($json.final_structured_memory) }}\n\n【Output Format】\nYou must strictly output a JSON object with the structure:\n{\n  \"chapter\": 2,\n  \"title\": \"2. Background and Objectives\",\n  \"content_md_main\": \"Write the complete Markdown body for 2.1 Background and 2.2 Research Objectives and Hypotheses here, excluding any JSON.\",\n  \"content_md_appendix\": \"Here is the Markdown for this chapter's appendix, if none then \\\"\\\"\",\n  \"needs\": [\n    \"If key information is found missing during writing (e.g., lack of latest local prevalence data), list it here; if no gaps return [].\"\n  ]\n}\n【Strict Format Constraints】\n- The top level must be a JSON object, keys can only be: chapter, title, content_md_main, content_md_appendix, needs.\n- Do not output any text outside the JSON.\n- Do not use ``` or ```json to wrap the JSON.\n- If there is no appendix content, content_md_appendix should be an empty string \"\".\n- If there is no information needing supplementation, needs should be [].",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -352,
+        400
+      ],
+      "id": "fc5bea7c-dbe3-4cd6-91a5-0d111124042d",
+      "name": "6_2.Background and Objectives"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=={{ $json.GLOBAL_WRITING_RULES }}\n\nYou are an expert in research methods and design, responsible for compiling the \"3. Research Design and Setting\" chapter of the research protocol.\n\nCore Writing Instructions\nYour task is to 【Output in Layers】, strictly distinguishing between \"Protocol Main Text\" and \"Supplementary Materials\". You are a \"Lead Author\" responsible for 【Compiling and Fusing】 source information into fluent chapters. You are only responsible for describing the research design type, sampling structure, research location, and time frame. Do not write about target population and source population, inclusion/exclusion criteria, sample size formulas, or operational definitions of variables.\n\n1. content_md_main (Protocol Main Text)\nTask: 【Compile and Fuse】\nThe 【Focus】 of this chapter is answering the \"What\" (what design) and \"Where\" (what population/site) of the study.\nYour main information sources are:\n- `sampling_statistical_toolkit`: This is the 【Core】 of this chapter. You must utilize the information in this field **exhaustively** (especially `full_protocol_text`, if it exists and is complete) to write 【3.1 Research Design and Sampling Plan】. If `full_protocol_text` is incomplete, you must 【Synthesize】 sub-fields like `rationale`, `design_label`, `stages_plan`, `stratification_plan`, etc.\n- `target_source_population_sampling_frame`: This is the 【Other Core】 of this chapter. You must use the definitions of `target_population`, `source_population`, and `sampling_frame` in this field to write 【3.2 Research Setting】.\n    \nProhibitions:\n- Your task is \"Compiling\", not \"Splicing\". You must rewrite transition sentences, unify tense (e.g., \"This study will adopt...\"), ensuring 【3.1】 and 【3.2】 read as a coherent whole.\n- `content_md_main` must be 【Complete and Detailed】. Do not incorrectly classify the content of `full_protocol_text` (which is the core protocol) into the appendix.\n\n2. content_md_appendix (Supplementary Materials)\nTask: 【Copy Verbatim】\nThe appendix of this chapter 【Only】 stores those \"supplementary details\" or \"background arguments\" that are *not needed* to be detailed in the main text and are too trivial.\n- `external_validity` (detailed discussion on external validity) in `target_source_population_sampling_frame` is a good candidate for the appendix.\n- `quality_control` (detailed list of QC steps), `randomization_plan` (technical details regarding randomization seeds), `weighting_and_analysis` (technical contracts regarding `svyset`) in `sampling_statistical_toolkit` are also good candidates for the appendix.\n\nAvailable Information\nSampling Method Toolkit (Core Source): {{ JSON.stringify($json.sampling_statistical_toolkit) }}\nTarget/Source Population/Sampling Frame (Core Source): {{ JSON.stringify($json.target_source_population_sampling_frame) }}\nResearch Framework (Supplementary): {{ JSON.stringify($json.classified_framework) }}\n\nOutput Format\nPlease return a JSON object:\n{\n  \"chapter\": 3,\n  \"title\": \"3. Research Design and Setting\",\n  \"content_md_main\": \"Here is the complete Markdown body for 3.1 and 3.2\",\n  \"content_md_appendix\": \"Here is the Markdown for this chapter's appendix, if none then \\\"\\\"\",\n  \"needs\": [\n    \"If key information is found missing during writing, list it here; if no gaps return [].\"\n  ]\n}\nDo not output any text outside the JSON, and do not use ``` to wrap the entire JSON.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -352,
+        592
+      ],
+      "id": "a92ac74d-181d-488e-982a-13077b14ead4",
+      "name": "6_3.Research Design and Setting"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.GLOBAL_WRITING_RULES }}\n\nYou are an expert in research methods and design, responsible for compiling the \"4. Participants\" section of the research protocol.\n\nCore Writing Instructions\nYour task is to 【Output in Layers】, strictly distinguishing between \"Protocol Main Text\" and \"Supplementary Materials\". You are a \"Lead Author\" responsible for 【Compiling and Fusing】 source information into fluent chapters.\n\n1. content_md_main (Protocol Main Text)\nTask: 【Compile and Fuse】\nThe 【Focus】 of this chapter is answering the \"Who\" (who is being studied).\nYour main information sources are:\n- `target_source_population_sampling_frame`: This is the 【Core】 of this chapter. You must use the definitions of `target_population` and `source_population` in this field to write 【4.1 Target Population and Source Population】.\n- `probability_non_sampling` and `sampling_statistical_toolkit`: You must 【Extract】 information regarding \"Inclusion Criteria\" and \"Exclusion Criteria\" from these fields to write 【4.2 Eligibility Criteria (Inclusion/Exclusion)】. If there is no explicit list in the source data, you need to reasonably construct this list based on context (e.g., age, region).\n- `sampling_statistical_toolkit`: You must 【Extract】 information regarding \"Recruitment Process\" (e.g., stage 3 in `stages_plan`), \"Quality Control\" (e.g., substitution for loss to follow-up in `quality_control`), and \"Informed Consent\" from this field to write 【4.3 Participant Recruitment and Process】.\n\nProhibitions:\n- Your task is \"Compiling\", not \"Splicing\". You must rewrite transition sentences, unify tense, ensuring high readability for this chapter.\n- `content_md_main` must be 【Complete and Detailed】.\n\n2. content_md_appendix (Supplementary Materials)\nTask: 【Copy Verbatim】\nThe appendix of this chapter 【Only】 stores those \"supplementary details\" or \"background arguments\" that are *not needed* to be detailed in the main text and are too trivial.\n- `external_validity` (detailed discussion on external validity) and `sampling_frame` (detailed technical description of the sampling frame) in `target_source_population_sampling_frame` are good candidates for the appendix.\n\nAvailable Information\nTarget/Source Population/Sampling Frame (Core Source): {{ JSON.stringify($json.target_source_population_sampling_frame) }}\nSampling Method Toolkit (Source): {{ JSON.stringify($json.sampling_statistical_toolkit) }}\nSampling Mode (Source): {{ JSON.stringify($json.probability_non_sampling) }}\nResearch Framework (Supplementary): {{ JSON.stringify($json.classified_framework) }}\nFinal Research Question: {{ JSON.stringify($json.final_structured_memory) }}\n\nOutput Format\nPlease strictly output a JSON object:\n{\n  \"chapter\": 4,\n  \"title\": \"4. Participants\",\n  \"content_md_main\": \"## 4.1 Target Population and Source Population\\n\\n(Text...)\\n\\n## 4.2 Eligibility Criteria\\n\\n(Text...)\\n\\n## 4.3 Recruitment Process\\n\\n(Text...)\",\n  \"content_md_appendix\": \"#### Appendix 4.A: Detailed Recruitment Script or Flowchart Description\\n\\n(If relevant material exists...)\",\n  \"needs\": []\n}\nProhibit outputting any text outside the JSON, and do not use ``` code blocks to wrap the JSON.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -352,
+        784
+      ],
+      "id": "8a11899a-b568-445f-b26e-059c1225eeb5",
+      "name": "6_4.Participants"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=={{ $json.GLOBAL_WRITING_RULES }}\n\nYou are an expert in biostatistics and psychometrics, responsible for compiling the \"5. Variable Definitions and Data Sources/Measurement\" section of the research protocol. Describe the operational definitions, measurement methods, and data sources for all key variables in this study, including outcomes, exposures, and covariates. Also explain the use of verified tools and new tools, along with their reliability/validity evidence.\n\nCore Writing Instructions\nYour task is to 【Output in Layers】, strictly distinguishing between \"Protocol Main Text\" and \"Supplementary Materials\". You are a \"Lead Author\" responsible for 【Compiling and Fusing】 source information into fluent chapters.\n\n1. content_md_main (Protocol Main Text)\nTask: 【Compile and Fuse】\nThe 【Focus】 of this chapter is answering the \"What\" (what is being measured).\nYour main information sources are:\n- `potential_ariables_sem`: This is the 【Core】 of this chapter. You must 【Exhaustively Compile】 the content of `protocol_text`, clearly expounding the diagnostics and strategies for both types of variables in 【5.1 Variable Definitions (Latent and Observed)】.\n- `verified_tool` (e.g., MoCA-Basic): You must 【Exhaustively Compile】 the content of `validation_document`, detailing the reliability, validity, applicability, and implementation plan of the tool in 【5.2 Measurement Tools (Verified)】.\n- `develop_new_tools` (e.g., QoL): You must 【Exhaustively Compile】 the content of `protocol_text` and `implementation_plan`, detailing the four stages of scale development in 【5.3 Measurement Tools (Newly Developed)】.\n- `data_preparation_quality_control`: You must 【Exhaustively Compile】 the content of `state.protocol_text`, expounding on data sources, cleaning, QC steps, etc., in 【5.4 Data Management and Quality Assurance】.\n\nProhibitions:\n- Your task is \"Compiling\", not \"Splicing\". You must rewrite transition sentences, unify tense, ensuring high readability for this chapter.\n- `content_md_main` must be 【Complete and Detailed】, as these are core parts of the protocol.\n- Prohibit outputting DAG code: Although you can see dag_construction information, strictly forbid outputting any DAGitty code or causal graphs in this chapter (Chapter 5). These contents must be left for Chapter 6. This chapter only focuses on variable definitions and measurement methods.\n\n2. content_md_appendix (Supplementary Materials)\nTask: 【Copy Verbatim】\nThe appendix of this chapter 【Only】 stores those \"raw materials\" or \"blank templates\" *not needed* in the main text.\n- `validation_report_template` (blank validation report writing template) in `develop_new_tools` is a perfect candidate for the appendix.\n- `systematic_search_evidence` (internal records regarding systematic search) in `verified_tool` is also a good candidate for the appendix.\n- Detailed sub-fields in `data_preparation_quality_control` (like `duplicate_check_plan_summary`, `range_check_plan_summary`) can be put into the appendix as a \"QC Checklist\".\n- And other involved contents.\n\nAvailable Information\nVerified/New Tools: {{ JSON.stringify($json.verified_tool)||{} }}, {{  JSON.stringify($json.develop_new_tools)||{} }}\nVariable Role Identification & Adjustment Sets: {{  JSON.stringify($json.dag_construction) }}, {{  JSON.stringify($json.mixed_mediation_collision) }}, {{  JSON.stringify($json.adjustment_set) }}, {{  JSON.stringify($json.dagitty) }}\nLatent Variables: {{  JSON.stringify($json.potential_ariables_sem) }}\nData QC: {{  JSON.stringify($json.data_preparation_quality_control) }}\n\nOutput Format\nPlease strictly output a JSON object:\n{\n  \"chapter\": 5,\n  \"title\": \"5. Variable Definitions and Data Sources/Measurement\",\n  \"content_md_main\": \"## 5.1 Variable Classification and Definitions\\n\\n(Text...)\\n\\n## 5.2 Measurement Tools and Methods\\n\\n(Text...)\\n\\n## 5.3 Data Management\\n\\n(Text...)\",\n  \"content_md_appendix\": \"#### Appendix 5.A: [Appendix Specific Title]\\n\\n(Content...)\\n\\n(Note: Do not include repeated numbering like 'Appendix 5: 5.' in the appendix title, write 'Appendix 5.A: ...' directly)\",\n  \"needs\": []\n}\nNote: Do **not** include a main title in content_md_appendix, start directly with ####.\nProhibit outputting any text outside the JSON, and do not use ``` code blocks to wrap the JSON.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -704,
+        976
+      ],
+      "id": "58036f91-89de-47ca-b3fb-257a99cb5535",
+      "name": "6_5.Variable Definitions and Data Sources/Measurement"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.GLOBAL_WRITING_RULES }}\n\nYou are an expert in research ethics and project compliance. Responsible for writing the 【8. Ethical Statement and Funding】 chapter of the research protocol.\n\n【Writing Boundaries and De-duplication Instructions】\n- This chapter is only responsible for \"Compliance\" and \"Administration\".\n- Strictly prohibit repeating \"Recruitment Process Details\" from Chapter 4 (Here only discuss the legal/ethical aspects of informed consent, not how to distribute flyers).\n- Strictly prohibit repeating \"Data Encryption Technical Details\" from Chapter 5 (Here only discuss privacy protection principles).\n- If specific information on funding or conflicts of interest is missing in the input data, you must generate conspicuous placeholders (e.g., [To be supplemented]), absolutely do not fabricate fake funding agencies.\n- Prohibit long explanations of the content of ethical codes like the \"Declaration of Helsinki\", just state that this study will comply with relevant regulations.\n- Appendix Format: Start directly with #### 8.A etc. sub-headers.\n\n【Available Information】\n- Reporting & Standards (incl. Ethics): {{ JSON.stringify($json.reporting_standards) }}\n- Results Publication & Dissemination (incl. Authorship): {{ JSON.stringify($json.results_publication_dissemination) }}\n\n【Core Instructions】\n\n1. Write 8.1 Ethical Approval:\n- State that the study will comply with the Declaration of Helsinki and relevant laws/regulations.\n- Clearly point out the need for approval from which level of Institutional Review Board (IRB/EC). If a specific institution name is in the input data use it, otherwise use a placeholder.\n\n2. Write 8.2 Informed Consent:\n- Describe the method of obtaining informed consent (Written/Oral/Electronic).\n- Specifically explain special protection measures for vulnerable groups (e.g., minors, cognitively impaired) if applicable.\n- Distinguish between different handling methods for \"Prospective Recruitment\" (needs signing ICF) and \"Retrospective Data Utilization\" (applying for waiver of informed consent).\n\n3. Write 8.3 Privacy and Data Security:\n- Expound on De-identification strategies.\n- State management principles for data storage and access permissions (access limited to authorized personnel).\n\n4. Write 8.4 Funding:\n- Based on input information, list funding agencies and project numbers.\n- If no specific info, generate standard statement: \"This study is supported by [To be supplemented: Funding Agency Name and Project Number].\"\n- State whether the funder participated in research design or data analysis (usually stated as \"Did not participate\" to ensure independence).\n\n5. Write 8.5 Conflict of Interest:\n- Generate a standard Conflict of Interest disclosure statement. If no specific conflict, state \"The authors declare no potential conflicts of interest.\"\n\n6. Write 8.6 Authorship:\n- Cite ICMJE standards to define authorship qualification.\n\n【Output Format Requirements】\nPlease strictly output a JSON object:\n{\n  \"chapter\": 8,\n  \"title\": \"8. Ethical Statement and Funding\",\n  \"content_md_main\": \"## 8.1 Ethical Approval\\n\\n(Text...)\\n\\n## 8.2 Informed Consent\\n\\n(Text...)...\",\n  \"content_md_appendix\": \"#### Appendix 8.A: Informed Consent Template (Placeholder)\\n\\n(Here mention: The detailed text of the Informed Consent Form is in a separate attachment.)\",\n  \"needs\": [\"Need to confirm specific name of Ethics Committee\", \"Need to confirm project funding number\"]\n}\nNote: content_md_appendix starts directly with ####.\nProhibit outputting any text outside the JSON, and do not use ``` code blocks to wrap the JSON.",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        0,
+        1792
+      ],
+      "id": "4ffd6ac2-214a-4ebd-9f4c-9f5e9679cd39",
+      "name": "6_8.Ethical Statement and Funding"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.GLOBAL_WRITING_RULES }}\n\nYou are an expert in academic dissemination and impact translation. Responsible for writing the 【9. Result Publication and Dissemination Plan】 chapter of the research protocol.\n\n【Writing Boundaries and De-duplication Instructions】\n- This chapter is only responsible for \"Impact\" (Impact and Output).\n- The core task is to answer \"After the research is done, how to let the world know the results\".\n- Strictly prohibit repeating \"Statistical Reporting Standards\" from Chapter 7 (Here only discuss which guidelines to follow, not how to write specific statistical metrics).\n- Strictly prohibit repeating Research Design description from Chapter 3.\n- Prohibit explaining concepts like FAIR principles, STROBE statement, etc., directly state that this study will follow these principles/statements.\n- Appendix Format: Start directly with #### 9.A, #### 9.B etc. sub-headers.\n\n【Available Information】\n- Dissemination Plan (Core Source): {{ JSON.stringify($json.results_publication_dissemination) }}\n- Reporting Standards: {{ JSON.stringify($json.reporting_standards) }}\n\n【Core Instructions】\n\n1. Write 9.1 Academic Publication:\n- Target Journals: Based on input info, list proposed journal tiers (Tier 1/Tier 2), and briefly state reasons for selection (e.g., impact, audience match).\n- Output Forms: Explain planned article types (e.g., Main Result Paper, Methodology Paper, Subgroup Analysis Paper).\n\n2. Write 9.2 Conference Presentation:\n- List types of international or domestic conferences planned to attend.\n- Form: Oral presentation or Poster.\n\n3. Write 9.3 Policy and Public Dissemination (Dissemination beyond Academia):\n- This is value-added. Describe how to translate results into non-academic products:\n  - Policy Brief: For health administration departments.\n  - Educational Materials: For communities or patients.\n  - Clinical Guideline Recommendations: For doctors.\n\n4. Write 9.4 Data Sharing & Reproducibility:\n- State data sharing policy (FAIR principles).\n- Explain when, where, and how (e.g., public repository, controlled access) to share de-identified data and code.\n\n5. Write 9.5 Reporting Guidelines:\n- Explicitly point out which guideline standards this study report will follow (e.g., STROBE Statement), and promise to provide a checklist.\n\n【Output Format Requirements】\nPlease strictly output a JSON object:\n{\n  \"chapter\": 9,\n  \"title\": \"9. Result Publication and Dissemination Plan\",\n  \"content_md_main\": \"## 9.1 Academic Publication\\n\\n(Text...)\\n\\n## 9.2 Conference Presentation\\n\\n(Text...)\\n\\n## 9.3 Policy and Public Dissemination\\n\\n(Text...)\\n\\n## 9.4 Data Sharing & Reproducibility\\n\\n(Text...)\\n\\n## 9.5 Reporting Guidelines\\n\\n(Text...)\",\n  \"content_md_appendix\": \"#### Appendix 9.A: Target Journal List\\n\\n(List specific journal names here...)\\n\\n#### Appendix 9.B: Reporting Guideline Checklist Explanation\\n\\n(Briefly describe the Checklist version to be used)\",\n  \"needs\": []\n}\nNote: content_md_appendix starts directly with ####.\nProhibit outputting any text outside the JSON, and do not use ``` code blocks to wrap the JSON.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -352,
+        2512
+      ],
+      "id": "a8283b3d-c95d-46c3-84f3-ed32f7a6132a",
+      "name": "6_9.Result Publication and Dissemination Plan"
+    },
+    {
+      "parameters": {
+        "numberInputs": 9
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        352,
+        864
+      ],
+      "id": "e7860929-9963-4550-8d1c-8455c7c9c3c9",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=={{ $json.GLOBAL_WRITING_RULES }}\n\nYou are an expert in biostatistics and epidemiology. This node is responsible for writing sections 【7.1 Data Preparation and Quality Control】 and 【7.2 Missing Data Handling】 of Chapter 7 \"7. Statistical Methods\" of the research protocol.\n\nThis node only writes:\n- 7.1 Data Preparation and Quality Control (Main Text)\n- 7.2 Missing Data Handling (Main Text)\n\nThe content_md_appendix for this node should universally return an empty string \"\". Detailed appendices for this chapter (Data QC checklist, variable list, bivariate pair list, etc.) will be generated uniformly by another dedicated appendix node.\n\n【Available Information】\nData Preparation and Quality Control: {{ JSON.stringify($json.data_preparation_quality_control) }}\nMissing Data Handling: {{ JSON.stringify($json.missing_data_handling) }}\n\ndata_preparation_quality_control usually contains:\n- state.protocol_text: Narrative for the protocol main text;\n- Other sub-fields (like duplicate_check_plan_summary, range_check_plan_summary, etc.) can be used in the appendix node.\nmissing_data_handling usually contains:\n- protocol_text: Protocol text for missing data handling strategy;\n- Other technical details, depending on structure.\n\n【content_md_main Writing Requirements】\nPlease write the complete:\n## 7.1 Data Preparation and Quality Control\nin content_md_main, revolving around the following content (reference data_preparation_quality_control.state.protocol_text etc.):\n- Data Sources and Flow: Which systems/platforms/surveys raw data comes from, how it is aggregated into analysis datasets;\n- Data Cleaning Process: Including uniqueness checks, duplicate record handling, range checks, logic consistency checks, outlier identification and handling principles;\n- Variable Derivation and Coding: Construction of key variables (e.g., converting raw fields to analysis variables, grouping methods);\n- Database Version Management and Audit Trails (if relevant descriptions exist);\n- QC Role Division and Timeline (e.g., who checks, when to lock DB).\n\nThen write:\n## 7.2 Missing Data Handling\nReference missing_data_handling.protocol_text, explain:\n- Expected overall pattern of missing data (MCAR, MAR, MNAR, etc.);\n- How to report missingness in the descriptive analysis stage (missing proportion, presentation by variable/stratification);\n- Treatment strategy for missing data in the main analysis (e.g., Complete Case Analysis, Multiple Imputation based analysis, etc.);\n- If planning to use Multiple Imputation, explain the basic idea of the imputation model (including variables, iterations, software framework, etc.);\n- Strategy for high missing proportion variables (e.g., only used in sensitivity analysis);\n- Diagnostics or sensitivity analysis to assess the rationality of missing data handling (e.g., comparing estimates before and after imputation).\n\nLanguage Requirements: Unify to research protocol style, use complete paragraphs and subheadings, avoid piling up bullet points.\n\n【content_md_appendix】\nPlease return an empty string \"\" for content_md_appendix in this node (Appendices for this chapter are generated uniformly by other nodes).\n\n【needs】\nPlease list information related to 7.1 and 7.2 that needs to be supplemented or confirmed by the researcher in the needs array, for example:\n- Missing proportion estimation not yet available;\n- Specific software and parameters for multiple imputation not yet determined;\n- Data quality of certain key variables is unclear.\nIf there is no obvious information needing supplementation, please return an empty array [].\n\n【Output Format】\nPlease strictly output JSON:\n{\n  \"chapter\": 7,\n  \"title\": \"7. Statistical Methods\",\n  \"content_md_main\": \"Here only contains the complete Markdown body for 7.1 and 7.2\",\n  \"content_md_appendix\": \"\",\n  \"needs\": [\n    \"If missing data handling strategy still has key uncertainties (e.g., whether to use multiple imputation), please list here; if none then [].\"\n  ]\n}\nProhibit outputting any text outside the JSON, and do not use ``` code blocks to wrap the JSON.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -1280,
+        1168
+      ],
+      "id": "5741e746-45cf-46bd-a221-639cf615922f",
+      "name": "6_7a.Statistical Methods_Data Processing"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=={{ $json.GLOBAL_WRITING_RULES }}\n\nYou are a epidemiology and biostatistics writing consultant, responsible for writing the 6.3 Sample Size Calculation subsection in Chapter 6 of this research protocol.\n\n【Research Design Information You Can See】\n- Final Research Question: {{ JSON.stringify($json.final_structured_memory) }}\n- Research Objectives & Hypotheses: {{ JSON.stringify($json.goal_hypothesises) }}\n- Sampling Mode & Method: {{ JSON.stringify($json.probability_non_sampling) }}\n- Sampling Statistical Toolkit & Sample Size Block: {{ JSON.stringify($json.sampling_statistical_toolkit) }}\n- Main Model & Effect Size: {{ JSON.stringify($json.main_model) }}\n\n【Writing Task】\n1. Only write the body content for \"## 6.3 Sample Size Calculation\".\n2. The goal is to explain how the sample size for this study was obtained using logically clear, reproducible, but not verbose text. Organize into 2-3 subsections, for example:\n   - 6.3.1 Calculation Basis and Main Parameters (Research objectives, expected proportion/effect size, alpha, power, etc.);\n   - 6.3.2 Calculation Method and Design Effect (If stratified/cluster sampling, design effect, loss to follow-up reserve, explain the inflation process here briefly);\n   - 6.3.3 Final Sample Size and Center/Strata Allocation (If any).\n3. If `sample_size_plan` already contains relatively complete content, what you need to do is \"Write\":\n   - Keep key parameters and logic;\n   - Avoid pasting original text verbatim twice;\n   - Avoid appearing to have two sets of mutually repetitive or conflicting sample size descriptions.\n4. If the study is a census, convenience sample, or secondary data analysis, you can also state:\n   - First estimate required sample size using theoretical formulas;\n   - Then explain if the actual obtainable sample size meets or slightly exceeds theoretical requirements;\n   - If not met, truthfully state \"The power of this study might be limited, will be explained in discussion\".\n\n【Prohibitions】\n- Do not discuss bias control, covariate selection, DAG, etc. in this section.\n- Do not output DAGitty code, long JSON, or text from other chapters in this section.\n- Do not write appendices, do not mention \"Appendix XX\".\n\n【Output Format】\nPlease return only one JSON object, format strictly as:\n{\n  \"chapter\": 6,\n  \"title\": \"6. Bias and Sample Size\",\n  \"content_md_main\": \"Put complete 6.3 subsection Markdown here: Start from \\\"## 6.3 Sample Size Calculation\\\" until end of this section.\",\n  \"content_md_appendix\": \"\",\n  \"needs\": [\n    \"e.g.: Need to confirm expected prevalence p, expected effect size, or ICC parameter with team; if no gaps return [].\"\n  ]\n}\nProhibit outputting any text outside the JSON, do not use ``` to wrap JSON.",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -1280,
+        2592
+      ],
+      "id": "28c186ed-cf89-4a4a-b0ad-f16555f98bf3",
+      "name": "6_6b.Sample Size Calculation"
+    },
+    {
+      "parameters": {
+        "jsCode": "const allItems = $input.all();\nlet mergedData = {};\n\nfor (const item of allItems) {\n  const j = item.json;\n  for (const key in j) {\n    if (key.match(/^ch\\d+_\\d+$/) || key === 'chapter' || key.match(/set/i)) {\n      if (typeof j[key] === 'object') {\n        mergedData[key] = j[key];\n      }\n    }\n  }\n}\n\nfunction safeExtract(sourceObj) {\n  if (!sourceObj) return { main: '', appendix: '', needs: [] };\n\n  const target = sourceObj.output || sourceObj.json || sourceObj;\n  \n  return {\n    main: (target.content_md_main || '').toString().trim(),\n    appendix: (target.content_md_appendix || '').toString().trim(),\n    needs: Array.isArray(target.needs) ? target.needs : []\n  };\n}\n\nconst keys = Object.keys(mergedData).sort();\nconst mainParts = [];\nconst appendixParts = [];\nlet allNeeds = [];\nlet chapterNum = 0;\nlet chapterTitle = \"\";\n\nfor (const key of keys) {\n  const data = safeExtract(mergedData[key]);\n  \n  if (data.main) mainParts.push(data.main);\n  if (data.appendix) appendixParts.push(data.appendix);\n  if (data.needs.length) allNeeds = allNeeds.concat(data.needs);\n\n  const rawObj = mergedData[key].output || mergedData[key];\n  if (!chapterNum && rawObj.chapter) chapterNum = rawObj.chapter;\n  if (!chapterTitle && rawObj.title) chapterTitle = rawObj.title;\n}\n\nif (!chapterNum) {\n  chapterNum = 0; \n  chapterTitle = \"Chapter Content Merge\";\n}\n\nreturn [{\n  json: {\n    chapter: chapterNum,\n    title: chapterTitle,\n    content_md_main: mainParts.join('\\n\\n'),\n    content_md_appendix: appendixParts.join('\\n\\n'),\n    needs: [...new Set(allNeeds)].filter(Boolean) \n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        64,
+        2224
+      ],
+      "id": "ae28946a-24bc-428b-8ab0-6de31c6b63d6",
+      "name": "Merge Chapter 6"
+    },
+    {
+      "parameters": {
+        "jsCode": "const allItems = $input.all();\nlet mergedData = {};\n\nfor (const item of allItems) {\n  const j = item.json;\n  for (const key in j) {\n    if (key.match(/^ch\\d+_\\d+$/) || key === 'chapter' || key.match(/set/i)) {\n      if (typeof j[key] === 'object') {\n        mergedData[key] = j[key];\n      }\n    }\n  }\n}\n\nfunction safeExtract(sourceObj) {\n  if (!sourceObj) return { main: '', appendix: '', needs: [] };\n\n  const target = sourceObj.output || sourceObj.json || sourceObj;\n  \n  return {\n    main: (target.content_md_main || '').toString().trim(),\n    appendix: (target.content_md_appendix || '').toString().trim(),\n    needs: Array.isArray(target.needs) ? target.needs : []\n  };\n}\n\nconst keys = Object.keys(mergedData).sort();\nconst mainParts = [];\nconst appendixParts = [];\nlet allNeeds = [];\nlet chapterNum = 0;\nlet chapterTitle = \"\";\n\nfor (const key of keys) {\n  const data = safeExtract(mergedData[key]);\n  \n  if (data.main) mainParts.push(data.main);\n  if (data.appendix) appendixParts.push(data.appendix);\n  if (data.needs.length) allNeeds = allNeeds.concat(data.needs);\n\n  const rawObj = mergedData[key].output || mergedData[key];\n  if (!chapterNum && rawObj.chapter) chapterNum = rawObj.chapter;\n  if (!chapterTitle && rawObj.title) chapterTitle = rawObj.title;\n}\n\nif (!chapterNum) {\n  chapterNum = 0; \n  chapterTitle = \"Chapter Content Merge\";\n}\n\nreturn [{\n  json: {\n    chapter: chapterNum,\n    title: chapterTitle,\n    content_md_main: mainParts.join('\\n\\n'),\n    content_md_appendix: appendixParts.join('\\n\\n'),\n    needs: [...new Set(allNeeds)].filter(Boolean) \n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        64,
+        1408
+      ],
+      "id": "c98258a7-0272-4cfb-b4e1-db5944e798b3",
+      "name": "Merge Chapter 7"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.GLOBAL_WRITING_RULES }}\n\nYou are an expert in epidemiology and causal inference. This node is responsible for writing the 【6.1 Potential Bias Identification and Control】 section of the research protocol \"6. Bias Control and Sample Size\".\n\nThis node only writes:\n- 6.1 Potential Bias Identification and Control (Main Text)\n- A small amount of appendix content directly related to 6.1 (e.g., a short table or list)\nOther subsections (6.2 Covariate Selection, 6.3 Sample Size) are handled by other nodes, do not write them here.\n\n【Available Information】\nFinal Research Question: {{ JSON.stringify($json.final_structured_memory) }}\nResearch Objectives & Hypotheses: {{ JSON.stringify($json.goal_hypothesises) }}\nDAG Construction & Causal Model Explanation: {{ JSON.stringify($json.dag_construction) }}\nCovariate Role Identification (Confounding/Mediation/Collider): {{ JSON.stringify($json.mixed_mediation_collision) }}\nMinimal Adjustment Set: {{ JSON.stringify($json.adjustment_set) }}\nSampling Mode & Method (If selection bias control needs mentioning): {{ JSON.stringify($json.probability_non_sampling) }}\n\n【Main Text content_md_main Requirements】\n\nPlease write the complete:\n## 6.1 Potential Bias Identification and Control\nin content_md_main.\nRequirements:\n1. Explicitly identify three types of biases: Selection Bias, Information Bias, and Confounding Bias;\n2. Combine dag_construction and mixed_mediation_collision to explain:\n   - Why confounding bias is critical in this study (multi-exposure, multi-outcome, complex upstream factors);\n   - How sampling design and field execution help reduce selection bias;\n   - How measurement design/data sources reduce information bias;\n3. Do not expand on sample size formulas, leave this to Section 6.3.\n\n【Appendix content_md_appendix Requirements】\nReturn empty string \"\".\n\n【needs】\nIn needs, list key information found to be \"still needing researcher supplementation\" while writing 6.1, such as:\n- Lack of specific examples of specific selection bias in local literature;\n- Measurement error types for certain exposures/outcomes are unclear.\n\n【Output Format】\nPlease strictly output a JSON object:\n{\n  \"chapter\": 6,\n  \"title\": \"6. Bias Control and Sample Size\",\n  \"content_md_main\": \"## 6.1 Potential Bias Identification and Control\\n\\n(Text...)\",\n  \"content_md_appendix\": \"\",\n  \"needs\": [\"If lacking info on specific bias sources, list here\"]\n}\nProhibit outputting any text outside the JSON, and do not use ``` code blocks to wrap the JSON.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -1280,
+        2032
+      ],
+      "id": "e066bc07-7912-40b1-9438-e12a6ce3cdd3",
+      "name": "6_6a.Bias Control 1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=={{ $json.GLOBAL_WRITING_RULES }}\n\nYou are a epidemiology and biostatistics writing consultant, responsible for writing the 6.2 Bias Control and Covariate Selection subsection in Chapter 6 of this research protocol.\n\n【Research Design Information You Can See】\n- Research Objectives & Hypotheses:  \n  {{ JSON.stringify($item(0).$node[\"3.Read Research Design Info\"].json.goal_hypothesises) }}\n- Final Research Question & Core Variable Framework (Exposure, Outcome, Covariate description):  \n  {{ JSON.stringify($item(0).$node[\"3.Read Research Design Info\"].json.final_structured_memory) }}\n- DAG & Causal Logic (Only for extracting theoretical reasons \"why choose these covariates\"): \n  {{ JSON.stringify($item(0).$node[\"3.Read Research Design Info\"].json.dag_construction) }}\n- Minimal Sufficient Adjustment Set / Final Adjustment Set (If any):  \n  {{ JSON.stringify($item(0).$node[\"3.Read Research Design Info\"].json.adjustment_set) }}\n- Sampling & Analysis Framework (Used to distinguish structural covariates, e.g., stratification variables, weight variables):  \n  {{ JSON.stringify($item(0).$node[\"3.Read Research Design Info\"].json.classified_framework) }}\n  {{ JSON.stringify($item(0).$node[\"3.Read Research Design Info\"].json.probability_non_sampling) }}\n  {{ JSON.stringify($item(0).$node[\"3.Read Research Design Info\"].json.sampling_statistical_toolkit) }}\n- Main Model and Effect Size Info (Used to explain relationship between covariates and modeling):  \n  {{ JSON.stringify($item(0).$node[\"3.Read Research Design Info\"].json.main_model) }}\n\n【Writing Task】\n1. Only write the body content for \"## 6.2 Bias Control and Covariate Selection\".\n2. Write three things clearly:\n   1) What principles this study generally adopts to control bias (especially confounding bias), e.g.:\n       - Design phase: Strict inclusion/exclusion criteria, unified measurement process, multi-center/stratified design, etc.;\n       - Analysis phase: Pre-determine covariates based on prior knowledge and causal structure (e.g., DAG), rather than purely relying on P-value screening.\n   2) **Which types of covariates** will be included in the adjustment in multivariate models (can be summarized by category, e.g.: demographic variables, baseline disease severity, important lifestyle factors, etc.). If specific variable names are available upstream, examples can be given, but do not paste long lists verbatim.\n   3) This study explicitly **will not adopt which \"purely data-driven\" practices** (e.g., stepwise regression, inclusion only if univariate P<0.05), but is led by causal inference.\n3. If upstream DAG text has a **brief explanation** of \"Why draw DAG\" or \"How to derive final adjustment set from DAG\", summarize it in 1-3 sentences of natural language, but do not paste DAGitty code, nor copy the variable role table as a whole segment.\n4. If missing_data_handling explains covariate missingness, you can add a sentence: For missingness of key covariates, method X will be used to reduce bias caused by missingness; specific technical details are explained in the statistical methods chapter.\n\n【Prohibitions】\n- Do not explain sample size or power in this section.\n- Do not rewrite \"Bias Sources\" from 6.1, just echo 6.1 in the first sentence or two.\n- Do not output any DAGitty code blocks, JSON raw text, or large tables.\n- Do not write appendices, do not mention \"Appendix XX\".\n\n【Output Format】\nPlease return only one JSON object, format strictly as:\n\n{\n  \"chapter\": 6,\n  \"title\": \"6. Bias and Sample Size\",\n  \"content_md_main\": \"Put complete 6.2 subsection Markdown here: Start from \\\"## 6.2 Bias Control and Covariate Selection\\\" until end of this section.\",\n  \"content_md_appendix\": \"\",\n  \"needs\": [\n    \"e.g.: No clear final adjustment set given, can only describe general principles; if no gaps return [].\"\n  ]\n}\nProhibit outputting any text outside the JSON, do not use ``` to wrap JSON.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -1280,
+        2224
+      ],
+      "id": "bad0d5d7-d0fb-44fd-9fc9-1b24342f4a48",
+      "name": "6_6a.Bias Control 2"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.GLOBAL_WRITING_RULES }}\n\nYou are an expert methodology appendix editor. This node is responsible for compiling a comprehensive appendix (supplementary material) for \"6. Bias Control and Sample Size\".\n\nThis node **does not write any main text**, only appendix content, including:\n- DAGitty model code\n- Candidate Covariate Causal Role Table\n- (Optional) Minimal Adjustment Set Candidate Set Summary\n- Appendix content related to sample size (if any)\n\nNote: If there are cases in the upstream text where multiple variables are squeezed into the same line, separated by asterisks or commas, please rewrite them automatically in this appendix as a one-line-per-item Markdown list to ensure readability.\n\n【Available Information】\nDAG Construction & Causal Model Explanation: {{ JSON.stringify($json.dag_construction) }}\nCovariate Role Identification (Confounding/Mediation/Collider): {{ JSON.stringify($json.mixed_mediation_collision) }}\nMinimal Adjustment Set: {{ JSON.stringify($json.adjustment_set) }}\nDAG Code: {{ JSON.stringify($json.dagitty) }}\nSampling Mode & Method: {{ JSON.stringify($json.probability_non_sampling) }}\nSampling Statistical Toolkit & Sample Size Block: {{ JSON.stringify($json.sampling_statistical_toolkit) }}\n\n【content_md_main】\nSince this node only does the appendix, content_md_main returns empty string \"\".\n\n【content_md_appendix】\n#### Appendix 6.A: DAGitty Model Code\n- dagitty contains DAG code, output verbatim in [wrapped] code block;\n\n#### Appendix 6.B: Candidate Covariate Causal Roles and Treatment Strategies\n- Based on mixed_mediation_collision.covariates (if exists), compile a table containing at least:\n  - Variable Name\n  - Presumed Causal Role (Confounder/Mediator/Collider/Effect Modifier, etc.)\n  - Treatment Strategy in Analysis (Adjust/Do Not Adjust/Sensitivity Analysis Only)\n\n#### Appendix 6.C: Minimal Adjustment Set Candidate Summary\n- If adjustment_set.minimal_adjustment_sets exists, list candidate sets in concise list form here, and briefly explain differences.\n\n#### Appendix 6.D: Sample Size Calculation Technical Details\n- If sample_size_block contains technical explanations/formula derivations/software commands, put them here.\n\n【needs】\nAdd only when key info is truly missing, e.g.:\n- No DAGitty code at all;\n- covariates list is empty, etc.\n\n【Output Format】\n- Output only the Markdown content of the appendix, do not output any JSON, YAML, or other structured wrapping.\n- Do not include JSON fragments like “chapter”: 6.\n- You can use headings, lists, code blocks, and tables, but the entire output is a piece of Markdown text.\n- No JSON output, no R code, do not use ``` to wrap the entire appendix.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -1280,
+        2784
+      ],
+      "id": "b1717df4-5ede-4436-b49e-f7681681e2b0",
+      "name": "6_6c.Appendix Synthesis"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=={{ $json.GLOBAL_WRITING_RULES }}\n\nYou are an expert in biostatistics, this node is responsible for writing sections 【7.3 Descriptive Statistics (Table 1)】 and 【7.4 Bivariate Exploratory Analysis】 of \"7. Statistical Methods\".\n\nThis node only writes:\n- 7.3 Descriptive Statistics (Table 1)\n- 7.4 Bivariate Exploratory Analysis\n\nThe content_md_appendix for this node should universally return an empty string \"\". The variable-by-variable list for Table 1 and list for bivariate analysis will be generated uniformly by the appendix node.\n\n【Available Information】\nDescriptive Statistics: {{ JSON.stringify($('3.Read Research Design Info').item.json.descriptive_statistics) }}\nBivariate Exploration: {{ JSON.stringify($('3.Read Research Design Info').item.json.bivariate_exploration) }}\n\ndescriptive_statistics usually contains:\n- table1_narrative_for_protocol: \"Table 1 narrative text\" for protocol main text;\n- row_variables: Definition and grouping info for each row variable in Table 1 (for appendix).\n\nbivariate_exploration usually contains:\n- narrative_for_protocol: Bivariate analysis description for protocol main text;\n- analysis_contract: Analysis \"contracts\" description;\n- bivariate_pairs: Very long exposure-outcome pair list (for appendix).\n\n【content_md_main Writing Requirements】\nWrite in content_md_main:\n## 7.3 Descriptive Statistics (Table 1)\nRequirements:\n- Explain the overall purpose of Table 1: Describe basic characteristics of the study population (demographics, lifestyle, clinical metrics, etc.);\n- Outline presentation methods for variables in Table 1 (e.g., Mean ± SD or Median [IQR] for continuous variables, Frequency and Percentage for categorical variables);\n- If descriptive_statistics.table1_narrative_for_protocol has a complete paragraph, use it after integrating language;\n- If complex sampling design exists, need to explain descriptive statistics will use weighted estimates, stratification and clustering corrections, etc.\n\nThen write:\n## 7.4 Bivariate Exploratory Analysis\nRequirements:\n- Overall explanation: Goal of 7.4 is to explore preliminary associations between exposures and main outcomes, providing reference for multivariate models;\n- Based on bivariate_exploration.narrative_for_protocol and analysis_contract, describe:\n  - Which statistical tests or models to use (e.g., weighted Chi-square test, Trend test, simple weighted regression, etc.);\n  - Whether to adopt Rao-Scott correction etc. under complex sampling design;\n  - Whether to control for multiple comparisons (e.g., only report p-value, no strict multiple correction, but emphasize bivariate results are for exploration only).\nDo not list every exposure-outcome pair in the main text, these will go into the appendix.\n\n【content_md_appendix】\nPlease return an empty string \"\" for content_md_appendix in this node.\n\n【needs】\nList missing info related to 7.3, 7.4 in needs, e.g.:\n- Grouping cutoffs for certain key variables not yet determined;\n- Whether bivariate analysis needs formal inference by complex sampling weights needs confirmation.\nIf none return [].\n\n【Output Format】\nPlease strictly output the following JSON object:\n{\n  \"chapter\": 7,\n  \"title\": \"7. Statistical Methods\",\n  \"content_md_main\": \"Write Markdown body containing ## 7.3 and ## 7.4 here.\",\n  \"content_md_appendix\": \"\",\n  \"needs\": [\"...if none then []\"]\n}\nProhibit outputting any text outside the JSON, and do not use ``` code blocks to wrap the JSON.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -1280,
+        1360
+      ],
+      "id": "d9e56ff3-702d-46b1-817a-c0543d1f776a",
+      "name": "6_7b.Statistical Methods_Descriptive"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=={{ $json.GLOBAL_WRITING_RULES }}\n\nYou are an expert in biostatistics and causal inference, this node is responsible for writing sections 【7.5 Multivariate Modeling (Main Analysis)】 and 【7.6 Model Diagnosis and Quality Control】 of \"7. Statistical Methods\".\n\nThis node only writes:\n- 7.5 Multivariate Modeling (Main Analysis)\n- 7.6 Model Diagnosis and Quality Control\n\nThe content_md_appendix for this node should universally return an empty string \"\". Software usage rules and detailed diagnostic checklists will be generated uniformly by the appendix node.\n\n【Available Information】\nMain Model & Effect Size: {{ JSON.stringify($('3.Read Research Design Info').item.json.main_model) }}\nModel Diagnosis: {{ JSON.stringify($('3.Read Research Design Info').item.json.model_diagnosis) }}\n\nmain_model usually contains:\n- SAP_text: Statistical Analysis Plan narrative for protocol;\n- software_rules: Software/Function usage whitelist/blacklist (for appendix).\n\nmodel_diagnosis usually contains:\n- diagnostics_and_qc_text_cn: Protocol text for diagnostics and QC;\n- checklist: Specific checklist items (for appendix).\n\n【content_md_main Writing Requirements】\nWrite in content_md_main:\n\n## 7.5 Multivariate Modeling (Main Analysis)\nRequirements:\n- For main outcome (e.g., Osteoporosis, Low BMD) explain:\n  - Which regression model to use (e.g., Modified Poisson Regression estimating Prevalence Ratio PR under complex sampling, or weighted logistic regression, etc.);\n  - How to incorporate complex sampling info (strata, cluster, weight) into model fitting;\n  - Which set of covariates to use as final adjustment set (can be consistent with Chapter 6, no need to list all variable names again, just summarize);\n  - Clarify main effect size form (PR, OR, etc.) and its interpretation.\n- If main_model.SAP_text provides a relatively complete paragraph, organize and fuse based on it.\n\nThen write:\n## 7.6 Model Diagnosis and Quality Control\nRequirements:\n- Describe based on model_diagnosis.diagnostics_and_qc_text_cn:\n  - Diagnostics for main model fit (e.g., residual analysis, goodness of fit, collinearity check, influential point diagnosis, etc.);\n  - Checks for complex sampling weights, strata, cluster settings (e.g., consistency with theoretical sample distribution);\n  - Strategy for handling outliers/high leverage points;\n  - Pre-defined \"Model Acceptability Criteria\" (e.g., whether certain key assumptions are met).\n- Do not list all checklist items one by one, put this in the appendix.\n\n【content_md_appendix】\nPlease return an empty string \"\" for content_md_appendix in this node.\n\n【needs】\nList missing info related to 7.5, 7.6, e.g.:\n- Not yet decided whether to include certain candidate covariates in main model;\n- Specific graphs or diagnostic statistics for model diagnosis need determination.\nIf none return [].\n\n【Output Format】\nPlease strictly output the following JSON object:\n{\n  \"chapter\": 7,\n  \"title\": \"7. Statistical Methods\",\n  \"content_md_main\": \"Here only contains complete Markdown body for 7.5 and 7.6\",\n  \"content_md_appendix\": \"\",\n  \"needs\": [\n    \"e.g.: Implementation path for certain diagnostics under complex sampling is unclear, needs subsequent statistician confirmation; if none then [].\"\n  ]\n}\nProhibit outputting any text outside the JSON, and do not use ``` code blocks to wrap the JSON.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -1280,
+        1552
+      ],
+      "id": "fbdcaab3-4f08-4284-8511-ed079315fe94",
+      "name": "6_7c.Statistical Methods_Main Model"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=={{ $json.GLOBAL_WRITING_RULES }}\n\nYou are an expert in biostatistics and methodology appendix writing, this node is responsible for writing the remaining subsections of \"7. Statistical Methods\" and all supplementary materials (appendices) for this chapter.\n\nThis node is responsible for:\n- Main Text Parts:\n  - 7.7 Advanced Statistical Analysis\n  - 7.8 Sensitivity Analysis\n  - 7.9 Result Presentation and Reporting Standards\n- Appendix Parts (All appendices for this chapter are uniformly output by this node):\n  - Appendix 7.1: Detailed Data Quality Control Checklist\n  - Appendix 7.2: Table 1 Detailed Variable List\n  - Appendix 7.3: Bivariate Analysis Itemized List\n  - Appendix 7.4: Software Usage Rules\n  - Appendix 7.5: Model Diagnosis Quality Control Checklist\n\n【Available Information】\nAdvanced Methods:\nPSM: {{ JSON.stringify($('3.Read Research Design Info').item.json.psm) }}\nMediation: {{ JSON.stringify($('3.Read Research Design Info').item.json.mediation) }}\nModeration: {{ JSON.stringify($('3.Read Research Design Info').item.json.moderation) }}\nSEM: {{ JSON.stringify($('3.Read Research Design Info').item.json.sem) }}\nLCA: {{ JSON.stringify($('3.Read Research Design Info').item.json.lca) }}\nSensitivity Analysis: {{ JSON.stringify($('3.Read Research Design Info').item.json.sensitivity_analysis) }}\nReporting Standards: {{ JSON.stringify($('3.Read Research Design Info').item.json.reporting_standards) }}\nRequired Detail Data for Appendix:\nData QC: {{ JSON.stringify($('3.Read Research Design Info').item.json.data_preparation_quality_control) }}\nDescriptive Statistics: {{ JSON.stringify($('3.Read Research Design Info').item.json.descriptive_statistics) }}\nBivariate Exploration: {{ JSON.stringify($('3.Read Research Design Info').item.json.bivariate_exploration) }}\nMain Model & Software Rules: {{ JSON.stringify($('3.Read Research Design Info').item.json.main_model) }}\nModel Diagnosis Checklist: {{ JSON.stringify($('3.Read Research Design Info').item.json.model_diagnosis) }}\n\n【content_md_main: Main Text Part】\nPlease write sequentially in content_md_main:\n## 7.7 Advanced Statistical Analysis\n- Write only for methods that actually exist (judge based on whether psm / mediation / moderation / sem / lca is empty);\n- If exists:\n  - Propensity Score Methods (PSM): Explain matching or weighting method type, main variables for propensity score model, effect size for estimation;\n  - Mediation Analysis: Explain mediation structure and estimation method (e.g., regression-based or SEM), no need to give all formulas;\n  - Moderation/Effect Modification Analysis: Explain how to conduct interaction term or stratified analysis;\n  - Structural Equation Modeling (SEM): Explain latent variables, path structure, and estimation framework;\n  - Latent Class Analysis (LCA): Explain variables used for identifying latent groups and criteria for selecting number of classes.\n- If a method input is empty or obviously unplanned, you can briefly say \"This study currently does not plan to implement XX analysis\", or simply skip that sub-item.\n\n## 7.8 Sensitivity Analysis\n- Based on sensitivity_analysis.section_text, explain:\n  - Which sensitivity analyses will be conducted for key assumptions like complex sampling settings, covariate selection, missing data handling, etc.;\n  - Whether different model specifications or different effect sizes will be used for comparison;\n  - Metrics used to assess model robustness.\n\n## 7.9 Result Presentation and Reporting Standards\n- Based on reporting_standards.reporting_core_components_section, explain:\n  - How results will be organized by tables/figures (e.g., main effect result table, subgroup analysis table, forest plot, etc.);\n  - Which reporting standards will be followed (e.g., STROBE, STROBE-nut, etc., depending on fields);\n  - How to present complex sampling analysis results (weighted estimates, standard errors, confidence intervals, etc.).\n\n【content_md_appendix: All Appendices for this Chapter】\nIn content_md_appendix, uniformly write out appendices for this chapter, suggested structure:\n#### Appendix 7.A: Detailed Data Quality Control Checklist\n- Based on sub-fields of data_preparation_quality_control.state other than protocol_text (e.g., duplicate_check_plan_summary, range_check_plan_summary, etc.), organize into list or table;\n- No need to output super long JSON verbatim, can format slightly, e.g.:\n  - Check Item Name\n  - Check Content Overview\n  - Trigger Condition or Threshold (if any)\n\n#### Appendix 7.B: Table 1 Detailed Variable List\n- Based on descriptive_statistics.row_variables, list:\n  - Variable Name\n  - Variable Type (Continuous/Categorical)\n  - Grouping Method or Cut-off Points\n  - Presentation Form in Table 1\n\n#### Appendix 7.C: Bivariate Analysis Itemized List\n- Based on bivariate_exploration.bivariate_pairs, summarize or partially list exposure-outcome pairs;\n- If list is too long, you can:\n  - Explain its structure;\n  - Select several example combinations;\n  - Or show in \"JSON Structure Illustration\" way.\n\n#### Appendix 7.D: Software Usage Rules\n- Based on main_model.software_rules, organize into:\n  - Allowed Software/Packages/Functions;\n  - Prohibited or Cautious Functions/Options.\n\n#### Appendix 7.E: Model Diagnosis Quality Control Checklist\n- Based on model_diagnosis.checklist, organize into table:\n  - Check Item\n  - Check Content\n  - Judgment Criteria\n  - Whether Mandatory\n\n**Important:** To avoid errors caused by overly long output, you can lightly compress or exemplify extremely long JSON lists instead of pasting all entries verbatim.\n\n【needs】\nList missing info related to 7.7–7.9 or appendices of this chapter in needs, e.g.:\n- Specific software packages for certain advanced analyses (e.g., PSM/SEM) not yet determined;\n- Complete list of sensitivity analyses needs confirmation with mentor;\n- Result chart templates not yet agreed upon with team.\nIf none then [].\n\n【Output Format】\nPlease strictly output the following JSON object:\n{\n  \"chapter\": 7,\n  \"title\": \"7. Statistical Methods\",\n  \"content_md_main\": \"Here only contains complete Markdown body for 7.7–7.9\",\n  \"content_md_appendix\": \"Here contains Markdown for 7.A–7.E etc. appendices\",\n  \"needs\": [\n    \"e.g.: Some advanced analyses only have principle explanations, specific models pending refinement by research team; if no gaps then [].\"\n  ]\n}\nProhibit outputting any text outside the JSON, and do not use ``` code blocks to wrap the JSON.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -1280,
+        1744
+      ],
+      "id": "1a7f768e-fe49-47e8-b4ca-f24a2951ba84",
+      "name": "6_7d.Statistical Methods_Advanced Analysis and Appendix"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "64774cdb-9971-4f9f-a88d-a7e6f9d54d7d",
+              "name": "ch7_1",
+              "value": "={{$json}}",
+              "type": "object"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -640,
+        1168
+      ],
+      "id": "4b4aaa74-03b2-49c6-89f1-db907ec005f0",
+      "name": "ch7_1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8a826187-acdd-4515-a4b1-046504a40018",
+              "name": "ch7_2",
+              "value": "={{$json}}",
+              "type": "object"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -640,
+        1360
+      ],
+      "id": "053b7a04-b3bc-4369-a3d3-af447f77eb3f",
+      "name": "ch7_2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "13df50d4-b0e8-431f-b71f-8cb988c3738a",
+              "name": "ch7_3",
+              "value": "={{$json}}",
+              "type": "object"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -640,
+        1552
+      ],
+      "id": "a185b6e3-2d97-428b-9400-e5be4e104a7b",
+      "name": "ch7_3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ddb3d7a7-72c3-448e-87cb-d1158f5c0fbf",
+              "name": "ch7_4",
+              "value": "={{$json}}",
+              "type": "object"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -640,
+        1744
+      ],
+      "id": "c5b42b36-8713-4842-a177-93a36f9517e5",
+      "name": "ch7_4"
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -288,
+        1376
+      ],
+      "id": "f00d48f1-d4ff-452d-b768-f5fa5b3a07ff",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8a826187-acdd-4515-a4b1-046504a40018",
+              "name": "ch6_1",
+              "value": "={{$json}}",
+              "type": "object"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -640,
+        2032
+      ],
+      "id": "1b64943c-ff44-4fc7-8370-427a983cdf06",
+      "name": "ch6_1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "01a531aa-f424-4320-b1c3-93413e991d9f",
+              "name": "ch6_2",
+              "value": "={{$json}}",
+              "type": "object"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -640,
+        2224
+      ],
+      "id": "cd8dbd5a-d3ae-4982-95c3-2da3c417cf66",
+      "name": "ch6_2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a1d1003e-b3d8-46fc-8159-c16c221eb759",
+              "name": "ch6_3",
+              "value": "={{$json}}",
+              "type": "object"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -640,
+        2592
+      ],
+      "id": "fbed2852-8c76-4edc-9759-4cae2ced48d6",
+      "name": "ch6_3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "758fa2ae-82b5-458d-ac0a-832013a119e2",
+              "name": "ch6_4",
+              "value": "={{$json}}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -640,
+        2784
+      ],
+      "id": "7ac627fa-a178-4142-953f-72960f060e78",
+      "name": "ch6_4"
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -288,
+        2192
+      ],
+      "id": "5b8f3aeb-6257-4d32-b83a-5ac6e407b635",
+      "name": "Merge2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const allItems = $input.all();\n\nconst chapterMap = new Map();\nconst allNeeds = [];\n\nfunction isChapterObj(obj) {\n  if (!obj || typeof obj !== 'object') return false;\n  if (typeof obj.chapter !== 'number') return false;\n  if (typeof obj.title !== 'string') return false;\n  return (\n    typeof obj.content_md_main === 'string' ||\n    typeof obj.content_md_appendix === 'string'\n  );\n}\n\nfunction extractChaptersFromJson(json) {\n  const found = [];\n\n  if (isChapterObj(json)) {\n    found.push(json);\n  }\n\n  if (json && typeof json.output === 'object' && isChapterObj(json.output)) {\n    found.push(json.output);\n  }\n\n  for (const [key, val] of Object.entries(json)) {\n    if (!val || typeof val !== 'object') continue;\n\n    const v = val.output && typeof val.output === 'object' ? val.output : val;\n    if (isChapterObj(v)) {\n      found.push(v);\n    }\n  }\n\n  return found;\n}\n\nfor (const item of allItems) {\n  const json = item.json || {};\n  const candidates = extractChaptersFromJson(json);\n\n  for (const ch of candidates) {\n    const chapNo = ch.chapter;\n    const title = ch.title;\n    const main = typeof ch.content_md_main === 'string' ? ch.content_md_main : '';\n    const appendix = typeof ch.content_md_appendix === 'string' ? ch.content_md_appendix : '';\n    const needs = Array.isArray(ch.needs)\n      ? ch.needs\n          .filter(v => typeof v === 'string')\n          .map(v => v.trim())\n          .filter(v => v !== '')\n      : [];\n\n    const existing = chapterMap.get(chapNo);\n\n    if (!existing || main.length > (existing.content_md_main || '').length) {\n      chapterMap.set(chapNo, {\n        chapter: chapNo,\n        title,\n        content_md_main: main,\n        content_md_appendix: appendix,\n        needs,\n      });\n    }\n\n    if (needs.length) {\n      allNeeds.push(...needs); \n    }\n  }\n}\n\nconst chapters = Array.from(chapterMap.values()).sort((a, b) => a.chapter - b.chapter);\n\nconst mainParts = [];\nconst appendixParts = [];\n\nfor (const ch of chapters) {\n  const main = (ch.content_md_main || '').trim();\n  const appendix = (ch.content_md_appendix || '').trim();\n\n  if (main) {\n\n    mainParts.push(`# ${ch.title}\\n\\n${main}`);\n  }\n  if (appendix) {\n    appendixParts.push(`### Appendix ${ch.chapter}: ${ch.title}\\n\\n${appendix}`);\n  }\n}\n\nconst mergedProtocol = {\n  chapters,\n  main_markdown_merged: mainParts.join('\\n\\n').trim(),\n  appendix_markdown_merged: appendixParts.join('\\n\\n').trim(),\n  needs_all: allNeeds,\n};\n\nreturn [{ json: mergedProtocol }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        576,
+        976
+      ],
+      "id": "73192044-aee2-4ffd-b99d-bf3b7b50cd37",
+      "name": "7.Merge Chapter JSON",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const chapters = $json.chapters || [];\nconst mainMerged = $json.main_markdown_merged || '';\nconst appendixMerged = $json.appendix_markdown_merged || '';\nconst needsAll = Array.isArray($json.needs_all) ? $json.needs_all : [];\n\nconst protocolTitle = 'Research Protocol';\n\nconst mdParts = [];\nmdParts.push(`# ${protocolTitle}`);\nif (mainMerged) mdParts.push(mainMerged);\n\nif (appendixMerged) {\n  mdParts.push('\\n\\n## Appendix A: Supplementary Materials\\n');\n  mdParts.push(appendixMerged);\n}\n\nif (needsAll.length) {\n  mdParts.push('\\n\\n## Appendix B: Needs List\\n');\n  // Support string or object ({msg:\"\", from:\"ch7.3\"})\n  const lines = needsAll.map((n, i) => {\n    if (typeof n === 'string') return `${i + 1}. ${n}`;\n    if (n && typeof n === 'object') {\n      const msg = n.msg || n.message || JSON.stringify(n);\n      const from = n.from ? `(Source: ${n.from})` : '';\n      return `${i + 1}. ${msg}${from}`;\n    }\n    return `${i + 1}. ${String(n)}`;\n  });\n  mdParts.push(lines.join('\\n'));\n}\n\nconst protocol_markdown = mdParts.join('\\n\\n').trim();\n\nconst finalOutput = {\n  protocol_title: protocolTitle,\n  protocol_markdown,\n  chapters,\n  needs_all: needsAll\n};\n\nreturn [{ json: finalOutput }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        976
+      ],
+      "id": "f35226d8-30f6-4a43-ab28-5559acdc77f2",
+      "name": "8.JSON to Markdown"
+    },
+    {
+      "parameters": {
+        "jsCode": "const new_data = $items('8.JSON to Markdown')[0].json.output;\n\n// 2. Prepare data needed for database update\nreturn [{\n  json: {\n    // Pass sessionId so Update node knows which row to update\n    session_id: $('3.Read Research Design Info').first().json.session_id,\n    \n    // Pass new data (JSON stringified) for writing to new field\n    sampling_philosophy_string: JSON.stringify(new_data),\n    \n    // Also pass newly generated data separately for Respond node to return to user\n    new_data_generated: new_data\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1024,
+        976
+      ],
+      "id": "32d95334-bd9a-434a-a4c7-1479574a6eb9",
+      "name": "9.Prepare DB Update"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "conversation_sessions",
+          "mode": "list",
+          "cachedResultName": "conversation_sessions"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "session_id": "={{ $json.session_id }}",
+            "research_proposal": "={{ $('8.JSON to Markdown').item.json.protocol_markdown }}"
+          },
+          "matchingColumns": [
+            "session_id"
+          ],
+          "schema": [
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "initial_query",
+              "displayName": "initial_query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "classified_framework",
+              "displayName": "classified_framework",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "current_state_json",
+              "displayName": "current_state_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "final_structured_memory",
+              "displayName": "final_structured_memory",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "history",
+              "displayName": "history",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "research_design",
+              "displayName": "research_design",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "design_progress",
+              "displayName": "design_progress",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "goal_hypothesises",
+              "displayName": "goal_hypothesises",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "target_source_population_sampling_frame",
+              "displayName": "target_source_population_sampling_frame",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "probability_non_sampling",
+              "displayName": "probability_non_sampling",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sampling_statistical_toolkit",
+              "displayName": "sampling_statistical_toolkit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "verified_tool",
+              "displayName": "verified_tool",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "develop_new_tools",
+              "displayName": "develop_new_tools",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "potential_ariables_sem",
+              "displayName": "potential_ariables_sem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "dag_construction",
+              "displayName": "dag_construction",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "mixed_mediation_collision",
+              "displayName": "mixed_mediation_collision",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "adjustment_set",
+              "displayName": "adjustment_set",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "dagitty",
+              "displayName": "dagitty",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "data_preparation_quality_control",
+              "displayName": "data_preparation_quality_control",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "missing_data_handling",
+              "displayName": "missing_data_handling",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "descriptive_statistics",
+              "displayName": "descriptive_statistics",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "bivariate_exploration",
+              "displayName": "bivariate_exploration",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "main_model",
+              "displayName": "main_model",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "model_diagnosis",
+              "displayName": "model_diagnosis",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "psm",
+              "displayName": "psm",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "mediation",
+              "displayName": "mediation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "moderation",
+              "displayName": "moderation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sem",
+              "displayName": "sem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "lca",
+              "displayName": "lca",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sensitivity_analysis",
+              "displayName": "sensitivity_analysis",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "reporting_standards",
+              "displayName": "reporting_standards",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "results_publication_dissemination",
+              "displayName": "results_publication_dissemination",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "research_proposal",
+              "displayName": "research_proposal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1248,
+        976
+      ],
+      "id": "9b0ab104-311a-4eb1-ba68-d93ef5325ed2",
+      "name": "10.Save New Fields to DB",
+      "credentials": {
+        "postgres": {
+          "id": "uaHhgTOU0gtpkeQ6",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE conversation_sessions \nSET workflow_c_completed = NOW()\nWHERE session_id = '{{ $('9.Prepare DB Update').item.json.session_id }}';",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1472,
+        976
+      ],
+      "id": "b5751ecf-7f6c-45b0-8854-873600c68919",
+      "name": "Mark C Completed",
+      "credentials": {
+        "postgres": {
+          "id": "uaHhgTOU0gtpkeQ6",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"status\": \"completed\",\n  \"message\": \"Research protocol generated successfully\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1696,
+        976
+      ],
+      "id": "3ede0ed5-fc9b-4be5-b172-da06fc9bc677",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst results = [];\n\nfunction extractJsonString(str) {\n  if (typeof str !== 'string') return '';\n  \n  const text = str.trim();\n\n  const jsonBlockRegex = /^```(?:json)?\\s*(\\{[\\s\\S]*\\})\\s*```$/i;\n  const matchBlock = text.match(jsonBlockRegex);\n  if (matchBlock) {\n    return matchBlock[1]; \n  }\n\n  const firstBrace = text.indexOf('{');\n  const lastBrace = text.lastIndexOf('}');\n  \n  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {\n    return text.substring(firstBrace, lastBrace + 1);\n  }\n  \n  return text; \n}\n\nfunction findChapterPayload(obj, depth = 0) {\n  if (!obj || typeof obj !== 'object' || depth > 5) return null;\n\n  if ('chapter' in obj && ('content_md_main' in obj || 'content_md_appendix' in obj)) {\n    return obj;\n  }\n\n  const candidates = ['output', 'json', 'data', 'response', 'text', 'message', 'content'];\n  for (const key of candidates) {\n    if (obj[key]) {\n      if (typeof obj[key] === 'string') {\n        try {\n          \n          const cleaned = extractJsonString(obj[key]);\n          const parsed = JSON.parse(cleaned);\n          const found = findChapterPayload(parsed, depth + 1);\n          if (found) return found;\n        } catch (e) {}\n      } else if (typeof obj[key] === 'object') {\n        const found = findChapterPayload(obj[key], depth + 1);\n        if (found) return found;\n      }\n    }\n  }\n\n  for (const key in obj) {\n    if (typeof obj[key] === 'object') {\n      const found = findChapterPayload(obj[key], depth + 1);\n      if (found) return found;\n    }\n  }\n  \n  return null;\n}\n\nfor (const item of items) {\n  let finalObj = null;\n  const debugRaw = item.json; // Used for debugging\n\n  try {\n\n    finalObj = findChapterPayload(item.json);\n\n    if (!finalObj && typeof item.json === 'string') {\n       try {\n         const parsed = JSON.parse(extractJsonString(item.json));\n         finalObj = findChapterPayload(parsed);\n       } catch(e) {}\n    }\n  } catch (err) {\n\n  }\n\n  results.push({\n    json: {\n      chapter: finalObj?.chapter || 0,\n      title: finalObj?.title || \"\",\n\n      content_md_main: (finalObj?.content_md_main || \"\").toString(),\n      content_md_appendix: (finalObj?.content_md_appendix || \"\").toString(),\n      needs: Array.isArray(finalObj?.needs) ? finalObj.needs : []\n    }\n  });\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        64,
+        112
+      ],
+      "id": "0c2ce48e-fb07-4b08-ad6b-ce76bbfe0819",
+      "name": "Code in JavaScript_1"
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-3-pro-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -288,
+        224
+      ],
+      "id": "67f9f5d2-3e92-4bd2-a57f-db25a04f840c",
+      "name": "Model1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "So4oLCHbFnhyK4pw",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst results = [];\n\nfunction extractJsonString(str) {\n  if (typeof str !== 'string') return '';\n  \n  const text = str.trim();\n\n  const jsonBlockRegex = /^```(?:json)?\\s*(\\{[\\s\\S]*\\})\\s*```$/i;\n  const matchBlock = text.match(jsonBlockRegex);\n  if (matchBlock) {\n    return matchBlock[1]; \n  }\n\n  const firstBrace = text.indexOf('{');\n  const lastBrace = text.lastIndexOf('}');\n  \n  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {\n    return text.substring(firstBrace, lastBrace + 1);\n  }\n  \n  return text; \n}\n\nfunction findChapterPayload(obj, depth = 0) {\n  if (!obj || typeof obj !== 'object' || depth > 5) return null;\n\n  if ('chapter' in obj && ('content_md_main' in obj || 'content_md_appendix' in obj)) {\n    return obj;\n  }\n\n  const candidates = ['output', 'json', 'data', 'response', 'text', 'message', 'content'];\n  for (const key of candidates) {\n    if (obj[key]) {\n      if (typeof obj[key] === 'string') {\n        try {\n          \n          const cleaned = extractJsonString(obj[key]);\n          const parsed = JSON.parse(cleaned);\n          const found = findChapterPayload(parsed, depth + 1);\n          if (found) return found;\n        } catch (e) {}\n      } else if (typeof obj[key] === 'object') {\n        const found = findChapterPayload(obj[key], depth + 1);\n        if (found) return found;\n      }\n    }\n  }\n\n  for (const key in obj) {\n    if (typeof obj[key] === 'object') {\n      const found = findChapterPayload(obj[key], depth + 1);\n      if (found) return found;\n    }\n  }\n  \n  return null;\n}\n\nfor (const item of items) {\n  let finalObj = null;\n  const debugRaw = item.json; // Used for debugging\n\n  try {\n\n    finalObj = findChapterPayload(item.json);\n\n    if (!finalObj && typeof item.json === 'string') {\n       try {\n         const parsed = JSON.parse(extractJsonString(item.json));\n         finalObj = findChapterPayload(parsed);\n       } catch(e) {}\n    }\n  } catch (err) {\n\n  }\n\n  results.push({\n    json: {\n      chapter: finalObj?.chapter || 0,\n      title: finalObj?.title || \"\",\n\n      content_md_main: (finalObj?.content_md_main || \"\").toString(),\n      content_md_appendix: (finalObj?.content_md_appendix || \"\").toString(),\n      needs: Array.isArray(finalObj?.needs) ? finalObj.needs : []\n    }\n  });\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        64,
+        400
+      ],
+      "id": "f71b0f93-947f-4523-932e-aaef97a5f824",
+      "name": "Code in JavaScript_2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst results = [];\n\nfunction aggressiveParse(str) {\n  if (typeof str !== 'string') return null;\n  \n  let clean = str.trim();\n\n  clean = clean.replace(/^```(?:json|markdown)?\\s*/i, '').replace(/\\s*```$/i, '');\n\n  try { return JSON.parse(clean); } catch (e) {}\n\n  const matchBlock = clean.match(/(\\{[\\s\\S]*\\})/);\n  if (matchBlock) {\n    try { return JSON.parse(matchBlock[1]); } catch(e) {}\n  }\n\n  const fallbackObj = {};\n\n  const chapMatch = clean.match(/\"chapter\"\\s*:\\s*(\\d+)/);\n  if (chapMatch) fallbackObj.chapter = parseInt(chapMatch[1]);\n\n  const titleMatch = clean.match(/\"title\"\\s*:\\s*\"([^\"]+)\"/);\n  if (titleMatch) fallbackObj.title = titleMatch[1];\n\n  const mainRegex = /\"content_md_main\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\"/;\n  const mainMatch = clean.match(mainRegex);\n  if (mainMatch) {\n\n      fallbackObj.content_md_main = mainMatch[1]\n        .replace(/\\\\n/g, '\\n')\n        .replace(/\\\\\"/g, '\"')\n        .replace(/\\\\\\\\/g, '\\\\');\n  }\n\n  const appxRegex = /\"content_md_appendix\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\"/;\n  const appxMatch = clean.match(appxRegex);\n  if (appxMatch) {\n      fallbackObj.content_md_appendix = appxMatch[1]\n        .replace(/\\\\n/g, '\\n')\n        .replace(/\\\\\"/g, '\"');\n  }\n\n  if (fallbackObj.chapter || fallbackObj.content_md_main) return fallbackObj;\n  \n  return null;\n}\n\nfunction findPayload(obj, depth = 0) {\n  if (!obj || typeof obj !== 'object' || depth > 3) return null;\n\n  if ('chapter' in obj && ('content_md_main' in obj || 'content_md_appendix' in obj)) {\n    return obj;\n  }\n\n  const candidates = ['output', 'json', 'data', 'text', 'message', 'content', 'response'];\n  for (const key of candidates) {\n    if (obj[key]) {\n      if (typeof obj[key] === 'string') {\n        const parsed = aggressiveParse(obj[key]);\n        if (parsed) return parsed;\n      } else if (typeof obj[key] === 'object') {\n        const found = findPayload(obj[key], depth + 1);\n        if (found) return found;\n      }\n    }\n  }\n\n  for (const key in obj) {\n     if (typeof obj[key] === 'object') {\n        const found = findPayload(obj[key], depth + 1);\n        if (found) return found;\n     }\n  }\n\n  return null;\n}\n\nfor (const item of items) {\n  let finalObj = null;\n\n  try {\n\n    finalObj = findPayload(item.json);\n\n    if (!finalObj && typeof item.json === 'string') {\n        finalObj = aggressiveParse(item.json);\n    }\n  } catch (err) {}\n\n  results.push({\n    json: {\n      chapter: finalObj?.chapter || 0, \n      title: finalObj?.title || \"\",\n      content_md_main: (finalObj?.content_md_main || \"\").toString(),\n      content_md_appendix: (finalObj?.content_md_appendix || \"\").toString(),\n      needs: Array.isArray(finalObj?.needs) ? finalObj.needs : []\n    }\n  });\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        64,
+        592
+      ],
+      "id": "9cf15283-5046-4f87-95b4-2317b58cd4a7",
+      "name": "Code in JavaScript_3"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst results = [];\n\nfunction extractJsonString(str) {\n  if (typeof str !== 'string') return '';\n  \n  const text = str.trim();\n\n  const jsonBlockRegex = /^```(?:json)?\\s*(\\{[\\s\\S]*\\})\\s*```$/i;\n  const matchBlock = text.match(jsonBlockRegex);\n  if (matchBlock) {\n    return matchBlock[1]; \n  }\n\n  const firstBrace = text.indexOf('{');\n  const lastBrace = text.lastIndexOf('}');\n  \n  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {\n    return text.substring(firstBrace, lastBrace + 1);\n  }\n  \n  return text; \n}\n\nfunction findChapterPayload(obj, depth = 0) {\n  if (!obj || typeof obj !== 'object' || depth > 5) return null;\n\n  if ('chapter' in obj && ('content_md_main' in obj || 'content_md_appendix' in obj)) {\n    return obj;\n  }\n\n  const candidates = ['output', 'json', 'data', 'response', 'text', 'message', 'content'];\n  for (const key of candidates) {\n    if (obj[key]) {\n      if (typeof obj[key] === 'string') {\n        try {\n          \n          const cleaned = extractJsonString(obj[key]);\n          const parsed = JSON.parse(cleaned);\n          const found = findChapterPayload(parsed, depth + 1);\n          if (found) return found;\n        } catch (e) {}\n      } else if (typeof obj[key] === 'object') {\n        const found = findChapterPayload(obj[key], depth + 1);\n        if (found) return found;\n      }\n    }\n  }\n\n  for (const key in obj) {\n    if (typeof obj[key] === 'object') {\n      const found = findChapterPayload(obj[key], depth + 1);\n      if (found) return found;\n    }\n  }\n  \n  return null;\n}\n\nfor (const item of items) {\n  let finalObj = null;\n  const debugRaw = item.json; // Used for debugging\n\n  try {\n\n    finalObj = findChapterPayload(item.json);\n\n    if (!finalObj && typeof item.json === 'string') {\n       try {\n         const parsed = JSON.parse(extractJsonString(item.json));\n         finalObj = findChapterPayload(parsed);\n       } catch(e) {}\n    }\n  } catch (err) {\n\n  }\n\n  results.push({\n    json: {\n      chapter: finalObj?.chapter || 0,\n      title: finalObj?.title || \"\",\n\n      content_md_main: (finalObj?.content_md_main || \"\").toString(),\n      content_md_appendix: (finalObj?.content_md_appendix || \"\").toString(),\n      needs: Array.isArray(finalObj?.needs) ? finalObj.needs : []\n    }\n  });\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        64,
+        784
+      ],
+      "id": "6c875296-47e0-4e47-a062-c05def930ca3",
+      "name": "Code in JavaScript_4"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst results = [];\n\nfunction extractJsonString(str) {\n  if (typeof str !== 'string') return '';\n  \n  const text = str.trim();\n\n  const jsonBlockRegex = /^```(?:json)?\\s*(\\{[\\s\\S]*\\})\\s*```$/i;\n  const matchBlock = text.match(jsonBlockRegex);\n  if (matchBlock) {\n    return matchBlock[1]; \n  }\n\n  const firstBrace = text.indexOf('{');\n  const lastBrace = text.lastIndexOf('}');\n  \n  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {\n    return text.substring(firstBrace, lastBrace + 1);\n  }\n  \n  return text; \n}\n\nfunction findChapterPayload(obj, depth = 0) {\n  if (!obj || typeof obj !== 'object' || depth > 5) return null;\n\n  if ('chapter' in obj && ('content_md_main' in obj || 'content_md_appendix' in obj)) {\n    return obj;\n  }\n\n  const candidates = ['output', 'json', 'data', 'response', 'text', 'message', 'content'];\n  for (const key of candidates) {\n    if (obj[key]) {\n      if (typeof obj[key] === 'string') {\n        try {\n          \n          const cleaned = extractJsonString(obj[key]);\n          const parsed = JSON.parse(cleaned);\n          const found = findChapterPayload(parsed, depth + 1);\n          if (found) return found;\n        } catch (e) {}\n      } else if (typeof obj[key] === 'object') {\n        const found = findChapterPayload(obj[key], depth + 1);\n        if (found) return found;\n      }\n    }\n  }\n\n  for (const key in obj) {\n    if (typeof obj[key] === 'object') {\n      const found = findChapterPayload(obj[key], depth + 1);\n      if (found) return found;\n    }\n  }\n  \n  return null;\n}\n\nfor (const item of items) {\n  let finalObj = null;\n  const debugRaw = item.json; // Used for debugging\n\n  try {\n\n    finalObj = findChapterPayload(item.json);\n\n    if (!finalObj && typeof item.json === 'string') {\n       try {\n         const parsed = JSON.parse(extractJsonString(item.json));\n         finalObj = findChapterPayload(parsed);\n       } catch(e) {}\n    }\n  } catch (err) {\n\n  }\n\n  results.push({\n    json: {\n      chapter: finalObj?.chapter || 0,\n      title: finalObj?.title || \"\",\n\n      content_md_main: (finalObj?.content_md_main || \"\").toString(),\n      content_md_appendix: (finalObj?.content_md_appendix || \"\").toString(),\n      needs: Array.isArray(finalObj?.needs) ? finalObj.needs : []\n    }\n  });\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -288,
+        976
+      ],
+      "id": "123f4eab-89fa-4e2e-adde-1ae4f20abed8",
+      "name": "Code in JavaScript_5"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "79b41544-0c43-484e-8edf-28cc56f247dc",
+              "name": "chapter",
+              "value": "={{ 5 }}",
+              "type": "number"
+            },
+            {
+              "id": "7f70fba4-46a9-42c9-8386-36e3679a94f7",
+              "name": "title",
+              "value": "={{ $json.title || \"5. Variable Definitions and Data Sources/Measurement\" }}",
+              "type": "string"
+            },
+            {
+              "id": "7400fdd5-9472-4d4e-8c4e-88288a21d93e",
+              "name": "content_md_main",
+              "value": "={{ $json.content_md_main || \"\" }}",
+              "type": "string"
+            },
+            {
+              "id": "60f7e6a7-d5d3-4879-8718-8fd00d41550d",
+              "name": "content_md_appendix",
+              "value": "={{ $json.content_md_appendix || \"\" }}",
+              "type": "string"
+            },
+            {
+              "id": "bdfddcdb-22cd-4a44-8490-8ee22210b8bb",
+              "name": "needs",
+              "value": "={{ $json.needs || [] }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        64,
+        976
+      ],
+      "id": "6dc748b9-1f4f-4cb1-93af-fc17d7ca0c3f",
+      "name": "Edit Fields_1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst results = [];\n\nfunction aggressiveJsonParse(str) {\n  if (typeof str !== 'string') return null;\n  \n  let clean = str.trim();\n\n  clean = clean.replace(/```(?:json|markdown)?/gi, '').replace(/```/g, '').trim();\n\n  try { return JSON.parse(clean); } catch (e) {}\n\n  const match = clean.match(/(\\{[\\s\\S]*\\})/);\n  if (match) {\n    clean = match[1];\n    try { return JSON.parse(clean); } catch (e) {}\n  }\n\n  try {\n\n    const manualObj = {};\n\n    const chapMatch = clean.match(/\"chapter\"\\s*:\\s*(\\d+)/);\n    if (chapMatch) manualObj.chapter = parseInt(chapMatch[1]);\n\n    const titleMatch = clean.match(/\"title\"\\s*:\\s*\"([^\"]+)\"/);\n    if (titleMatch) manualObj.title = titleMatch[1];\n\n    const mainMatch = clean.match(/\"content_md_main\"\\s*:\\s*\"([\\s\\S]*?)(?<!\\\\)\"\\s*,\\s*\"/);\n    if (mainMatch) {\n        manualObj.content_md_main = mainMatch[1].replace(/\\\\n/g, '\\n').replace(/\\\\\"/g, '\"');\n    } else {\n\n    }\n\n    if (manualObj.chapter) return manualObj;\n    \n  } catch (e) {}\n\n  return null;\n}\n\nfunction findPayload(obj, depth = 0) {\n  if (!obj || typeof obj !== 'object' || depth > 3) return null;\n\n  if ('chapter' in obj && ('content_md_main' in obj || 'content_md_appendix' in obj)) {\n    return obj;\n  }\n\n  const candidates = ['output', 'json', 'data', 'response', 'text', 'message', 'content'];\n  for (const key of candidates) {\n    if (obj[key]) {\n      if (typeof obj[key] === 'string') {\n        const parsed = aggressiveJsonParse(obj[key]);\n        if (parsed) {\n\n            const deepFound = findPayload(parsed, depth + 1);\n            return deepFound || parsed; \n        }\n      } else if (typeof obj[key] === 'object') {\n        const found = findPayload(obj[key], depth + 1);\n        if (found) return found;\n      }\n    }\n  }\n\n  for (const key in obj) {\n     if (typeof obj[key] === 'object') {\n        const found = findPayload(obj[key], depth + 1);\n        if (found) return found;\n     }\n  }\n\n  return null;\n}\n\nfor (const item of items) {\n  let finalObj = null;\n\n  try {\n    finalObj = findPayload(item.json);\n  } catch (e) {}\n\n  if (!finalObj && typeof item.json === 'string') {\n     finalObj = aggressiveJsonParse(item.json);\n  }\n\n  results.push({\n    json: {\n      chapter: finalObj?.chapter || 6, \n      title: finalObj?.title || \"6\",\n      content_md_main: (finalObj?.content_md_main || \"\").toString(),\n      content_md_appendix: (finalObj?.content_md_appendix || \"\").toString(),\n      needs: Array.isArray(finalObj?.needs) ? finalObj.needs : []\n    }\n  });\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -928,
+        2032
+      ],
+      "id": "e9b1735a-e9c0-40b5-af85-f75a6fbfd181",
+      "name": "Code in JavaScript_6"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst results = [];\n\nfunction aggressiveJsonParse(str) {\n  if (typeof str !== 'string') return null;\n  \n  let clean = str.trim();\n\n  clean = clean.replace(/```(?:json|markdown)?/gi, '').replace(/```/g, '').trim();\n\n  try { return JSON.parse(clean); } catch (e) {}\n\n  const match = clean.match(/(\\{[\\s\\S]*\\})/);\n  if (match) {\n    clean = match[1];\n    try { return JSON.parse(clean); } catch (e) {}\n  }\n\n  try {\n\n    const manualObj = {};\n\n    const chapMatch = clean.match(/\"chapter\"\\s*:\\s*(\\d+)/);\n    if (chapMatch) manualObj.chapter = parseInt(chapMatch[1]);\n\n    const titleMatch = clean.match(/\"title\"\\s*:\\s*\"([^\"]+)\"/);\n    if (titleMatch) manualObj.title = titleMatch[1];\n\n    const mainMatch = clean.match(/\"content_md_main\"\\s*:\\s*\"([\\s\\S]*?)(?<!\\\\)\"\\s*,\\s*\"/);\n    if (mainMatch) {\n        manualObj.content_md_main = mainMatch[1].replace(/\\\\n/g, '\\n').replace(/\\\\\"/g, '\"');\n    } else {\n\n    }\n\n    if (manualObj.chapter) return manualObj;\n    \n  } catch (e) {}\n\n  return null;\n}\n\nfunction findPayload(obj, depth = 0) {\n  if (!obj || typeof obj !== 'object' || depth > 3) return null;\n\n  if ('chapter' in obj && ('content_md_main' in obj || 'content_md_appendix' in obj)) {\n    return obj;\n  }\n\n  const candidates = ['output', 'json', 'data', 'response', 'text', 'message', 'content'];\n  for (const key of candidates) {\n    if (obj[key]) {\n      if (typeof obj[key] === 'string') {\n        const parsed = aggressiveJsonParse(obj[key]);\n        if (parsed) {\n\n            const deepFound = findPayload(parsed, depth + 1);\n            return deepFound || parsed; \n        }\n      } else if (typeof obj[key] === 'object') {\n        const found = findPayload(obj[key], depth + 1);\n        if (found) return found;\n      }\n    }\n  }\n\n  for (const key in obj) {\n     if (typeof obj[key] === 'object') {\n        const found = findPayload(obj[key], depth + 1);\n        if (found) return found;\n     }\n  }\n\n  return null;\n}\n\nfor (const item of items) {\n  let finalObj = null;\n\n  try {\n    finalObj = findPayload(item.json);\n  } catch (e) {}\n\n  if (!finalObj && typeof item.json === 'string') {\n     finalObj = aggressiveJsonParse(item.json);\n  }\n\n  results.push({\n    json: {\n      chapter: finalObj?.chapter || 6, \n      title: finalObj?.title || \"6\",\n      content_md_main: (finalObj?.content_md_main || \"\").toString(),\n      content_md_appendix: (finalObj?.content_md_appendix || \"\").toString(),\n      needs: Array.isArray(finalObj?.needs) ? finalObj.needs : []\n    }\n  });\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -928,
+        2224
+      ],
+      "id": "c35ed3a4-08a7-4696-9968-bbe62caf2ed2",
+      "name": "Code in JavaScript_7"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst results = [];\n\nfunction aggressiveJsonParse(str) {\n  if (typeof str !== 'string') return null;\n  \n  let clean = str.trim();\n\n  clean = clean.replace(/```(?:json|markdown)?/gi, '').replace(/```/g, '').trim();\n\n  try { return JSON.parse(clean); } catch (e) {}\n\n  const match = clean.match(/(\\{[\\s\\S]*\\})/);\n  if (match) {\n    clean = match[1];\n    try { return JSON.parse(clean); } catch (e) {}\n  }\n\n  try {\n\n    const manualObj = {};\n\n    const chapMatch = clean.match(/\"chapter\"\\s*:\\s*(\\d+)/);\n    if (chapMatch) manualObj.chapter = parseInt(chapMatch[1]);\n\n    const titleMatch = clean.match(/\"title\"\\s*:\\s*\"([^\"]+)\"/);\n    if (titleMatch) manualObj.title = titleMatch[1];\n\n    const mainMatch = clean.match(/\"content_md_main\"\\s*:\\s*\"([\\s\\S]*?)(?<!\\\\)\"\\s*,\\s*\"/);\n    if (mainMatch) {\n        manualObj.content_md_main = mainMatch[1].replace(/\\\\n/g, '\\n').replace(/\\\\\"/g, '\"');\n    } else {\n\n    }\n\n    if (manualObj.chapter) return manualObj;\n    \n  } catch (e) {}\n\n  return null;\n}\n\nfunction findPayload(obj, depth = 0) {\n  if (!obj || typeof obj !== 'object' || depth > 3) return null;\n\n  if ('chapter' in obj && ('content_md_main' in obj || 'content_md_appendix' in obj)) {\n    return obj;\n  }\n\n  const candidates = ['output', 'json', 'data', 'response', 'text', 'message', 'content'];\n  for (const key of candidates) {\n    if (obj[key]) {\n      if (typeof obj[key] === 'string') {\n        const parsed = aggressiveJsonParse(obj[key]);\n        if (parsed) {\n\n            const deepFound = findPayload(parsed, depth + 1);\n            return deepFound || parsed; \n        }\n      } else if (typeof obj[key] === 'object') {\n        const found = findPayload(obj[key], depth + 1);\n        if (found) return found;\n      }\n    }\n  }\n\n  for (const key in obj) {\n     if (typeof obj[key] === 'object') {\n        const found = findPayload(obj[key], depth + 1);\n        if (found) return found;\n     }\n  }\n\n  return null;\n}\n\nfor (const item of items) {\n  let finalObj = null;\n\n  try {\n    finalObj = findPayload(item.json);\n  } catch (e) {}\n\n  if (!finalObj && typeof item.json === 'string') {\n     finalObj = aggressiveJsonParse(item.json);\n  }\n\n  results.push({\n    json: {\n      chapter: finalObj?.chapter || 6, \n      title: finalObj?.title || \"6\",\n      content_md_main: (finalObj?.content_md_main || \"\").toString(),\n      content_md_appendix: (finalObj?.content_md_appendix || \"\").toString(),\n      needs: Array.isArray(finalObj?.needs) ? finalObj.needs : []\n    }\n  });\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -928,
+        2592
+      ],
+      "id": "3958d305-05f9-448e-b6a1-4d10fe61b734",
+      "name": "Code in JavaScript_8"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst results = [];\n\nfunction aggressiveJsonParse(str) {\n  if (typeof str !== 'string') return null;\n  \n  let clean = str.trim();\n\n  clean = clean.replace(/```(?:json|markdown)?/gi, '').replace(/```/g, '').trim();\n\n  try { return JSON.parse(clean); } catch (e) {}\n\n  const match = clean.match(/(\\{[\\s\\S]*\\})/);\n  if (match) {\n    clean = match[1];\n    try { return JSON.parse(clean); } catch (e) {}\n  }\n\n  try {\n\n    const manualObj = {};\n\n    const chapMatch = clean.match(/\"chapter\"\\s*:\\s*(\\d+)/);\n    if (chapMatch) manualObj.chapter = parseInt(chapMatch[1]);\n\n    const titleMatch = clean.match(/\"title\"\\s*:\\s*\"([^\"]+)\"/);\n    if (titleMatch) manualObj.title = titleMatch[1];\n\n    const mainMatch = clean.match(/\"content_md_main\"\\s*:\\s*\"([\\s\\S]*?)(?<!\\\\)\"\\s*,\\s*\"/);\n    if (mainMatch) {\n        manualObj.content_md_main = mainMatch[1].replace(/\\\\n/g, '\\n').replace(/\\\\\"/g, '\"');\n    } else {\n\n    }\n\n    if (manualObj.chapter) return manualObj;\n    \n  } catch (e) {}\n\n  return null;\n}\n\nfunction findPayload(obj, depth = 0) {\n  if (!obj || typeof obj !== 'object' || depth > 3) return null;\n\n  if ('chapter' in obj && ('content_md_main' in obj || 'content_md_appendix' in obj)) {\n    return obj;\n  }\n\n  const candidates = ['output', 'json', 'data', 'response', 'text', 'message', 'content'];\n  for (const key of candidates) {\n    if (obj[key]) {\n      if (typeof obj[key] === 'string') {\n        const parsed = aggressiveJsonParse(obj[key]);\n        if (parsed) {\n\n            const deepFound = findPayload(parsed, depth + 1);\n            return deepFound || parsed; \n        }\n      } else if (typeof obj[key] === 'object') {\n        const found = findPayload(obj[key], depth + 1);\n        if (found) return found;\n      }\n    }\n  }\n\n  for (const key in obj) {\n     if (typeof obj[key] === 'object') {\n        const found = findPayload(obj[key], depth + 1);\n        if (found) return found;\n     }\n  }\n\n  return null;\n}\n\nfor (const item of items) {\n  let finalObj = null;\n\n  try {\n    finalObj = findPayload(item.json);\n  } catch (e) {}\n\n  if (!finalObj && typeof item.json === 'string') {\n     finalObj = aggressiveJsonParse(item.json);\n  }\n\n  results.push({\n    json: {\n      chapter: finalObj?.chapter || 6, \n      title: finalObj?.title || \"6\",\n      content_md_main: (finalObj?.content_md_main || \"\").toString(),\n      content_md_appendix: (finalObj?.content_md_appendix || \"\").toString(),\n      needs: Array.isArray(finalObj?.needs) ? finalObj.needs : []\n    }\n  });\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -928,
+        2784
+      ],
+      "id": "f6d02817-f6b7-401b-9687-77910981c0bf",
+      "name": "Code in JavaScript_9"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"chapter\": 8,\n  \"title\": \"8. Ethical Statement and Funding\",\n  \"content_md_main\": \"## 8.1 Ethical Approval\\n\\n(Here you should [Fuse and Compile] paragraphs regarding Ethics Committee Approval from `Reporting_standards['ethics_and_reproducibility_section']`.)\\n\\n## 8.2 Informed Consent\\n\\n(Here you should [Fuse and Compile] paragraphs regarding informed consent processes, special population protection from `Reporting_standards['ethics_and_reproducibility_section']`.)\\n\\n## 8.3 Privacy and Data Security\\n\\n(Here you should [Fuse and Compile] paragraphs regarding privacy protection, de-identification, data security from `Reporting_standards['ethics_and_reproducibility_section']`.)\\n\\n## 8.4 Funding\\n\\nThis study is supported by the following projects: [To be added: Funding Agency and Project Number]. The funders had no role in study design, data collection and analysis, decision to publish, or preparation of the manuscript.\\n(If no funding, please state: This research received no specific grant from any funding agency in the public, commercial, or not-for-profit sectors.)\\n\\n## 8.5 Conflict of Interest Statement\\n\\nAll authors will complete the ICMJE standard Conflict of Interest Disclosure Form. The authors declare no potential conflicts of interest relevant to this study. [To be added: Please confirm this statement with all authors upon submission.]\\n\\n## 8.6 Authorship\\n\\n(Here you can [Fuse and Compile] content from `Results_Publication_Dissemination['authorship_policy']`.)\\n\",\n  \"content_md_appendix\": \"## Appendix: Ethics and Compliance (Supplementary Material)\\n\\n(The appendix for this chapter will likely be empty. Unless there are files like 'Informed Consent Template'.)\\n\",\n  \"needs\": [\"Need to supplement official name of Ethics Committee and approval number\", \"Need to supplement specific funding sources (Funding Agency and Project Number)\", \"Need confirmation of Conflict of Interest statement from all authors\"]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        80,
+        2016
+      ],
+      "id": "d5fe6042-0c18-4a4f-98cb-a77c794fd5e1",
+      "name": "Output4"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "bochunxinprotocolc",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -2176,
+        1424
+      ],
+      "id": "23156d25-6a3d-4952-83f0-730ddd61c68a",
+      "name": "1.Receive Start Request",
+      "webhookId": "93f04bf8-e4d0-4aae-b71d-e05f4193639b"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst results = [];\n\nfunction aggressiveJsonParse(str) {\n  if (typeof str !== 'string') return null;\n  \n  let clean = str.trim();\n\n  clean = clean.replace(/```(?:json|markdown)?/gi, '').replace(/```/g, '').trim();\n\n  try { return JSON.parse(clean); } catch (e) {}\n\n  const match = clean.match(/(\\{[\\s\\S]*\\})/);\n  if (match) {\n    clean = match[1];\n    try { return JSON.parse(clean); } catch (e) {}\n  }\n\n  try {\n\n    const manualObj = {};\n\n    const chapMatch = clean.match(/\"chapter\"\\s*:\\s*(\\d+)/);\n    if (chapMatch) manualObj.chapter = parseInt(chapMatch[1]);\n\n    const titleMatch = clean.match(/\"title\"\\s*:\\s*\"([^\"]+)\"/);\n    if (titleMatch) manualObj.title = titleMatch[1];\n\n    const mainMatch = clean.match(/\"content_md_main\"\\s*:\\s*\"([\\s\\S]*?)(?<!\\\\)\"\\s*,\\s*\"/);\n    if (mainMatch) {\n        manualObj.content_md_main = mainMatch[1].replace(/\\\\n/g, '\\n').replace(/\\\\\"/g, '\"');\n    } else {\n\n    }\n\n    if (manualObj.chapter) return manualObj;\n    \n  } catch (e) {}\n\n  return null;\n}\n\nfunction findPayload(obj, depth = 0) {\n  if (!obj || typeof obj !== 'object' || depth > 3) return null;\n\n  if ('chapter' in obj && ('content_md_main' in obj || 'content_md_appendix' in obj)) {\n    return obj;\n  }\n\n  const candidates = ['output', 'json', 'data', 'response', 'text', 'message', 'content'];\n  for (const key of candidates) {\n    if (obj[key]) {\n      if (typeof obj[key] === 'string') {\n        const parsed = aggressiveJsonParse(obj[key]);\n        if (parsed) {\n\n            const deepFound = findPayload(parsed, depth + 1);\n            return deepFound || parsed; \n        }\n      } else if (typeof obj[key] === 'object') {\n        const found = findPayload(obj[key], depth + 1);\n        if (found) return found;\n      }\n    }\n  }\n\n  for (const key in obj) {\n     if (typeof obj[key] === 'object') {\n        const found = findPayload(obj[key], depth + 1);\n        if (found) return found;\n     }\n  }\n\n  return null;\n}\n\nfor (const item of items) {\n  let finalObj = null;\n\n  try {\n    finalObj = findPayload(item.json);\n  } catch (e) {}\n\n  if (!finalObj && typeof item.json === 'string') {\n     finalObj = aggressiveJsonParse(item.json);\n  }\n\n  results.push({\n    json: {\n      chapter: finalObj?.chapter || 7, \n      title: finalObj?.title || \"7. Statistical Methods (Advanced and Appendix)\",\n      content_md_main: (finalObj?.content_md_main || \"\").toString(),\n      content_md_appendix: (finalObj?.content_md_appendix || \"\").toString(),\n      needs: Array.isArray(finalObj?.needs) ? finalObj.needs : []\n    }\n  });\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -928,
+        1168
+      ],
+      "id": "991730aa-c3ae-4cff-afde-b6412c48dfa9",
+      "name": "Code in JavaScript_10"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst results = [];\n\nfunction aggressiveJsonParse(str) {\n  if (typeof str !== 'string') return null;\n  \n  let clean = str.trim();\n\n  clean = clean.replace(/```(?:json|markdown)?/gi, '').replace(/```/g, '').trim();\n\n  try { return JSON.parse(clean); } catch (e) {}\n\n  const match = clean.match(/(\\{[\\s\\S]*\\})/);\n  if (match) {\n    clean = match[1];\n    try { return JSON.parse(clean); } catch (e) {}\n  }\n\n  try {\n\n    const manualObj = {};\n\n    const chapMatch = clean.match(/\"chapter\"\\s*:\\s*(\\d+)/);\n    if (chapMatch) manualObj.chapter = parseInt(chapMatch[1]);\n\n    const titleMatch = clean.match(/\"title\"\\s*:\\s*\"([^\"]+)\"/);\n    if (titleMatch) manualObj.title = titleMatch[1];\n\n    const mainMatch = clean.match(/\"content_md_main\"\\s*:\\s*\"([\\s\\S]*?)(?<!\\\\)\"\\s*,\\s*\"/);\n    if (mainMatch) {\n        manualObj.content_md_main = mainMatch[1].replace(/\\\\n/g, '\\n').replace(/\\\\\"/g, '\"');\n    } else {\n\n    }\n\n    if (manualObj.chapter) return manualObj;\n    \n  } catch (e) {}\n\n  return null;\n}\n\nfunction findPayload(obj, depth = 0) {\n  if (!obj || typeof obj !== 'object' || depth > 3) return null;\n\n  if ('chapter' in obj && ('content_md_main' in obj || 'content_md_appendix' in obj)) {\n    return obj;\n  }\n\n  const candidates = ['output', 'json', 'data', 'response', 'text', 'message', 'content'];\n  for (const key of candidates) {\n    if (obj[key]) {\n      if (typeof obj[key] === 'string') {\n        const parsed = aggressiveJsonParse(obj[key]);\n        if (parsed) {\n\n            const deepFound = findPayload(parsed, depth + 1);\n            return deepFound || parsed; \n        }\n      } else if (typeof obj[key] === 'object') {\n        const found = findPayload(obj[key], depth + 1);\n        if (found) return found;\n      }\n    }\n  }\n\n  for (const key in obj) {\n     if (typeof obj[key] === 'object') {\n        const found = findPayload(obj[key], depth + 1);\n        if (found) return found;\n     }\n  }\n\n  return null;\n}\n\nfor (const item of items) {\n  let finalObj = null;\n\n  try {\n    finalObj = findPayload(item.json);\n  } catch (e) {}\n\n  if (!finalObj && typeof item.json === 'string') {\n     finalObj = aggressiveJsonParse(item.json);\n  }\n\n  results.push({\n    json: {\n      chapter: finalObj?.chapter || 7, \n      title: finalObj?.title || \"7. Statistical Methods (Advanced and Appendix)\",\n      content_md_main: (finalObj?.content_md_main || \"\").toString(),\n      content_md_appendix: (finalObj?.content_md_appendix || \"\").toString(),\n      needs: Array.isArray(finalObj?.needs) ? finalObj.needs : []\n    }\n  });\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -928,
+        1360
+      ],
+      "id": "8454deb1-65e5-4616-96ee-842c36a7c6b4",
+      "name": "Code in JavaScript_11"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst results = [];\n\nfunction aggressiveJsonParse(str) {\n  if (typeof str !== 'string') return null;\n  \n  let clean = str.trim();\n\n  clean = clean.replace(/```(?:json|markdown)?/gi, '').replace(/```/g, '').trim();\n\n  try { return JSON.parse(clean); } catch (e) {}\n\n  const match = clean.match(/(\\{[\\s\\S]*\\})/);\n  if (match) {\n    clean = match[1];\n    try { return JSON.parse(clean); } catch (e) {}\n  }\n\n  try {\n\n    const manualObj = {};\n\n    const chapMatch = clean.match(/\"chapter\"\\s*:\\s*(\\d+)/);\n    if (chapMatch) manualObj.chapter = parseInt(chapMatch[1]);\n\n    const titleMatch = clean.match(/\"title\"\\s*:\\s*\"([^\"]+)\"/);\n    if (titleMatch) manualObj.title = titleMatch[1];\n\n    const mainMatch = clean.match(/\"content_md_main\"\\s*:\\s*\"([\\s\\S]*?)(?<!\\\\)\"\\s*,\\s*\"/);\n    if (mainMatch) {\n        manualObj.content_md_main = mainMatch[1].replace(/\\\\n/g, '\\n').replace(/\\\\\"/g, '\"');\n    } else {\n\n    }\n\n    if (manualObj.chapter) return manualObj;\n    \n  } catch (e) {}\n\n  return null;\n}\n\nfunction findPayload(obj, depth = 0) {\n  if (!obj || typeof obj !== 'object' || depth > 3) return null;\n\n  if ('chapter' in obj && ('content_md_main' in obj || 'content_md_appendix' in obj)) {\n    return obj;\n  }\n\n  const candidates = ['output', 'json', 'data', 'response', 'text', 'message', 'content'];\n  for (const key of candidates) {\n    if (obj[key]) {\n      if (typeof obj[key] === 'string') {\n        const parsed = aggressiveJsonParse(obj[key]);\n        if (parsed) {\n\n            const deepFound = findPayload(parsed, depth + 1);\n            return deepFound || parsed; \n        }\n      } else if (typeof obj[key] === 'object') {\n        const found = findPayload(obj[key], depth + 1);\n        if (found) return found;\n      }\n    }\n  }\n\n  for (const key in obj) {\n     if (typeof obj[key] === 'object') {\n        const found = findPayload(obj[key], depth + 1);\n        if (found) return found;\n     }\n  }\n\n  return null;\n}\n\nfor (const item of items) {\n  let finalObj = null;\n\n  try {\n    finalObj = findPayload(item.json);\n  } catch (e) {}\n\n  if (!finalObj && typeof item.json === 'string') {\n     finalObj = aggressiveJsonParse(item.json);\n  }\n\n  results.push({\n    json: {\n      chapter: finalObj?.chapter || 7, \n      title: finalObj?.title || \"7. Statistical Methods (Advanced and Appendix)\",\n      content_md_main: (finalObj?.content_md_main || \"\").toString(),\n      content_md_appendix: (finalObj?.content_md_appendix || \"\").toString(),\n      needs: Array.isArray(finalObj?.needs) ? finalObj.needs : []\n    }\n  });\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -928,
+        1552
+      ],
+      "id": "57561f2c-4656-4732-a416-54e76be35311",
+      "name": "Code in JavaScript_12"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst results = [];\n\nfunction aggressiveJsonParse(str) {\n  if (typeof str !== 'string') return null;\n  \n  let clean = str.trim();\n\n  clean = clean.replace(/```(?:json|markdown)?/gi, '').replace(/```/g, '').trim();\n\n  try { return JSON.parse(clean); } catch (e) {}\n\n  const match = clean.match(/(\\{[\\s\\S]*\\})/);\n  if (match) {\n    clean = match[1];\n    try { return JSON.parse(clean); } catch (e) {}\n  }\n\n  try {\n\n    const manualObj = {};\n\n    const chapMatch = clean.match(/\"chapter\"\\s*:\\s*(\\d+)/);\n    if (chapMatch) manualObj.chapter = parseInt(chapMatch[1]);\n\n    const titleMatch = clean.match(/\"title\"\\s*:\\s*\"([^\"]+)\"/);\n    if (titleMatch) manualObj.title = titleMatch[1];\n\n    const mainMatch = clean.match(/\"content_md_main\"\\s*:\\s*\"([\\s\\S]*?)(?<!\\\\)\"\\s*,\\s*\"/);\n    if (mainMatch) {\n        manualObj.content_md_main = mainMatch[1].replace(/\\\\n/g, '\\n').replace(/\\\\\"/g, '\"');\n    } else {\n\n    }\n\n    if (manualObj.chapter) return manualObj;\n    \n  } catch (e) {}\n\n  return null;\n}\n\nfunction findPayload(obj, depth = 0) {\n  if (!obj || typeof obj !== 'object' || depth > 3) return null;\n\n  if ('chapter' in obj && ('content_md_main' in obj || 'content_md_appendix' in obj)) {\n    return obj;\n  }\n\n  const candidates = ['output', 'json', 'data', 'response', 'text', 'message', 'content'];\n  for (const key of candidates) {\n    if (obj[key]) {\n      if (typeof obj[key] === 'string') {\n        const parsed = aggressiveJsonParse(obj[key]);\n        if (parsed) {\n\n            const deepFound = findPayload(parsed, depth + 1);\n            return deepFound || parsed; \n        }\n      } else if (typeof obj[key] === 'object') {\n        const found = findPayload(obj[key], depth + 1);\n        if (found) return found;\n      }\n    }\n  }\n\n  for (const key in obj) {\n     if (typeof obj[key] === 'object') {\n        const found = findPayload(obj[key], depth + 1);\n        if (found) return found;\n     }\n  }\n\n  return null;\n}\n\nfor (const item of items) {\n  let finalObj = null;\n\n  try {\n    finalObj = findPayload(item.json);\n  } catch (e) {}\n\n  if (!finalObj && typeof item.json === 'string') {\n     finalObj = aggressiveJsonParse(item.json);\n  }\n\n  results.push({\n    json: {\n      chapter: finalObj?.chapter || 7, \n      title: finalObj?.title || \"7. Statistical Methods (Advanced and Appendix)\",\n      content_md_main: (finalObj?.content_md_main || \"\").toString(),\n      content_md_appendix: (finalObj?.content_md_appendix || \"\").toString(),\n      needs: Array.isArray(finalObj?.needs) ? finalObj.needs : []\n    }\n  });\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -928,
+        1744
+      ],
+      "id": "f13baf7c-d8e4-4d32-a990-75dd676fc97c",
+      "name": "Code in JavaScript_13"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst results = [];\n\nfunction extractJsonString(str) {\n  if (typeof str !== 'string') return '';\n  \n  const text = str.trim();\n\n  const jsonBlockRegex = /^```(?:json)?\\s*(\\{[\\s\\S]*\\})\\s*```$/i;\n  const matchBlock = text.match(jsonBlockRegex);\n  if (matchBlock) {\n    return matchBlock[1]; \n  }\n\n  const firstBrace = text.indexOf('{');\n  const lastBrace = text.lastIndexOf('}');\n  \n  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {\n    return text.substring(firstBrace, lastBrace + 1);\n  }\n  \n  return text; \n}\n\nfunction findChapterPayload(obj, depth = 0) {\n  if (!obj || typeof obj !== 'object' || depth > 5) return null;\n\n  if ('chapter' in obj && ('content_md_main' in obj || 'content_md_appendix' in obj)) {\n    return obj;\n  }\n\n  const candidates = ['output', 'json', 'data', 'response', 'text', 'message', 'content'];\n  for (const key of candidates) {\n    if (obj[key]) {\n      if (typeof obj[key] === 'string') {\n        try {\n          \n          const cleaned = extractJsonString(obj[key]);\n          const parsed = JSON.parse(cleaned);\n          const found = findChapterPayload(parsed, depth + 1);\n          if (found) return found;\n        } catch (e) {}\n      } else if (typeof obj[key] === 'object') {\n        const found = findChapterPayload(obj[key], depth + 1);\n        if (found) return found;\n      }\n    }\n  }\n\n  for (const key in obj) {\n    if (typeof obj[key] === 'object') {\n      const found = findChapterPayload(obj[key], depth + 1);\n      if (found) return found;\n    }\n  }\n  \n  return null;\n}\n\nfor (const item of items) {\n  let finalObj = null;\n  const debugRaw = item.json; // Used for debugging\n\n  try {\n\n    finalObj = findChapterPayload(item.json);\n\n    if (!finalObj && typeof item.json === 'string') {\n       try {\n         const parsed = JSON.parse(extractJsonString(item.json));\n         finalObj = findChapterPayload(parsed);\n       } catch(e) {}\n    }\n  } catch (err) {\n\n  }\n\n  results.push({\n    json: {\n      chapter: finalObj?.chapter || 0,\n      title: finalObj?.title || \"\",\n\n      content_md_main: (finalObj?.content_md_main || \"\").toString(),\n      content_md_appendix: (finalObj?.content_md_appendix || \"\").toString(),\n      needs: Array.isArray(finalObj?.needs) ? finalObj.needs : []\n    }\n  });\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        64,
+        2512
+      ],
+      "id": "a835651f-b29c-4f5c-b37b-19fd9cb90640",
+      "name": "Code in JavaScript_14"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "2.Prepare Input": {
+      "main": [
+        [
+          {
+            "node": "3.Read Research Design Info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3.Read Research Design Info": {
+      "main": [
+        [
+          {
+            "node": "4.Organize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "4.Organize Input": {
+      "main": [
+        [
+          {
+            "node": "6_1.Title and Abstract",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "6_2.Background and Objectives",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "6_3.Research Design and Setting",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "6_4.Participants",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "6_5.Variable Definitions and Data Sources/Measurement",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "6_7a.Statistical Methods_Data Processing",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "6_8.Ethical Statement and Funding",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "6_9.Result Publication and Dissemination Plan",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "6_6a.Bias Control 1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "6_7b.Statistical Methods_Descriptive",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "6_7c.Statistical Methods_Main Model",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "6_7d.Statistical Methods_Advanced Analysis and Appendix",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "6_6a.Bias Control 2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "6_6b.Sample Size Calculation",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "6_6c.Appendix Synthesis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "6_1.Title and Abstract": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript_1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "6_2.Background and Objectives": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript_2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "6_4.Participants": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript_4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "6_3.Research Design and Setting": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript_3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "6_5.Variable Definitions and Data Sources/Measurement": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript_5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "6_9.Result Publication and Dissemination Plan": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript_14",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "6_8.Ethical Statement and Funding": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 7
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "7.Merge Chapter JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "6_7a.Statistical Methods_Data Processing": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript_10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "6_6b.Sample Size Calculation": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript_8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Chapter 7": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 6
+          }
+        ]
+      ]
+    },
+    "Merge Chapter 6": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "6_6a.Bias Control 2": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript_7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "6_6a.Bias Control 1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript_6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "6_6c.Appendix Synthesis": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript_9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "6_7b.Statistical Methods_Descriptive": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript_11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "6_7c.Statistical Methods_Main Model": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript_12",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "6_7d.Statistical Methods_Advanced Analysis and Appendix": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript_13",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ch7_1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ch7_2": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "ch7_3": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "ch7_4": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Merge Chapter 7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ch6_4": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "ch6_1": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ch6_2": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "ch6_3": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "Merge Chapter 6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "7.Merge Chapter JSON": {
+      "main": [
+        [
+          {
+            "node": "8.JSON to Markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "8.JSON to Markdown": {
+      "main": [
+        [
+          {
+            "node": "9.Prepare DB Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "9.Prepare DB Update": {
+      "main": [
+        [
+          {
+            "node": "10.Save New Fields to DB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "10.Save New Fields to DB": {
+      "main": [
+        [
+          {
+            "node": "Mark C Completed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark C Completed": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript_1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "6_3.Research Design and Setting",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "6_1.Title and Abstract",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "6_2.Background and Objectives",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "6_4.Participants",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "6_5.Variable Definitions and Data Sources/Measurement",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "6_7a.Statistical Methods_Data Processing",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "6_7b.Statistical Methods_Descriptive",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "6_7c.Statistical Methods_Main Model",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "6_8.Ethical Statement and Funding",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "6_7d.Statistical Methods_Advanced Analysis and Appendix",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "6_6a.Bias Control 1",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "6_6a.Bias Control 2",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "6_9.Result Publication and Dissemination Plan",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "6_6b.Sample Size Calculation",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "6_6c.Appendix Synthesis",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript_2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript_3": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript_4": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript_5": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields_1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields_1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript_6": {
+      "main": [
+        [
+          {
+            "node": "ch6_1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript_7": {
+      "main": [
+        [
+          {
+            "node": "ch6_2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript_8": {
+      "main": [
+        [
+          {
+            "node": "ch6_3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript_9": {
+      "main": [
+        [
+          {
+            "node": "ch6_4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Output4": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "6_8.Ethical Statement and Funding",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1.Receive Start Request": {
+      "main": [
+        [
+          {
+            "node": "2.Prepare Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript_10": {
+      "main": [
+        [
+          {
+            "node": "ch7_1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript_11": {
+      "main": [
+        [
+          {
+            "node": "ch7_2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript_12": {
+      "main": [
+        [
+          {
+            "node": "ch7_3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript_13": {
+      "main": [
+        [
+          {
+            "node": "ch7_4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript_14": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 8
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "46c8b90b-08fb-4caa-96bb-dc99e82ec156",
+  "meta": {
+    "instanceId": "80ba165fc158dff2241db7d1bcd6321181a547103579dbd3779b72b2fd728028"
+  },
+  "id": "Bs3Jl1d4zaRc2EuB",
+  "tags": []
+}

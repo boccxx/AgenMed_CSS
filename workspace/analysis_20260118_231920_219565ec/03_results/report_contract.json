@@ -1,0 +1,13 @@
+{
+  "inference_level": "design_based",
+  "weight_var_name": "Sampling_Weight",
+  "weight_status": "valid",
+  "strata_variable": "Geographic_Region",
+  "psu_variable": null,
+  "n_total": null,
+  "n_by_group": {},
+  "missing_data_method": "unknown",
+  "exposure_definition": null,
+  "outcome_definition": null,
+  "design_limitations": "Valid sampling weights detected; design-based inference possible in later stages"
+}

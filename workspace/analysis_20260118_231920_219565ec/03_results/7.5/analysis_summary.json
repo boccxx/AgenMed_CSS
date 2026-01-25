@@ -1,0 +1,36 @@
+{
+  "stage": "7.5_multivariable_modeling",
+  "timestamp": "2026-01-18 23:52:53",
+  "primary_model": "quasipoisson",
+  "n_imputations": 20,
+  "successful_models": 20,
+  "convergence_issues": 0,
+  "pooled_PR": 1.255,
+  "pooled_PR_95CI": [0.955, 1.648],
+  "pooled_PR_pvalue": 0.1031,
+  "pooled_Beta_BMD": -0.0331,
+  "pooled_Beta_95CI": [-0.0527, -0.0135],
+  "pooled_Beta_pvalue": 0.0009,
+  "critical_decisions": {
+    "adjustment_set": ["Age", "Gender", "Geographic_Region", "Self_Care_Ability"],
+    "primary_model_covariates": ["Age", "Gender", "Geographic_Region", "Self_Care_Ability"],
+    "supplementary_model_covariates": ["Gender", "Age", "BMI", "Self_Care_Ability", "Smoking_Status", "Alcohol_Frequency", "Physical_Function", "Hemoglobin", "Fasting_Glucose", "Total_Bilirubin", "Serum_Creatinine", "Blood_Urea_Nitrogen", "Total_Cholesterol", "Triglycerides"],
+    "sparse_variable_handling": "Self_Care_Ability: Moderate_Dependence merged into Mild_Dependence",
+    "convergence_status": "success",
+    "supplementary_model_convergence": 20,
+    "vif_max": 1.21,
+    "overdispersion_ratio": 0.718,
+    "influential_points_n": 55
+  },
+  "statistical_methods_summary": {
+    "binary_outcome": "quasipoisson regression with robust variance",
+    "continuous_outcome": "Weighted Linear Regression",
+    "pooling_method": "Rubin's Rules (manual implementation)",
+    "diagnostics": ["VIF", "Overdispersion", "Goodness-of-fit", "Residual plots", "Cook's Distance"]
+  },
+  "next_stage_requirements": {
+    "note": "Subgroup analysis and sensitivity analysis ready",
+    "key_variables": ["Exercise_Group", "Osteoporosis_Binary", "Bone_Mineral_Density"],
+    "stratification_candidates": ["Gender", "Age_Group", "Geographic_Region"]
+  }
+}

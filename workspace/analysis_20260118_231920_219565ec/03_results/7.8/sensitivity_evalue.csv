@@ -1,0 +1,3 @@
+"Estimate","PR","E_value","Interpretation"
+"Point Estimate",1.25,1.25,"Unmeasured confounder must have RR >= 1.25 with both exposure and outcome to explain away the observed association"
+"Lower 95% CI",1.25,NA,"E-value not calculable"

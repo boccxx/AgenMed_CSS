@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS) - Statistical Analysis</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #4a90e2;
+            --dark-blue: #2c5282;
+            --light-blue: #e6f3ff;
+            --accent-blue: #3182ce;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #e6f3ff 0%, #f0f8ff 100%);
+            min-height: 100vh;
+        }
+        
+        .chat-container {
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .step-active {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+            color: white;
+        }
+        
+        .step-completed {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+        
+        .step-pending {
+            background: rgba(255, 255, 255, 0.8);
+            color: #6b7280;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .step-error {
+            background: linear-gradient(135deg, #e53e3e 0%, #fc8181 100%);
+            color: white;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, var(--dark-blue) 0%, var(--primary-blue) 100%);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        
+        .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(74, 144, 226, 0.1);
+            position: fixed;
+            top: 6rem;
+            left: 0.5rem;
+            width: calc(25% - 0.75rem);
+            max-height: calc(100vh - 7rem);
+            overflow-y: auto;
+            z-index: 10;
+        }
+        
+        @media (max-width: 1024px) {
+            .sidebar {
+                position: relative;
+                top: auto;
+                left: auto;
+                width: 100%;
+                max-height: none;
+            }
+        }
+        
+        .chat-area {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(74, 144, 226, 0.1);
+        }
+        
+        .chat-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .chat-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        .chat-container::-webkit-scrollbar-thumb {
+            background: var(--primary-blue);
+            border-radius: 4px;
+        }
+        
+        .message-bubble {
+            max-width: 95%;
+            width: 100%;
+            font-size: 0.875rem; /* 14px */
+        }
+        
+        .message-bubble p {
+            font-size: 0.875rem;
+            line-height: 1.4;
+        }
+        
+        .message-bubble h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .message-bubble h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.4rem;
+        }
+        
+        .message-bubble ul, .message-bubble ol {
+            font-size: 0.8rem;
+            line-height: 1.3;
+        }
+        
+        .message-bubble li {
+            margin-bottom: 0.3rem;
+        }
+        
+        .message-bubble .text-sm {
+            font-size: 0.75rem;
+        }
+
+        .upload-area {
+            border: 2px dashed #cbd5e0;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary-blue);
+            background-color: #f7fafc;
+        }
+        
+        .upload-area.dragover {
+            border-color: var(--primary-blue);
+            background-color: var(--light-blue);
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+        
+        .code-block pre {
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+            transition: width 0.3s ease;
+        }
+
+        .result-card {
+            border-left: 4px solid var(--primary-blue);
+            background: #f8fafc;
+        }
+
+        .log-entry {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .log-info { color: #3182ce; }
+        .log-success { color: #38a169; }
+        .log-warning { color: #d69e2e; }
+        .log-error { color: #e53e3e; }
+
+        .file-tree {
+            max-height: 60vh;
+            overflow-y: auto;
+            font-size: 0.8rem;
+        }
+        
+        .file-tree::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .file-tree::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        
+        .file-tree::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+        
+        .file-tree::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+        
+        .file-tree-item {
+            padding: 0.25rem 0.5rem;
+            margin: 0.1rem 0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            position: relative;
+        }
+        
+        .file-tree-item:hover {
+            background-color: #e2e8f0;
+            transform: translateX(2px);
+        }
+        
+        .file-tree-item.active {
+            background-color: #3b82f6;
+            color: white;
+            font-weight: 600;
+            transform: translateX(4px);
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+        
+        .file-tree-item:active {
+            transform: translateX(1px) scale(0.98);
+        }
+        
+        .file-tree-item.folder {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .file-tree-item.file {
+            color: #6b7280;
+            padding-left: 1.5rem;
+        }
+        
+        .file-tree-item.file:hover {
+            color: #374151;
+        }
+        
+        .content-viewer {
+            max-height: 70vh;
+            overflow-y: auto;
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        
+        .content-viewer pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+        
+        .content-viewer .json-content {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            line-height: 1.5;
+        }
+        
+        .image-content {
+            text-align: center;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+        
+        .image-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .json-content pre {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 1rem;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .csv-content pre {
+            background: #f0f8ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 6px;
+            padding: 1rem;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.3;
+        }
+        
+        .markdown-content {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 1rem;
+            line-height: 1.6;
+        }
+        
+        .text-content {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 1rem;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .binary-content {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 1rem;
+            text-align: center;
+            color: #856404;
+        }
+        
+        .pdf-content {
+            background: #e3f2fd;
+            border: 1px solid #90caf9;
+            border-radius: 6px;
+            padding: 2rem;
+            text-align: center;
+            color: #1565c0;
+        }
+        
+        .pdf-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .pdf-content h3 {
+            margin: 0.5rem 0;
+            color: #1565c0;
+        }
+        
+        .pdf-message {
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        
+        .pdf-tip {
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: #1976d2;
+            font-style: italic;
+        }
+        
+        .binary-content .binary-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from { 
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-fadeIn {
+            animation: fadeIn 0.2s ease-out;
+        }
+        
+        .animate-slideIn {
+            animation: slideIn 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="max-w-full mx-auto px-2 sm:px-4 lg:px-6">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mr-3">
+                        <i class="fas fa-chart-line text-white text-xl"></i>
+                    </div>
+                    <h1 class="text-xl font-bold text-white">Cross-Sectional Study Design and Analysis Agent (AgenMed_CSS)</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-white text-opacity-80">Statistical Analysis</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-full mx-auto px-2 sm:px-4 lg:px-6 py-8 mt-16">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div class="lg:col-span-1">
+                <div class="sidebar p-4">
+                    <h3 class="text-base font-semibold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-route mr-2 text-blue-600"></i>Analysis Progress
+                    </h3>
+                    <div class="space-y-2" id="progress-steps">
+                        <div class="step-item flex items-center p-3 rounded-xl step-pending transition-all duration-300" id="step-upload">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold mr-3">1</div>
+                            <span class="font-medium text-sm">File Upload</span>
+                        </div>
+                        <div class="step-item flex items-center p-3 rounded-xl step-pending transition-all duration-300" id="step-parse">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold mr-3">2</div>
+                            <span class="text-sm">Protocol Parsing</span>
+                        </div>
+                        <div class="step-item flex items-center p-3 rounded-xl step-pending transition-all duration-300" id="step-analysis">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold mr-3">3</div>
+                            <span class="text-sm">Analysis Execution</span>
+                        </div>
+                        <div class="step-item flex items-center p-3 rounded-xl step-pending transition-all duration-300" id="step-complete">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold mr-3">4</div>
+                            <span class="text-sm">Analysis Complete</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <div class="flex justify-between text-sm text-gray-600 mb-2">
+                            <span>Overall Progress</span>
+                            <span id="progress-percentage">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="progress-bar h-2 rounded-full" id="progress-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-base font-semibold text-gray-800 flex items-center">
+                                <i class="fas fa-folder-tree mr-2 text-green-600"></i>File Structure
+                            </h3>
+                            <button class="text-xs px-2 py-1 rounded bg-blue-500 text-white hover:bg-blue-600" onclick="updateFileTree()">Refresh</button>
+                        </div>
+                        <div class="file-tree" id="file-tree">
+                            <div class="text-sm text-gray-500">Waiting for analysis to begin...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="lg:col-span-3 lg:ml-[calc(25%+0.5rem)]" style="position: relative; z-index: 20;">
+                <div class="chat-area">
+                    <div class="p-6 rounded-2xl mb-6" id="upload-section">
+                        <div class="bg-white rounded-2xl p-6 shadow-lg">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                                <i class="fas fa-upload mr-3 text-blue-600"></i>File Upload
+                            </h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-3">Research Protocol (.md, .doc, .docx)</label>
+                                    <div class="upload-area p-6 text-center" id="research-upload-area">
+                                        <i class="fas fa-file-alt text-4xl text-gray-400 mb-4"></i>
+                                        <p class="text-gray-600 mb-2">Drag protocol file here, or click to select</p>
+                                        <input type="file" id="research-file" accept=".md,.txt,.doc,.docx" class="hidden">
+                                        <button type="button" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors" onclick="document.getElementById('research-file').click()">
+                                            Select File
+                                        </button>
+                                    </div>
+                                    <div id="research-file-info" class="mt-2 text-sm text-gray-600 hidden"></div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-3">Data File (.csv)</label>
+                                    <div class="upload-area p-6 text-center" id="data-upload-area">
+                                        <i class="fas fa-table text-4xl text-gray-400 mb-4"></i>
+                                        <p class="text-gray-600 mb-2">Drag data file here, or click to select</p>
+                                        <input type="file" id="data-file" accept=".csv" class="hidden">
+                                        <button type="button" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors" onclick="document.getElementById('data-file').click()">
+                                            Select File
+                                        </button>
+                                    </div>
+                                    <div id="data-file-info" class="mt-2 text-sm text-gray-600 hidden"></div>
+                                </div>
+                            </div>
+
+                            <div class="text-center mt-6">
+                                <button id="start-analysis-btn" class="bg-green-500 text-white px-8 py-3 rounded-lg hover:bg-green-600 transition-colors font-semibold disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>
+                                    <i class="fas fa-play mr-2"></i>Start Statistical Analysis
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="analysis-results" id="analysis-results" style="display: none;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let researchFile = null;
+        let dataFile = null;
+        let analysisInProgress = false;
+        let currentTaskId = null;
+        let fileTreeData = {};
+        const fileContentCache = new Map();
+        const inflightFileRequests = new Map();
+
+        function setupFileUpload() {
+            const researchUploadArea = document.getElementById('research-upload-area');
+            const researchFileInput = document.getElementById('research-file');
+            const researchFileInfo = document.getElementById('research-file-info');
+
+            const dataUploadArea = document.getElementById('data-upload-area');
+            const dataFileInput = document.getElementById('data-file');
+            const dataFileInfo = document.getElementById('data-file-info');
+
+            // Drag and drop functionality
+            [researchUploadArea, dataUploadArea].forEach((area, index) => {
+                const fileInput = index === 0 ? researchFileInput : dataFileInput;
+                const fileInfo = index === 0 ? researchFileInfo : dataFileInfo;
+                const fileType = index === 0 ? 'research' : 'data';
+
+                area.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    area.classList.add('dragover');
+                });
+
+                area.addEventListener('dragleave', () => {
+                    area.classList.remove('dragover');
+                });
+
+                area.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    area.classList.remove('dragover');
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        handleFileSelect(files[0], fileType, fileInfo);
+                    }
+                });
+
+                fileInput.addEventListener('change', (e) => {
+                    if (e.target.files.length > 0) {
+                        handleFileSelect(e.target.files[0], fileType, fileInfo);
+                    }
+                });
+            });
+        }
+
+        function handleFileSelect(file, type, infoElement) {
+            console.log(`File selected: ${file.name}, type: ${type}, size: ${file.size} bytes`);
+            
+            const fileSize = (file.size / 1024 / 1024).toFixed(2);
+            infoElement.innerHTML = `
+                <i class="fas fa-check-circle text-green-500 mr-1"></i>
+                <strong>${file.name}</strong> (${fileSize} MB)
+            `;
+            infoElement.classList.remove('hidden');
+
+            if (type === 'research') {
+                researchFile = file;
+                console.log('Research protocol file set:', researchFile.name);
+            } else {
+                dataFile = file;
+                console.log('Data file set:', dataFile.name);
+            }
+
+            updateStartButton();
+        }
+
+        function updateStartButton() {
+            const startBtn = document.getElementById('start-analysis-btn');
+            console.log('Update start button status:', {
+                researchFile: researchFile ? researchFile.name : 'null',
+                dataFile: dataFile ? dataFile.name : 'null',
+                analysisInProgress: analysisInProgress
+            });
+            
+            if (researchFile && dataFile && !analysisInProgress) {
+                startBtn.disabled = false;
+                console.log('Start button enabled');
+            } else {
+                startBtn.disabled = true;
+                console.log('Start button disabled');
+            }
+        }
+
+        function startAnalysis() {
+            if (!researchFile || !dataFile || analysisInProgress) return;
+
+            analysisInProgress = true;
+            updateStartButton();
+            updateProgressStep('step-upload', 'completed');
+            
+            document.getElementById('upload-section').style.display = 'none';
+            document.getElementById('analysis-results').style.display = 'block';
+            
+            runAnalysis();
+        }
+
+        function updateProgress(step, status) {
+            const stepElement = document.getElementById(`step-${step}`);
+            const progressBar = document.getElementById('progress-bar');
+            const progressPercentage = document.getElementById('progress-percentage');
+            
+            stepElement.className = `step-item flex items-center p-3 rounded-xl step-${status} transition-all duration-300`;
+            
+            const percentage = (step / 5) * 100;
+            progressBar.style.width = `${percentage}%`;
+            progressPercentage.textContent = `${Math.round(percentage)}%`;
+        }
+
+        function addMessage(content, type = 'info', icon = 'fas fa-info-circle') {
+            updateAnalysisResults(content);
+        }
+
+        async function runAnalysis() {
+            try {
+                updateAnalysisResults(`
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-upload text-blue-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-blue-800">Step 1: File Upload</h3>
+                                <p class="text-sm text-blue-700 mt-1">Saving uploaded files...</p>
+                            </div>
+                        </div>
+                    </div>
+                `);
+                
+                await uploadFiles();
+                
+                const results = await parseResearchDocument();
+                
+                await displayResults(results);
+                
+                updateAnalysisResults(`
+                    <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-check-circle text-green-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-green-800">Analysis Complete!</h3>
+                                <p class="text-sm text-green-700 mt-1">Statistical analysis has been successfully completed. All results have been generated and displayed below.</p>
+                                <div class="mt-3 space-x-2">
+                                    <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors text-sm" onclick="downloadReport()">
+                                        <i class="fas fa-file-word mr-2"></i>Download Analysis Report
+                                    </button>
+                                    <button class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors text-sm" onclick="downloadResults()">
+                                        <i class="fas fa-download mr-2"></i>Download All Results
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `);
+                
+            } catch (error) {
+                console.error('Error during analysis:', error);
+
+                let errorMessage = error.message;
+                if (error.message.includes('Failed to fetch') || error.message.includes('ERR_CONNECTION_REFUSED') || error.message.includes('Cannot connect to API server')) {
+                    errorMessage = 'Cannot connect to API server. Please start the server first: python -m src.api.api_server';
+                    showServerConnectionWarning();
+                }
+                
+                updateAnalysisResults(`
+                    <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-exclamation-triangle text-red-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-red-800">Analysis Failed</h3>
+                                <p class="text-sm text-red-700 mt-1">${errorMessage}</p>
+                            </div>
+                        </div>
+                    </div>
+                `);
+                
+                const activeSteps = ['step-parse', 'step-analysis', 'step-complete'];
+                for (const stepId of activeSteps) {
+                    const stepElement = document.getElementById(stepId);
+                    if (stepElement && stepElement.classList.contains('step-active')) {
+                        updateProgressStep(stepId, 'error');
+                        break;
+                    }
+                }
+            } finally {
+                analysisInProgress = false;
+                updateStartButton();
+            }
+        }
+
+        async function uploadFiles() {
+            const isConnected = await checkAPIServer();
+            if (!isConnected) {
+                showServerConnectionWarning();
+                throw new Error('Cannot connect to API server. Please start the server first: python -m src.api.api_server');
+            }
+            
+            const formData = new FormData();
+            formData.append('research', researchFile);
+            formData.append('data', dataFile);
+            
+            const response = await fetch('http://localhost:8001/api/upload', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'File upload failed');
+            }
+            
+            const result = await response.json();
+            console.log('File upload successful:', result);
+        }
+
+        async function parseResearchDocument() {
+            const response = await fetch('http://localhost:8001/api/analyze', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            });
+            
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'Failed to start analysis');
+            }
+            
+            const result = await response.json();
+            currentTaskId = result.task_id;
+            
+            return await pollAnalysisStatus(currentTaskId);
+        }
+
+        async function fetchAndDisplayLogs(taskId) {
+            try {
+                const response = await fetch(`http://localhost:8001/api/logs/${taskId}`);
+                if (!response.ok) {
+                    const latestResponse = await fetch('http://localhost:8001/api/logs/latest');
+                    if (latestResponse.ok) {
+                        const latestData = await latestResponse.json();
+                        displayLogs(latestData.logs, lastLogLineCount);
+                        lastLogLineCount = latestData.total_lines;
+                    }
+                    return;
+                }
+                
+                const logData = await response.json();
+                if (logData.logs && logData.logs.length > 0) {
+                    displayLogs(logData.logs, lastLogLineCount);
+                    lastLogLineCount = logData.total_lines;
+                }
+            } catch (e) {
+                console.error('Failed to fetch logs:', e);
+            }
+        }
+        
+        function displayLogs(logs, startFrom = 0) {
+            if (!logs || logs.length === 0) return;
+            
+            const newLogs = logs.slice(startFrom);
+            if (newLogs.length === 0) return;
+            
+            const moduleGroups = {
+                'Initialization': [],
+                'Document Parsing': [],
+                'Code Generation': [],
+                'Code Execution': [],
+                'Result Processing': [],
+                'Other': []
+            };
+            
+            newLogs.forEach(log => {
+                const msg = log.message || log.raw;
+                let module = 'Other';
+                
+                if (msg.includes('初始化') || msg.includes('初始化功能模块') || msg.includes('Initializ')) {
+                    module = 'Initialization';
+                } else if (msg.includes('解析') || msg.includes('研究方案') || msg.includes('Pars')) {
+                    module = 'Document Parsing';
+                } else if (msg.includes('生成') || msg.includes('R代码') || msg.includes('Generat')) {
+                    module = 'Code Generation';
+                } else if (msg.includes('执行') || msg.includes('R脚本') || msg.includes('Execut')) {
+                    module = 'Code Execution';
+                } else if (msg.includes('结果') || msg.includes('保存') || msg.includes('Result') || msg.includes('Sav')) {
+                    module = 'Result Processing';
+                }
+                
+                if (!moduleGroups[module]) {
+                    moduleGroups[module] = [];
+                }
+                moduleGroups[module].push(log);
+            });
+            
+            let logHTML = '';
+            Object.keys(moduleGroups).forEach(module => {
+                if (moduleGroups[module].length === 0) return;
+                
+                const moduleIcons = {
+                    'Initialization': 'fa-cog',
+                    'Document Parsing': 'fa-file-alt',
+                    'Code Generation': 'fa-code',
+                    'Code Execution': 'fa-play-circle',
+                    'Result Processing': 'fa-check-circle',
+                    'Other': 'fa-info-circle'
+                };
+                
+                const moduleColors = {
+                    'Initialization': 'bg-blue-50 border-blue-200',
+                    'Document Parsing': 'bg-purple-50 border-purple-200',
+                    'Code Generation': 'bg-green-50 border-green-200',
+                    'Code Execution': 'bg-yellow-50 border-yellow-200',
+                    'Result Processing': 'bg-indigo-50 border-indigo-200',
+                    'Other': 'bg-gray-50 border-gray-200'
+                };
+                
+                logHTML += `
+                    <div class="${moduleColors[module]} border-l-4 rounded-lg p-3 mb-3">
+                        <div class="flex items-center mb-2">
+                            <i class="fas ${moduleIcons[module]} mr-2 text-gray-600"></i>
+                            <span class="font-semibold text-sm text-gray-700">${module}</span>
+                        </div>
+                        <div class="ml-6 space-y-1">
+                `;
+                
+                moduleGroups[module].forEach(log => {
+                    const levelColors = {
+                        'INFO': 'text-blue-700',
+                        'WARNING': 'text-yellow-700',
+                        'ERROR': 'text-red-700',
+                        'DEBUG': 'text-gray-600'
+                    };
+                    const level = log.level || 'INFO';
+                    const color = levelColors[level] || 'text-gray-700';
+                    
+                    logHTML += `
+                        <div class="text-xs ${color}">
+                            <span class="font-mono text-gray-500">${log.timestamp || ''}</span>
+                            <span class="ml-2">${log.message || log.raw}</span>
+                        </div>
+                    `;
+                });
+                
+                logHTML += `
+                        </div>
+                    </div>
+                `;
+            });
+            
+            if (logHTML) {
+                updateAnalysisResults(logHTML);
+            }
+        }
+        
+        async function pollAnalysisStatus(taskId) {
+            let retryCount = 0;
+            const maxRetries = 5;
+            
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+            }
+            autoRefreshInterval = setInterval(async () => {
+                await fetchAndDisplayLogs(taskId);
+            }, 60000);
+            
+            return new Promise((resolve, reject) => {
+                let pollInterval = setInterval(async () => {
+                    try {
+                        const response = await fetch(`http://localhost:8001/api/status/${taskId}`);
+                        if (!response.ok) {
+                            if (response.status === 404) {
+                                clearInterval(pollInterval);
+                                if (autoRefreshInterval) {
+                                    clearInterval(autoRefreshInterval);
+                                    autoRefreshInterval = null;
+                                }
+                                console.log('Task status 404, possibly completed');
+                                try {
+                                    const debugResponse = await fetch('http://localhost:8001/api/debug/tasks');
+                                    if (debugResponse.ok) {
+                                        const debugInfo = await debugResponse.json();
+                                        console.log('Debug info:', debugInfo);
+                                        const taskInfo = debugInfo.tasks && debugInfo.tasks.find(t => t.task_id === taskId);
+                                        if (taskInfo) {
+                                            resolve(taskInfo);
+                                            return;
+                                        }
+                                    }
+                                } catch (debugE) {
+                                    console.error('Failed to fetch debug info:', debugE);
+                                }
+                                reject(new Error('Task does not exist or has expired'));
+                                return;
+                            }
+                            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                        }
+                        
+                        const status = await response.json();
+                        retryCount = 0;
+                        
+                        await fetchAndDisplayLogs(taskId);
+                        
+                        if (status.progress !== undefined) {
+                            updateProgressBar(status.progress);
+                        }
+                        
+                        if (status.status === 'started' || status.status === 'running') {
+                            if (status.current_step) {
+                                const stepLower = status.current_step.toLowerCase();
+                                if (stepLower.includes('parsing') || stepLower.includes('解析') || stepLower.includes('parse') || stepLower.includes('document')) {
+                                    updateProgressStep('step-upload', 'completed');
+                                    updateProgressStep('step-parse', 'active');
+                                } else if (stepLower.includes('analysis') || stepLower.includes('分析') || stepLower.includes('stage') || stepLower.includes('阶段') || stepLower.includes('execution') || stepLower.includes('processing') || stepLower.includes('generating') || stepLower.includes('executing') || stepLower.includes('r code')) {
+                                    updateProgressStep('step-upload', 'completed');
+                                    updateProgressStep('step-parse', 'completed');
+                                    updateProgressStep('step-analysis', 'active');
+                                } else if (stepLower.includes('post-processing') || stepLower.includes('清理') || stepLower.includes('报告') || stepLower.includes('cleanup') || stepLower.includes('report') || stepLower.includes('postprocess')) {
+                                    updateProgressStep('step-upload', 'completed');
+                                    updateProgressStep('step-parse', 'completed');
+                                    updateProgressStep('step-analysis', 'completed');
+                                }
+                            }
+                            if (status.current_step) {
+                                updateCurrentStep(status.current_step);
+                            }
+                        } else if (status.status === 'analysis_completed') {
+                            updateProgressStep('step-upload', 'completed');
+                            updateProgressStep('step-parse', 'completed');
+                            updateProgressStep('step-analysis', 'completed');
+                            updateProgressStep('step-complete', 'active');
+                            if (status.current_step) {
+                                updateCurrentStep(status.current_step);
+                            }
+                        } else if (status.status === 'completed') {
+                            updateProgressStep('step-upload', 'completed');
+                            updateProgressStep('step-parse', 'completed');
+                            updateProgressStep('step-analysis', 'completed');
+                            updateProgressStep('step-complete', 'completed');
+                            if (status.current_step) {
+                                updateCurrentStep(status.current_step);
+                            }
+                            clearInterval(pollInterval);
+                            if (autoRefreshInterval) {
+                                clearInterval(autoRefreshInterval);
+                                autoRefreshInterval = null;
+                            }
+                            resolve(status);
+                        } else if (status.status === 'failed' || status.status === 'postprocess_failed') {
+                            if (status.current_step && (status.current_step.includes('Parsing') || status.current_step.includes('解析'))) {
+                                updateProgressStep('step-parse', 'error');
+                            } else if (status.current_step && (status.current_step.includes('Analysis') || status.current_step.includes('分析'))) {
+                                updateProgressStep('step-analysis', 'error');
+                            } else {
+                                updateProgressStep('step-complete', 'error');
+                            }
+                            if (status.current_step) {
+                                updateCurrentStep(status.current_step);
+                            }
+                            clearInterval(pollInterval);
+                            if (autoRefreshInterval) {
+                                clearInterval(autoRefreshInterval);
+                                autoRefreshInterval = null;
+                            }
+                            reject(new Error(status.message || status.error || 'Analysis failed'));
+                        } else if (status.current_step) {
+                            updateCurrentStep(status.current_step);
+                        }
+                        
+                        if (status.steps && status.steps.length > 0) {
+                            const latestStep = status.steps[status.steps.length - 1];
+                            if (latestStep.status === 'completed') {
+                                if (latestStep.step.includes('解析研究方案文档') || latestStep.step.includes('Parsing Protocol')) {
+                                    updateProgressStep('step-parse', 'completed');
+                                } else if (latestStep.step.includes('处理阶段') || latestStep.step.includes('Processing Stage')) {
+                                    updateProgressStep('step-analysis', 'completed');
+                                } else if (latestStep.step.includes('分析完成') || latestStep.step.includes('Analysis Complete')) {
+                                    updateProgressStep('step-complete', 'completed');
+                                }
+                                
+                                const stepKey = `${latestStep.step}_completed`;
+                                if (!displayedSteps.has(stepKey)) {
+                                    displayedSteps.add(stepKey);
+                                    updateAnalysisResults(`
+                                        <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-4">
+                                            <div class="flex">
+                                                <div class="flex-shrink-0">
+                                                    <i class="fas fa-check-circle text-green-400"></i>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <h3 class="text-sm font-medium text-green-800">${latestStep.step}</h3>
+                                                    <p class="text-sm text-green-700 mt-1">${latestStep.result}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `);
+                                }
+                            } else if (latestStep.status === 'error') {
+                                if (latestStep.step.includes('解析研究方案文档') || latestStep.step.includes('Parsing Protocol')) {
+                                    updateProgressStep('step-parse', 'error');
+                                } else if (latestStep.step.includes('处理阶段') || latestStep.step.includes('Processing Stage')) {
+                                    updateProgressStep('step-analysis', 'error');
+                                } else if (latestStep.step.includes('分析完成') || latestStep.step.includes('Analysis Complete')) {
+                                    updateProgressStep('step-complete', 'error');
+                                }
+                                
+                                const stepKey = `${latestStep.step}_error`;
+                                if (!displayedSteps.has(stepKey)) {
+                                    displayedSteps.add(stepKey);
+                                    updateAnalysisResults(`
+                                        <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-4">
+                                            <div class="flex">
+                                                <div class="flex-shrink-0">
+                                                    <i class="fas fa-exclamation-triangle text-red-400"></i>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <h3 class="text-sm font-medium text-red-800">${latestStep.step}</h3>
+                                                    <p class="text-sm text-red-700 mt-1">${latestStep.error}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `);
+                                }
+                            }
+                        }
+                        
+                        try {
+                            await updateFileTree();
+                        } catch (e) {
+                            console.warn('Failed to update file tree:', e);
+                        }
+                        
+                        if (status.status === 'completed') {
+                            clearInterval(pollInterval);
+                            resolve(status);
+                        } else if (status.status === 'error') {
+                            clearInterval(pollInterval);
+                            reject(new Error(status.error || 'Analysis failed'));
+                        }
+                        
+                    } catch (error) {
+                        retryCount++;
+                        console.warn(`Polling failed (${retryCount}/${maxRetries}):`, error.message);
+                        
+                        if (retryCount >= maxRetries) {
+                            clearInterval(pollInterval);
+                            reject(new Error(`Connection failed: ${error.message}`));
+                        } else {
+                            updateAnalysisResults(`
+                                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-3">
+                                    <div class="flex">
+                                        <div class="flex-shrink-0">
+                                            <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm text-yellow-700">Connection interrupted, retrying... (${retryCount}/${maxRetries})</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                        }
+                    }
+                }, 5000);
+            });
+        }
+
+        function updateProgressBar(progress) {
+            const progressBar = document.getElementById('progress-bar');
+            const progressPercentage = document.getElementById('progress-percentage');
+            
+            progressBar.style.width = `${progress}%`;
+            progressPercentage.textContent = `${Math.round(progress)}%`;
+            
+            if (progress >= 20 && progress < 90) {
+                const stepAnalysis = document.getElementById('step-analysis');
+                if (stepAnalysis && !stepAnalysis.classList.contains('step-active') && !stepAnalysis.classList.contains('step-completed')) {
+                    updateProgressStep('step-upload', 'completed');
+                    updateProgressStep('step-parse', 'completed');
+                    updateProgressStep('step-analysis', 'active');
+                }
+            } else if (progress >= 90 && progress < 100) {
+                const stepComplete = document.getElementById('step-complete');
+                if (stepComplete && !stepComplete.classList.contains('step-active') && !stepComplete.classList.contains('step-completed')) {
+                    updateProgressStep('step-upload', 'completed');
+                    updateProgressStep('step-parse', 'completed');
+                    updateProgressStep('step-analysis', 'completed');
+                    updateProgressStep('step-complete', 'active');
+                }
+            } else if (progress >= 100) {
+                updateProgressStep('step-upload', 'completed');
+                updateProgressStep('step-parse', 'completed');
+                updateProgressStep('step-analysis', 'completed');
+                updateProgressStep('step-complete', 'completed');
+            }
+        }
+    
+        let displayedSteps = new Set();
+        let lastLogLineCount = 0;
+        let autoRefreshInterval = null;
+        
+        function updateCurrentStep(stepName) {
+            const stepLower = stepName.toLowerCase();
+            if (stepLower.includes('解析研究方案文档') || stepLower.includes('parsing protocol') || stepLower.includes('parsing document') || stepLower.includes('parsing')) {
+                updateProgressStep('step-upload', 'completed');
+                updateProgressStep('step-parse', 'active');
+            } else if (stepLower.includes('处理阶段') || stepLower.includes('生成r代码') || stepLower.includes('执行r代码') || stepLower.includes('processing stage') || stepLower.includes('generating r code') || stepLower.includes('executing r code') || stepLower.includes('starting analysis') || stepLower.includes('stage') || stepLower.includes('analysis') || stepLower.includes('execution')) {
+                updateProgressStep('step-upload', 'completed');
+                updateProgressStep('step-parse', 'completed');
+                updateProgressStep('step-analysis', 'active');
+            } else if (stepLower.includes('分析完成') || stepLower.includes('analysis complete') || stepLower.includes('completed')) {
+                updateProgressStep('step-complete', 'active');
+            }
+            
+            if (!displayedSteps.has(stepName)) {
+                displayedSteps.add(stepName);
+                updateAnalysisResults(`
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-3 mb-3">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-spinner fa-spin text-blue-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-blue-700">Executing: ${stepName}</p>
+                            </div>
+                        </div>
+                    </div>
+                `);
+            }
+        }
+        
+        function updateProgressStep(stepId, status) {
+            const stepElement = document.getElementById(stepId);
+            if (stepElement) {
+                stepElement.className = `step-item flex items-center p-3 rounded-xl step-${status} transition-all duration-300`;
+            }
+        }
+    
+        async function executeAnalysis(results) {
+            return results.execution_results || [];
+        }
+
+        async function displayResults(results) {
+            const executionResults = results.execution_results || [];
+            
+            if (results.r_scripts && results.r_scripts.length > 0) {
+                addMessage(`
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Generated R Scripts</h3>
+                    <div class="space-y-3">
+                        ${results.r_scripts.map(script => `
+                            <details class="bg-white p-4 rounded-lg border">
+                                <summary class="cursor-pointer text-blue-600 hover:text-blue-800 font-medium">
+                                    ${script.section} - ${script.stage_name}
+                                </summary>
+                                <div class="mt-3 p-4 code-block rounded-lg overflow-x-auto">
+                                    <pre><code>${script.code}</code></pre>
+                                </div>
+                            </details>
+                        `).join('')}
+                    </div>
+                `, 'info', 'fas fa-code');
+            }
+            
+            executionResults.forEach(result => {
+                const statusIcon = result.success ? 'fas fa-check-circle' : 'fas fa-exclamation-triangle';
+                const statusColor = result.success ? 'success' : 'warning';
+                
+                addMessage(`
+                    <div class="result-card p-4 rounded-lg">
+                        <h4 class="font-semibold text-gray-800 mb-2">${result.section} - ${result.stage_name}</h4>
+                        <p class="text-gray-700 mb-2">${result.message}</p>
+                        <div class="text-sm text-gray-600">
+                            <strong>Generated Files:</strong> ${result.output_files ? result.output_files.join(', ') : 'None'}
+                        </div>
+                    </div>
+                `, statusColor, statusIcon);
+            });
+        }
+
+        async function checkAPIServer() {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 2000);
+                
+                const response = await fetch('http://localhost:8001/api/health', {
+                    signal: controller.signal,
+                    mode: 'cors',
+                    cache: 'no-cache'
+                });
+                
+                clearTimeout(timeoutId);
+                return response.ok;
+            } catch (error) {
+                return false;
+            }
+        }
+        
+        function showServerConnectionWarning() {
+            const uploadSection = document.getElementById('upload-section');
+            if (uploadSection && !document.getElementById('server-warning')) {
+                const warning = document.createElement('div');
+                warning.id = 'server-warning';
+                warning.className = 'bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4 rounded-lg';
+                warning.innerHTML = `
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-yellow-800">API Server Not Connected</h3>
+                            <p class="text-sm text-yellow-700 mt-1">
+                                Please start the API server first:<br>
+                                <code class="bg-yellow-100 px-2 py-1 rounded">python -m src.api.api_server</code>
+                            </p>
+                            <button onclick="location.reload()" class="mt-2 px-3 py-1 bg-yellow-600 text-white rounded text-xs hover:bg-yellow-700">
+                                Refresh Page
+                            </button>
+                        </div>
+                    </div>
+                `;
+                uploadSection.insertBefore(warning, uploadSection.firstChild);
+            }
+        }
+        
+        async function updateFileTree() {
+            try {
+                const response = await fetch('http://localhost:8001/api/files');
+                if (!response.ok) {
+                    showServerConnectionWarning();
+                    return;
+                }
+                
+                const warning = document.getElementById('server-warning');
+                if (warning) warning.remove();
+                
+                const files = await response.json();
+                fileTreeData = files;
+                renderFileTree(files);
+            } catch (error) {
+                console.error('Failed to update file tree:', error);
+                showServerConnectionWarning();
+            }
+        }
+        
+        function renderFolderContents(folderData, basePath, folderId) {
+            let html = '';
+            
+            if (folderData.files && folderData.files.length > 0) {
+                folderData.files.forEach(fileObj => {
+                    const fileName = typeof fileObj === 'string' ? fileObj : fileObj.name;
+                    const filePath = basePath ? `${basePath}/${fileName}` : fileName;
+                    html += `<div class="file-tree-item file" onclick="showFileContent(this, '${filePath}')">
+                        <i class="fas fa-file mr-2"></i>${fileName}
+                    </div>`;
+                });
+            }
+            
+            if (folderData.folders && Object.keys(folderData.folders).length > 0) {
+                for (const [subFolderName, subFolderData] of Object.entries(folderData.folders)) {
+                    const subFolderId = folderId ? `${folderId}-${subFolderName}` : subFolderName;
+                    const subFolderPath = basePath ? `${basePath}/${subFolderName}` : subFolderName;
+                    
+                    html += `<div class="file-tree-item folder" onclick="toggleFolder('${subFolderId}')">
+                        <i class="fas fa-folder mr-2"></i>${subFolderName}
+                    </div>`;
+                    
+                    html += `<div class="folder-contents" id="folder-${subFolderId}" style="display: none;">`;
+                    html += renderFolderContents(subFolderData, subFolderPath, subFolderId);
+                    html += '</div>';
+                }
+            }
+            
+            return html;
+        }
+        
+        function renderFileTree(files) {
+            const fileTree = document.getElementById('file-tree');
+            if (!files || Object.keys(files).length === 0) {
+                fileTree.innerHTML = '<div class="text-sm text-gray-500">No files available</div>';
+                return;
+            }
+            
+            let html = '';
+            for (const [folderName, folderData] of Object.entries(files)) {
+                html += `<div class="file-tree-item folder" onclick="toggleFolder('${folderName}')">
+                    <i class="fas fa-folder mr-2"></i>${folderName}/
+                </div>`;
+                
+                html += `<div class="folder-contents" id="folder-${folderName}" style="display: none;">`;
+                html += renderFolderContents(folderData, folderName, folderName);
+                html += '</div>';
+            }
+            
+            fileTree.innerHTML = html;
+        }
+        
+        function toggleFolder(folderName) {
+            const folderContents = document.getElementById(`folder-${folderName}`);
+            if (folderContents) {
+                folderContents.style.display = folderContents.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+        
+        async function showFileContent(fileElement, filePath) {
+            try {
+                document.querySelectorAll('.file-tree-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                const fileItem = (fileElement && fileElement.closest) ? fileElement.closest('.file-tree-item') : null;
+                if (fileItem) {
+                    fileItem.classList.add('active');
+                }
+                
+                const fileName = filePath.split('/').pop();
+
+                if (fileContentCache.has(filePath)) {
+                    const cached = fileContentCache.get(filePath);
+                    const cachedContent = buildDisplayContent(fileName, cached);
+                    showFileModal(fileName, filePath, cachedContent);
+                } else {
+                
+                    showFileModal(fileName, filePath, `
+                        <div class="flex items-center justify-center p-8">
+                            <div class="flex items-center space-x-3">
+                                <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+                                <span class="text-gray-600">Loading ${fileName}...</span>
+                            </div>
+                        </div>
+                    `);
+                }
+
+                let requestPromise = inflightFileRequests.get(filePath);
+                if (!requestPromise) {
+                    requestPromise = (async () => {
+                        const response = await fetch(`http://localhost:8001/api/file/${encodeURIComponent(filePath)}`);
+                        if (!response.ok) {
+                            const errorText = await response.text();
+                            console.error(`Failed to read file: ${response.status} ${response.statusText}`, errorText);
+                            throw new Error(`Failed to read file: ${response.status} ${response.statusText}`);
+                        }
+                        return await response.json();
+                    })();
+                    inflightFileRequests.set(filePath, requestPromise);
+                }
+
+                const data = await requestPromise;
+                inflightFileRequests.delete(filePath);
+                fileContentCache.set(filePath, data);
+
+                const displayContent = buildDisplayContent(fileName, data);
+                showFileModal(fileName, filePath, displayContent);
+                
+            } catch (error) {
+                console.error('Failed to display file content:', error);
+                showFileModal(fileName, filePath, `
+                    <div class="bg-red-50 border-l-4 border-red-400 p-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-exclamation-triangle text-red-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-red-800">Failed to Read File</h3>
+                                <p class="text-sm text-red-700 mt-1">${error.message}</p>
+                            </div>
+                        </div>
+                    </div>
+                `);
+            }
+        }
+
+        function buildDisplayContent(fileName, data) {
+            const content = data.content;
+            const fileType = data.type;
+            const extension = (data.extension || fileName.split('.').pop()).toLowerCase();
+
+            if (fileType === 'image') {
+                const imageUrl = `data:image/${extension};base64,${content}`;
+                return `<div class="image-content"><img src="${imageUrl}" alt="${fileName}" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"></div>`;
+            } else if (fileType === 'pdf') {
+                const message = data.message || 'PDF files cannot be previewed directly in the browser';
+                return `
+                    <div class="pdf-content">
+                        <div class="pdf-icon">📄</div>
+                        <h3>PDF File</h3>
+                        <p>${fileName}</p>
+                        <p class="pdf-message">${message}</p>
+                        <p class="pdf-tip">💡 Tip: Please download the file and open it with a PDF reader</p>
+                    </div>
+                `;
+            } else if (fileType === 'binary') {
+                const message = data.message || 'This is a binary file';
+                return `
+                    <div class="binary-content">
+                        <div class="binary-icon">📦</div>
+                        <h3>Binary File</h3>
+                        <p>${fileName}</p>
+                        <p class="binary-message">${message}</p>
+                    </div>
+                `;
+            } else {
+                if (extension === 'json') {
+                    try {
+                        const jsonData = JSON.parse(content);
+                        return `<div class="json-content"><pre>${JSON.stringify(jsonData, null, 2)}</pre></div>`;
+                    } catch (e) {
+                        return `<pre class="text-content">${content}</pre>`;
+                    }
+                } else if (['r', 'R'].includes(extension)) {
+                    return `<pre class="text-content"><code class="language-r">${content}</code></pre>`;
+                } else if (['md', 'txt'].includes(extension)) {
+                    return `<div class="markdown-content">${content.replace(/\n/g, '<br>')}</div>`;
+                } else if (['csv'].includes(extension)) {
+                    return `<div class="csv-content"><pre>${content}</pre></div>`;
+                } else {
+                    return `<pre class="text-content">${content}</pre>`;
+                }
+            }
+        }
+
+        function showFileModal(fileName, filePath, content) {
+            let modal = document.getElementById('file-modal');
+            if (modal) {
+                const titleEl = modal.querySelector('#file-modal-filename');
+                const pathEl = modal.querySelector('#file-modal-path');
+                const contentEl = modal.querySelector('#file-modal-content');
+                if (titleEl) titleEl.textContent = fileName;
+                if (pathEl) pathEl.textContent = filePath;
+                if (contentEl) contentEl.innerHTML = content;
+                return;
+            }
+
+            const modalHTML = `
+                <div id="file-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 animate-fadeIn" onclick="closeFileModal()">
+                    <div class="relative top-20 mx-auto p-5 border w-11/12 max-w-6xl shadow-lg rounded-md bg-white animate-slideIn" onclick="event.stopPropagation()">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                                <i class="fas fa-file mr-2"></i><span id="file-modal-filename">${fileName}</span>
+                            </h3>
+                            <div class="flex items-center space-x-4">
+                                <span id="file-modal-path" class="text-sm text-gray-500">${filePath}</span>
+                                <button onclick="closeFileModal()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-200 transform hover:scale-105">
+                                    <i class="fas fa-times mr-1"></i>Close
+                                </button>
+                            </div>
+                        </div>
+                        <div id="file-modal-content" class="content-viewer max-h-96 overflow-y-auto">
+                            ${content}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            const handleEscape = function(e) {
+                if (e.key === 'Escape') {
+                    closeFileModal();
+                    document.removeEventListener('keydown', handleEscape);
+                }
+            };
+            document.addEventListener('keydown', handleEscape);
+        }
+
+        function closeFileModal() {
+            const modal = document.getElementById('file-modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+        
+        function updateAnalysisResults(content) {
+            const resultsContainer = document.getElementById('analysis-results');
+            if (!resultsContainer.innerHTML.includes('Analysis Progress')) {
+                resultsContainer.innerHTML = `
+                    <div class="bg-white rounded-2xl p-6 shadow-lg">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                            <i class="fas fa-chart-line mr-3 text-green-600"></i>Analysis Progress
+                        </h3>
+                        <div id="progress-content"></div>
+                    </div>
+                `;
+            }
+            
+            const progressContent = document.getElementById('progress-content');
+            if (progressContent) {
+                progressContent.innerHTML += content;
+                progressContent.scrollTop = progressContent.scrollHeight;
+            }
+        }
+        
+        function downloadReport() {
+            window.open('http://localhost:8001/api/download/report', '_blank');
+        }
+        
+        function downloadResults() {
+            window.open('http://localhost:8001/api/download/latest/summary', '_blank');
+        }
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            setupFileUpload();
+            
+            setTimeout(async () => {
+                const isConnected = await checkAPIServer();
+                if (!isConnected) {
+                    showServerConnectionWarning();
+                } else {
+                    updateFileTree();
+                }
+            }, 100);
+            
+            document.getElementById('start-analysis-btn').addEventListener('click', startAnalysis);
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,119 @@
+{
+  "name": "Retrieve Session Data",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "get-session-data",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        496,
+        -144
+      ],
+      "id": "e68a22a8-58fc-48ac-9a1b-2425ee3c6a37",
+      "name": "Webhook",
+      "webhookId": "get-session-data-webhook"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"assignments\": [\n    { \"name\": \"sessionId\", \"value\": \"{{ $json.body.sessionId }}\", \"type\": \"string\" }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        -144
+      ],
+      "id": "3920efd2-f8cd-4b19-bfe9-2d4d57f07e27",
+      "name": "Prepare Input"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT\n  session_id,\n  initial_query,\n  classified_framework,\n  final_structured_memory,\n  goal_hypothesises,\n  target_source_population_sampling_frame,\n  probability_non_sampling,\n  sampling_statistical_toolkit,\n  verified_tool,\n  develop_new_tools,\n  potential_ariables_sem,\n  dag_construction,\n  mixed_mediation_collision,\n  adjustment_set,\n  dagitty,\n  Data_Preparation_Quality_Control,\n  Missing_data_handling,\n  descriptive_statistics,\n  Bivariate_exploration,\n  Main_Model,\n  Model_diagnosis,\n  PSM,\n  Mediation,\n  Moderation,\n  SEM,\n  LCA,\n  Sensitivity_analysis,\n  Reporting_standards,\n  Results_Publication_Dissemination,\n  research_proposal,\n  workflow_b1_completed,\n  workflow_b2_completed,\n  workflow_b3_completed,\n  workflow_c_completed\nFROM public.conversation_sessions\nWHERE session_id = '{{ $json.assignments[0].value }}';",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        944,
+        -144
+      ],
+      "id": "f527d570-6727-47c8-bb4d-60ae930b4a5f",
+      "name": "Query Database",
+      "credentials": {
+        "postgres": {
+          "id": "uaHhgTOU0gtpkeQ6",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1168,
+        -144
+      ],
+      "id": "b759b949-dec5-4ffb-8dd8-d9d99b4d7a68",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Prepare Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Input": {
+      "main": [
+        [
+          {
+            "node": "Query Database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Database": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "7b383a8e-1b9f-4ee9-873f-8ca5f8aff146",
+  "meta": {
+    "instanceId": "80ba165fc158dff2241db7d1bcd6321181a547103579dbd3779b72b2fd728028"
+  },
+  "id": "y5bwV6nvtoouXICD",
+  "tags": []
+}

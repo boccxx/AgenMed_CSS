@@ -1,0 +1,32 @@
+{
+  "stage": "7.4_bivariate_analysis",
+  "timestamp": "2026-01-18 23:40:06",
+  "sample_size": 1263,
+  "critical_decisions": {
+    "significant_associations": ["Exercise_Group vs Osteoporosis_Status (p=0.0178)", "Exercise_Frequency vs Osteoporosis_Status (p=0.0037)", "Exercise_Group vs Geographic_Region (p=0)", "Exercise_Group vs Smoking_Status (p=0)", "Osteoporosis_Status vs Gender (p=0)", "Osteoporosis_Status vs Smoking_Status (p=0.0397)", "BMD vs Exercise_Group (p=0.0021)", "BMD vs Exercise_Frequency (p=0)", "Age vs Osteoporosis_Status (p=0)", "BMI vs Osteoporosis_Status (p=0)", "Hemoglobin vs Osteoporosis_Status (p=0)", "BMD vs Age (p=0)", "BMD vs BMI (p=0)", "BMD vs Hemoglobin (p=0)"],
+    "non_linear_trends": ["BMD vs Age: LOESS suggests potential non-linear relationship", "BMD vs BMI: LOESS suggests potential non-linear relationship"],
+    "note": "P-values are exploratory only - DAG determines adjustment sets for multivariable models"
+  },
+  "statistical_methods_summary": {
+    "framework": "Complex survey weighted tests",
+    "categorical_vs_categorical": "Rao-Scott Corrected Chi-square Test",
+    "continuous_vs_categorical_2groups": "Complex survey weighted t-test",
+    "continuous_vs_categorical_multigroup": "Design-based F-test (ANOVA)",
+    "continuous_vs_continuous": "Weighted linear regression slope",
+    "tests_conducted": 21
+  },
+  "design": {
+    "design_verified_level": "design_based",
+    "weight_variable": "Sampling_Weight",
+    "strata_variable": "Geographic_Region",
+    "psu_variable": {},
+    "weight_is_placeholder": false,
+    "weights_actually_used": true,
+    "usable_weight": true,
+    "design_limitations": "Survey design declared with stratification"
+  },
+  "next_stage_requirements": {
+    "note": "Proceed to Stage 7.5 for multivariable modeling",
+    "adjustment_strategy": "Use DAG-based adjustment sets, not bivariate p-values"
+  }
+}

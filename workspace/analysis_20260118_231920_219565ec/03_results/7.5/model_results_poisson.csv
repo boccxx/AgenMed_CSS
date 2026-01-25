@@ -1,0 +1,7 @@
+"Variable","PR","CI_Lower","CI_Upper","P_value"
+"Exercise_GroupBelow_Recommended",1.255,0.955,1.648,0.1031
+"Age",1.072,1.055,1.088,0
+"GenderMale",0.203,0.147,0.281,0
+"Geographic_RegionBoxing",1.261,1.012,1.571,0.0387
+"Geographic_RegionPingyi",1.155,0.899,1.484,0.2587
+"Self_Care_AbilityMild_Dependence",1.812,1.007,3.261,0.0473

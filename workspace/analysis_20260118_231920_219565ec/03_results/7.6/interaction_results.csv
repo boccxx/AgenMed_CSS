@@ -1,0 +1,5 @@
+"Exposure","Moderator","Outcome","Interaction_P","Interaction_Q","Significant"
+"Exercise_Frequency","Gender","Bone_Mineral_Density",4.52000912460628e-05,0.000180800364984251,TRUE
+"Exercise_Frequency","Age_Group","Bone_Mineral_Density",0.17770680386705,0.3554136077341,FALSE
+"Smoking_Status","Gender","Bone_Mineral_Density",0.66862135923946,0.66862135923946,FALSE
+"Smoking_Status","Age_Group","Bone_Mineral_Density",0.510505996661104,0.66862135923946,FALSE

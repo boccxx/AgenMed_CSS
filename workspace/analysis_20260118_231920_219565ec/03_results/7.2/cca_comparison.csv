@@ -1,0 +1,11 @@
+"Variable","Mean_Original","Mean_CCA","Mean_MICE","Difference_CCA_vs_MICE"
+"Age",73.606,73.587,73.606,-0.019
+"BMI",24.993,24.994,24.983,0.011
+"Hemoglobin",132.566,132.628,132.593,0.035
+"Fasting_Glucose",5.912,5.915,5.916,-0.001
+"Total_Bilirubin",14.167,14.158,14.221,-0.063
+"Serum_Creatinine",69.719,69.753,69.69,0.063
+"Blood_Urea_Nitrogen",6.06,6.061,6.062,-0.002
+"Total_Cholesterol",5.2,5.2,5.207,-0.007
+"Triglycerides",1.512,1.513,1.509,0.004
+"Bone_Mineral_Density",0.424,0.423,0.424,0

@@ -1,0 +1,1367 @@
+# Statistical Analysis Sub-Prompts Generation
+
+Based on the research protocol Section 7.0 and actual data variables, I will generate independent sub-prompt files for each numbered subsection.
+
+---
+
+## File: prompt_7.1_data_preparation_quality_control.md
+
+```markdown
+# Statistical Analysis Task: SAP 7.1 - Data Preparation and Quality Control
+
+## Core Statistical Methods
+**Verbatim from Protocol Section 7.1:**
+- Multi-source data integration from: (1) Bone density screening system; (2) Health questionnaire system; (3) Regional health big data platform; (4) Primary healthcare archives
+- Non-destructive cleaning via version-controlled scripts (R/Python)
+- Automated quality checks: duplicate handling, range/logic checks, consistency verification
+- Outlier identification via boxplots and density plots
+- Strategy: Obvious errors → missing; Extreme real values → retain in main analysis, evaluate in sensitivity
+
+## Hard Constraint Extraction (Contract Enforcement)
+
+**1. Sampling Design Contract:**
+```json
+{
+  "design_contract": {
+    "weight": "Sampling_Weight",
+    "strata": "Geographic_Region",
+    "psu": null
+  },
+  "design_mode": "stratified_weighted",
+  "validation": "MANDATORY - verify Geographic_Region has 3 levels (Boxing, Pingyi, West_Coast)"
+}
+```
+**CRITICAL Variable Mapping:**
+- Protocol mentions "strata by Economic Circle" → Actual data has "Geographic_Region" with 3 levels (Boxing, Pingyi, West_Coast)
+- Set "strata": "Geographic_Region" (NOT null)
+- Protocol does not explicitly mention PSU/cluster variable → Set "psu": null (assume SRS within strata)
+
+**2. Estimand & Exposure Definition:**
+- Primary exposure: "Exercise_Frequency" (Daily vs No_Exercise)
+- Secondary exposures: Dietary_Habits, Smoking_Status, Alcohol_Frequency, Hemoglobin, Fasting_Glucose
+- Outcome: Osteoporosis_Status (binary: Osteoporosis vs Normal/Low_Bone_Mass), Bone_Mineral_Density (continuous)
+
+**3. Covariate Adjustment Strategy:**
+```json
+{
+  "adjustment_mode": "DAG_fixed",
+  "covariates": ["Age", "Gender", "Geographic_Region", "BMI"],
+  "exclude_from_main": ["Physical_Function", "Self_Care_Ability"],
+  "note": "Protocol specifies DAG-based minimal adjustment set - DO NOT use p-value screening"
+}
+```
+
+**4. Missing Data Primary Strategy:**
+```json
+{
+  "missing_contract": {
+    "primary": "MICE",
+    "sensitivity": ["CCA", "MNAR_delta_adjustment"]
+  }
+}
+```
+
+**CRITICAL: Design Variable Preservation (MANDATORY):**
+- NEVER filter data by Geographic_Region or Sampling_Weight
+- ALWAYS preserve all levels: `factor(Geographic_Region, levels = c("Boxing", "Pingyi", "West_Coast"))`
+- NEVER use `droplevels()` on design variables
+- Verify Geographic_Region has 3 levels BEFORE analysis
+
+## Data and Variable Requirements
+- **Data reading path**: `data.csv` (original file)
+- **Key variables** (ACTUAL data variables):
+  - **Design variables**: Sampling_Weight (weight), Geographic_Region (strata)
+  - **Outcome**: Bone_Mineral_Density (continuous), Osteoporosis_Status (categorical: Normal/Low_Bone_Mass/Osteoporosis)
+  - **Exposures**: Exercise_Frequency (4 levels), Dietary_Habits (3 levels), Smoking_Status (2 levels), Alcohol_Frequency (4 levels), Hemoglobin (continuous), Fasting_Glucose (continuous)
+  - **Covariates**: Age (continuous), Gender (2 levels), BMI (continuous), Self_Rated_Health (3 levels), Self_Care_Ability (3 levels), Physical_Function (2 levels)
+  - **Biochemical**: Total_Bilirubin, Serum_Creatinine, Blood_Urea_Nitrogen, Total_Cholesterol, Triglycerides
+  - **Disease history**: Cerebrovascular_Disease (95.7% missing), Other_Neurological_Diseases (99.9% missing)
+- **Variable types**: Use actual data types (int64 for Age, float64 for BMI/biomarkers, object for categorical)
+- **Previous stage information**: N/A (first stage)
+
+## Variable Selection Strategy
+**A priori mode (DAG-based):**
+- Strictly follow protocol's predefined adjustment set: Age, Gender, Geographic_Region, BMI
+- Prohibit variable selection based on bivariate p-values
+- Previous stage information: N/A (this is the first stage)
+
+## Execution Requirements
+1. **Data integration**: Read `data.csv`, verify all 23 variables present
+2. **Data dictionary**: Create standardized variable definitions (name, type, unit, coding, range)
+3. **Automated QC**:
+   - Duplicate check: Verify no duplicate rows (use all columns as key)
+   - Range check: Flag out-of-range values per protocol Appendix 7.A
+     * Age: [65, 120]
+     * BMI: [10, 50] (flag 378.70 as extreme outlier)
+     * Hemoglobin: [50, 200]
+     * Fasting_Glucose: [2.5, 30]
+     * Bone_Mineral_Density: [0.1, 1.5]
+   - Logic check: Verify Gender coding, Geographic_Region levels
+4. **Outlier handling**:
+   - Identify via boxplots (IQR method) and Z-scores (|Z| > 3)
+   - Obvious errors (e.g., BMI=378.70) → set to missing, log change
+   - Extreme real values → retain, flag for sensitivity analysis
+5. **Missing data diagnosis**:
+   - Calculate missing rates by variable
+   - Generate missing pattern matrix (VIM/mice package)
+   - Flag variables with >40% missing (Cerebrovascular_Disease, Other_Neurological_Diseases) for exclusion
+6. **Validation**: Each step must include start marker, execution code, result validation, completion confirmation
+
+## Output Requirements
+1. **Standard output files**:
+   - `main_output.csv`: Cleaned data with QC flags (columns: all original + `QC_flag_BMI`, `QC_flag_Hb`, etc.)
+   - `analysis_summary.json`: 
+     ```json
+     {
+       "stage": "7.1_data_preparation",
+       "n_total": 1265,
+       "n_after_qc": "XXX",
+       "missing_rates": {"Hemoglobin": 0.031, "Fasting_Glucose": 0.009, ...},
+       "outliers_flagged": {"BMI": ["row_X"], ...},
+       "critical_decisions": {
+         "design_variables": {"weight": "Sampling_Weight", "strata": "Geographic_Region", "psu": null},
+         "excluded_variables": ["Cerebrovascular_Disease", "Other_Neurological_Diseases"],
+         "qc_summary": "..."
+       }
+     }
+     ```
+   - `data_dictionary.csv`: Variable definitions (columns: variable_name, type, unit, coding, range, source)
+   - `qc_log.txt`: Detailed QC log (duplicates, range violations, outliers)
+
+2. **Graphics output (PNG, ENGLISH labels, publication quality)**:
+   - **MANDATORY Distribution/Diagnostic Plots**:
+     * `outlier_boxplots_continuous.png`: Boxplots for ALL continuous variables (Age, BMI, Hemoglobin, Fasting_Glucose, Bone_Mineral_Density, biochemical markers)
+       - Multi-panel layout: 4×4 grid (16 vars per plot)
+       - If > 16 vars: Split into `outlier_boxplots_part1.png`, `part2.png`
+       - Highlight outliers in red
+     * `distribution_continuous.png`: Histograms for ALL continuous variables
+       - Multi-panel layout: 4×4 grid
+       - Split if > 16 vars
+     * `distribution_categorical.png`: Bar charts for ALL categorical variables (Gender, Geographic_Region, Exercise_Frequency, Dietary_Habits, Smoking_Status, Alcohol_Frequency, Osteoporosis_Status, Self_Rated_Health, Self_Care_Ability, Physical_Function)
+       - Multi-panel layout: 3×4 grid (12 vars per plot)
+       - Split if > 12 vars
+   - **Quality requirements**:
+     ```r
+     library(ggplot2)
+     theme_set(theme_minimal(base_size = 12))
+     plot_colors <- c("#4E79A7", "#F28E2B", "#E15759", "#76B7B2", "#59A14F")
+     # Example for boxplots:
+     ggplot(data_long, aes(x = variable, y = value)) +
+       geom_boxplot(outlier.color = "red", outlier.size = 2) +
+       facet_wrap(~variable, scales = "free", ncol = 4) +
+       theme(axis.text.x = element_text(angle = 45, hjust = 1))
+     ggsave("outlier_boxplots_continuous.png", width = 12, height = 8, dpi = 300)
+     ```
+
+3. **Code requirements**: Use R with tidyverse, mice, VIM packages; English comments
+
+## Validation Template
+```r
+cat("Start execution: Data Integration\n")
+data <- read.csv("data.csv", stringsAsFactors = FALSE)
+if(nrow(data) != 1265 | ncol(data) != 23) stop("Error: Data dimensions mismatch!")
+cat("Validation passed: Data integration successful\n")
+
+cat("Start execution: Range Check\n")
+# Flag BMI outliers
+data$QC_flag_BMI <- ifelse(data$BMI < 10 | data$BMI > 50, "outlier", "normal")
+if(!exists("data$QC_flag_BMI")) stop("Error: Range check failed!")
+cat("Validation passed: Range check completed\n")
+
+cat("Start execution: Missing Pattern Analysis\n")
+library(mice)
+md.pattern(data, plot = FALSE)
+missing_rates <- colMeans(is.na(data))
+if(!exists("missing_rates")) stop("Error: Missing analysis failed!")
+cat("Validation passed: Missing pattern analysis completed\n")
+
+cat("Start execution: Design Variable Verification\n")
+# CRITICAL: Verify Geographic_Region has 3 levels
+if(length(unique(data$Geographic_Region)) != 3) stop("Error: Geographic_Region does not have 3 levels!")
+cat("Validation passed: Design variables verified (Geographic_Region = 3 levels)\n")
+```
+```
+
+---
+
+## File: prompt_7.2_missing_data_handling.md
+
+```markdown
+# Statistical Analysis Task: SAP 7.2 - Missing Data Handling
+
+## Core Statistical Methods
+**Verbatim from Protocol Section 7.2:**
+- **Primary method**: Multiple Imputation by Chained Equations (MICE)
+- **Framework**: Generate 20–50 imputed datasets
+- **Inclusion**: All analysis variables (outcomes, exposures, covariates) + auxiliary variables
+- **Model specification**: Conditional models tailored to variable types (PMM for continuous, Logistic for binary)
+- **Convergence**: Assess via trace plots
+- **Pooling**: Use Rubin's Rules to merge estimates
+- **Sensitivity analyses**: 
+  - Complete Case Analysis (CCA)
+  - MNAR Pattern-Mixture Models (Delta-adjustment for key variables)
+
+## Hard Constraint Extraction (Contract Enforcement)
+
+**1. Sampling Design Contract:**
+```json
+{
+  "design_contract": {
+    "weight": "Sampling_Weight",
+    "strata": "Geographic_Region",
+    "psu": null
+  },
+  "design_mode": "stratified_weighted",
+  "note": "MICE imputation MUST preserve design structure - use survey weights in imputation models"
+}
+```
+
+**2. Estimand & Exposure Definition:**
+- Inherited from 7.1: Exercise_Frequency (primary), Dietary_Habits, Smoking_Status, Alcohol_Frequency, Hemoglobin, Fasting_Glucose
+- Outcome: Osteoporosis_Status, Bone_Mineral_Density
+
+**3. Covariate Adjustment Strategy:**
+```json
+{
+  "adjustment_mode": "DAG_fixed",
+  "covariates": ["Age", "Gender", "Geographic_Region", "BMI"],
+  "note": "Include all DAG covariates in imputation models to strengthen MAR assumption"
+}
+```
+
+**4. Missing Data Primary Strategy:**
+```json
+{
+  "missing_contract": {
+    "primary": "MICE",
+    "m_imputations": 20,
+    "sensitivity": ["CCA", "MNAR_delta_adjustment"]
+  }
+}
+```
+
+## Data and Variable Requirements
+- **Data reading path**: `../7.1/main_output.csv` (fallback to `data.csv` if not exists)
+- **Key variables** (from actual data):
+  - **Variables with missing**: Hemoglobin (3.1%), Fasting_Glucose (0.9%), Total_Bilirubin (3.1%), Serum_Creatinine (3.1%), Blood_Urea_Nitrogen (3.1%), Total_Cholesterol (3.1%), Triglycerides (3.1%), Self_Rated_Health (0.2%)
+  - **Variables to exclude**: Cerebrovascular_Disease (95.7% missing), Other_Neurological_Diseases (99.9% missing)
+  - **Imputation model variables**: All analysis variables + auxiliary variables (e.g., biochemical markers)
+- **Previous stage information**: Read `../7.1/analysis_summary.json` for `critical_decisions` (design variables, excluded variables)
+
+## Variable Selection Strategy
+**A priori mode:**
+- Include all DAG-specified covariates in imputation models
+- Add auxiliary variables (biochemical markers) to strengthen MAR assumption
+- Do NOT use p-value screening for imputation model variables
+
+## Execution Requirements
+1. **Missing diagnosis** (from 7.1 output):
+   - Read missing rates from `../7.1/analysis_summary.json`
+   - Generate missing pattern matrix plot
+   - Assess MAR assumption: Test associations between missing indicators and observed covariates
+2. **MICE imputation**:
+   - Set m=20 imputations (increase to 50 if convergence issues)
+   - Specify methods: `pmm` for continuous (Age, BMI, Hemoglobin, Fasting_Glucose, biochemical markers), `logreg` for binary (Gender, Smoking_Status), `polyreg` for categorical (Exercise_Frequency, Dietary_Habits, Osteoporosis_Status)
+   - Include survey weights in imputation: Use `mice(..., weights = Sampling_Weight)`
+   - Preserve design variables: Ensure Geographic_Region, Sampling_Weight are NOT imputed
+   - Convergence check: Plot trace plots for key variables (Hemoglobin, Fasting_Glucose)
+3. **Pooling**:
+   - Pool estimates using Rubin's Rules (via `pool()` function)
+   - Report pooled means, SDs, and 95% CIs for key variables
+4. **Sensitivity analyses**:
+   - **CCA**: Repeat descriptive statistics on complete cases only
+   - **MNAR**: For Hemoglobin (potential MNAR), apply Delta-adjustment (shift imputed values by ±0.5 SD)
+5. **Validation**: Each step must include start marker, execution code, result validation, completion confirmation
+
+## Output Requirements
+1. **Standard output files**:
+   - `main_output.csv`: First imputed dataset (m=1) for downstream analysis
+   - `imputed_datasets.rds`: All m=20 imputed datasets (R object for pooling)
+   - `analysis_summary.json`:
+     ```json
+     {
+       "stage": "7.2_missing_data_handling",
+       "method": "MICE",
+       "m_imputations": 20,
+       "convergence": "converged",
+       "missing_rates_before": {"Hemoglobin": 0.031, ...},
+       "missing_rates_after": {"Hemoglobin": 0.0, ...},
+       "critical_decisions": {
+         "imputation_method": "MICE with survey weights",
+         "auxiliary_variables": ["Total_Bilirubin", "Serum_Creatinine", ...],
+         "sensitivity_analyses": ["CCA", "MNAR_delta_adjustment"]
+       }
+     }
+     ```
+   - `cca_comparison.csv`: Comparison of means/proportions between MICE and CCA
+
+2. **Graphics output (PNG, ENGLISH labels)**:
+   - `missing_pattern.png`: Missing pattern matrix (VIM package)
+   - `trace_plots.png`: Convergence trace plots for key variables (Hemoglobin, Fasting_Glucose)
+   - `density_comparison.png`: Density plots comparing observed vs imputed values
+   - **Quality requirements**:
+     ```r
+     library(mice)
+     library(VIM)
+     # Missing pattern
+     aggr(data, col = c("#4E79A7", "#E15759"), numbers = TRUE, sortVars = TRUE)
+     # Trace plots
+     plot(imp, c("Hemoglobin", "Fasting_Glucose"))
+     # Density comparison
+     densityplot(imp, ~Hemoglobin + Fasting_Glucose)
+     ```
+
+3. **Code requirements**: Use R with mice, VIM, survey packages; English comments
+
+## Validation Template
+```r
+cat("Start execution: Missing Diagnosis\n")
+library(mice)
+md.pattern(data, plot = FALSE)
+missing_rates <- colMeans(is.na(data))
+if(!exists("missing_rates")) stop("Error: Missing diagnosis failed!")
+cat("Validation passed: Missing diagnosis completed\n")
+
+cat("Start execution: MICE Imputation\n")
+imp <- mice(data, m = 20, method = "pmm", seed = 123, printFlag = FALSE)
+if(!exists("imp")) stop("Error: MICE imputation failed!")
+cat("Validation passed: MICE imputation completed\n")
+
+cat("Start execution: Convergence Check\n")
+plot(imp, c("Hemoglobin", "Fasting_Glucose"))
+if(any(is.na(complete(imp, 1)$Hemoglobin))) stop("Error: Imputation incomplete!")
+cat("Validation passed: Convergence check passed\n")
+
+cat("Start execution: Pooling\n")
+library(survey)
+# Example: Pool means
+fit <- with(imp, lm(Bone_Mineral_Density ~ Age + Gender))
+pooled <- pool(fit)
+if(!exists("pooled")) stop("Error: Pooling failed!")
+cat("Validation passed: Pooling completed\n")
+```
+```
+
+---
+
+## File: prompt_7.3_descriptive_statistics_table1.md
+
+```markdown
+# Statistical Analysis Task: SAP 7.3 - Descriptive Statistics (Table 1)
+
+## Core Statistical Methods
+**Verbatim from Protocol Section 7.3:**
+- **Baseline characteristics stratified by primary exposure** (Exercise_Frequency): Total sample, Below recommended level, At/above recommended level
+- **Complex Survey Weighted Estimation**: Declare survey design object (Stratum_ID, PSU_ID, weight, FPC)
+- **Continuous variables**: Weighted Mean (SD) for normal/approx. normal (Age, BMI, Cognition, Hb, BMD); Weighted Median (IQR) for skewed (Fasting_Glucose)
+- **Categorical variables**: Weighted Count (estimated N) and Percentage (%)
+- **Balance assessment**: Standardized Mean Difference (SMD); abs(SMD) > 0.10 indicates substantial imbalance
+- **No P-values**: Avoid multiple comparison issues (exception: if required by reviewers, use design-based tests)
+
+## Hard Constraint Extraction (Contract Enforcement)
+
+**1. Sampling Design Contract:**
+```json
+{
+  "design_contract": {
+    "weight": "Sampling_Weight",
+    "strata": "Geographic_Region",
+    "psu": null
+  },
+  "design_mode": "stratified_weighted",
+  "validation": "MANDATORY - verify Geographic_Region preserved in imputed data"
+}
+```
+
+**2. Estimand & Exposure Definition:**
+- Primary exposure: Exercise_Frequency (4 levels: Daily, Weekly_Or_More, Occasional, No_Exercise)
+- Grouping: "At/above recommended" (Daily + Weekly_Or_More) vs "Below recommended" (Occasional + No_Exercise)
+
+**3. Covariate Adjustment Strategy:**
+```json
+{
+  "adjustment_mode": "descriptive_only",
+  "note": "Table 1 is descriptive - no adjustment, just stratified summaries"
+}
+```
+
+**4. Missing Data Primary Strategy:**
+- Use first imputed dataset (m=1) from 7.2 output
+
+## Data and Variable Requirements
+- **Data reading path**: `../7.2/main_output.csv` (first imputed dataset)
+- **Key variables** (ACTUAL data):
+  - **Stratification**: Exercise_Frequency (4 levels)
+  - **Demographics**: Age (continuous), Gender (2 levels), Geographic_Region (3 levels)
+  - **Anthropometric**: BMI (continuous)
+  - **Lifestyle**: Dietary_Habits (3 levels), Smoking_Status (2 levels), Alcohol_Frequency (4 levels), Self_Rated_Health (3 levels), Self_Care_Ability (3 levels), Physical_Function (2 levels)
+  - **Biochemical**: Hemoglobin (continuous), Fasting_Glucose (continuous), Total_Bilirubin, Serum_Creatinine, Blood_Urea_Nitrogen, Total_Cholesterol, Triglycerides
+  - **Outcome**: Bone_Mineral_Density (continuous), Osteoporosis_Status (3 levels)
+- **Previous stage information**: Read `../7.2/analysis_summary.json` for imputation method confirmation
+
+## Variable Selection Strategy
+**Descriptive mode:**
+- Include all variables listed in protocol Appendix 7.B Table 1 Variable List
+- No variable selection based on p-values
+
+## Execution Requirements
+1. **Survey design declaration**:
+   ```r
+   library(survey)
+   design <- svydesign(
+     ids = ~1,  # No PSU (SRS within strata)
+     strata = ~Geographic_Region,
+     weights = ~Sampling_Weight,
+     data = data,
+     nest = TRUE
+   )
+   ```
+2. **Create exposure groups**:
+   - Recode Exercise_Frequency: "Daily" + "Weekly_Or_More" → "At/Above Recommended"; "Occasional" + "No_Exercise" → "Below Recommended"
+3. **Weighted descriptive statistics**:
+   - Continuous (normal): `svymean()`, `svyvar()` → Mean (SD)
+   - Continuous (skewed): `svyquantile()` → Median (IQR)
+   - Categorical: `svytable()`, `prop.table()` → N (%)
+4. **SMD calculation**:
+   - For continuous: SMD = (Mean1 - Mean2) / pooled_SD
+   - For categorical: SMD = (Prop1 - Prop2) / sqrt((Prop1*(1-Prop1) + Prop2*(1-Prop2))/2)
+   - Flag abs(SMD) > 0.10
+5. **Validation**: Each step must include start marker, execution code, result validation, completion confirmation
+
+## Output Requirements
+1. **Standard output files**:
+   - `main_output.csv`: Same as input (no data transformation)
+   - `table1_baseline_characteristics.csv`: Table 1 with columns: Variable, Total (N=1265), Below_Recommended (N=XXX), At_Above_Recommended (N=XXX), SMD
+     - Format: "Mean (SD)" for continuous normal, "Median [IQR]" for skewed, "N (%)" for categorical
+   - `analysis_summary.json`:
+     ```json
+     {
+       "stage": "7.3_descriptive_statistics",
+       "n_total": 1265,
+       "n_below_recommended": "XXX",
+       "n_at_above_recommended": "XXX",
+       "imbalanced_variables": ["Age", "BMI", ...],
+       "critical_decisions": {
+         "exposure_grouping": "Daily+Weekly_Or_More vs Occasional+No_Exercise",
+         "smd_threshold": 0.10
+       }
+     }
+     ```
+
+2. **Graphics output**: None required for Table 1
+
+3. **Code requirements**: Use R with survey, tableone packages; English comments
+
+## Validation Template
+```r
+cat("Start execution: Survey Design Declaration\n")
+library(survey)
+design <- svydesign(ids = ~1, strata = ~Geographic_Region, weights = ~Sampling_Weight, data = data, nest = TRUE)
+if(!exists("design")) stop("Error: Survey design declaration failed!")
+cat("Validation passed: Survey design declared\n")
+
+cat("Start execution: Exposure Grouping\n")
+data$Exercise_Group <- ifelse(data$Exercise_Frequency %in% c("Daily", "Weekly_Or_More"), "At_Above_Recommended", "Below_Recommended")
+if(!exists("data$Exercise_Group")) stop("Error: Exposure grouping failed!")
+cat("Validation passed: Exposure grouping completed\n")
+
+cat("Start execution: Weighted Descriptive Statistics\n")
+# Example: Weighted mean for Age
+mean_age <- svymean(~Age, design)
+if(!exists("mean_age")) stop("Error: Weighted mean calculation failed!")
+cat("Validation passed: Weighted descriptive statistics completed\n")
+
+cat("Start execution: SMD Calculation\n")
+# Example: SMD for Age
+smd_age <- (mean_age_group1 - mean_age_group2) / pooled_sd
+if(!exists("smd_age")) stop("Error: SMD calculation failed!")
+cat("Validation passed: SMD calculation completed\n")
+```
+```
+
+---
+
+## File: prompt_7.4_bivariate_exploratory_analysis.md
+
+```markdown
+# Statistical Analysis Task: SAP 7.4 - Bivariate Exploratory Analysis
+
+## Core Statistical Methods
+**Verbatim from Protocol Section 7.4:**
+- **Purpose**: (1) Understand raw associations between exposure and outcome; (2) Identify covariate distributions; (3) Detect non-linearity
+- **Pairs**: Exposure-Outcome, Exposure-Covariate, Outcome-Covariate, Continuous-Continuous correlations
+- **Statistical tests** (all under complex survey framework):
+  - Categorical vs Categorical: Rao-Scott Corrected Chi-square Test
+  - Continuous vs Categorical: Complex survey weighted t-test (2 groups) or design-based F-test (multi-group)
+  - Continuous vs Continuous: Weighted linear regression slope or design-weighted Pearson/Spearman correlation
+- **Methodological control**:
+  - P-values are exploratory only
+  - NOT used for variable selection
+  - DAG determines adjustment sets, regardless of bivariate significance
+
+## Hard Constraint Extraction (Contract Enforcement)
+
+**1. Sampling Design Contract:**
+```json
+{
+  "design_contract": {
+    "weight": "Sampling_Weight",
+    "strata": "Geographic_Region",
+    "psu": null
+  },
+  "design_mode": "stratified_weighted"
+}
+```
+
+**2. Estimand & Exposure Definition:**
+- Primary exposure: Exercise_Frequency (4 levels)
+- Secondary exposures: Dietary_Habits, Smoking_Status, Alcohol_Frequency, Hemoglobin, Fasting_Glucose
+- Outcome: Osteoporosis_Status (binary: Osteoporosis vs Normal/Low_Bone_Mass), Bone_Mineral_Density (continuous)
+
+**3. Covariate Adjustment Strategy:**
+```json
+{
+  "adjustment_mode": "bivariate_only",
+  "note": "NO adjustment in bivariate analysis - raw associations only"
+}
+```
+
+**4. Missing Data Primary Strategy:**
+- Use first imputed dataset (m=1) from 7.2 output
+
+## Data and Variable Requirements
+- **Data reading path**: `../7.2/main_output.csv`
+- **Key variables** (from actual data):
+  - **Exposures**: Exercise_Frequency, Dietary_Habits, Smoking_Status, Alcohol_Frequency, Hemoglobin, Fasting_Glucose
+  - **Outcomes**: Osteoporosis_Status, Bone_Mineral_Density
+  - **Covariates**: Age, Gender, Geographic_Region, BMI, Self_Rated_Health, Self_Care_Ability, Physical_Function
+- **Previous stage information**: Read `../7.3/analysis_summary.json` for exposure grouping
+
+## Variable Selection Strategy
+**Exploratory mode:**
+- Test all exposure-outcome pairs
+- Test all exposure-covariate pairs
+- Test all outcome-covariate pairs
+- Do NOT use p-values for variable selection in subsequent models
+
+## Execution Requirements
+1. **Survey design declaration**: Same as 7.3
+2. **Bivariate tests** (per protocol Appendix 7.C checklist):
+   - **Exposure vs Outcome**:
+     * Exercise_Frequency (categorical) vs Osteoporosis_Status (categorical): Rao-Scott Chi-square
+     * Exercise_Frequency (categorical) vs Bone_Mineral_Density (continuous): Design-based F-test
+   - **Exposure vs Covariates**:
+     * Exercise_Frequency vs Age, Gender, Geographic_Region, BMI: Appropriate tests
+   - **Outcome vs Covariates**:
+     * Osteoporosis_Status vs Age, Gender, Geographic_Region, BMI, Hemoglobin, Fasting_Glucose: Appropriate tests
+   - **Continuous-Continuous correlations**:
+     * Bone_Mineral_Density vs Age, BMI, Hemoglobin, Fasting_Glucose: Weighted Pearson correlation
+3. **Non-linearity detection**:
+   - Plot scatter plots with LOESS smoothing for continuous-continuous pairs
+   - Check for U-shaped or threshold effects
+4. **Validation**: Each test must include start marker, execution code, result validation, completion confirmation
+
+## Output Requirements
+1. **Standard output files**:
+   - `main_output.csv`: Same as input
+   - `bivariate_results.csv`: All test results with columns: Exposure, Outcome, Test_Type, Statistic, P_Value, Effect_Size
+   - `analysis_summary.json`:
+     ```json
+     {
+       "stage": "7.4_bivariate_analysis",
+       "n_tests": "XXX",
+       "significant_associations": ["Exercise_Frequency vs Osteoporosis_Status", ...],
+       "critical_decisions": {
+         "note": "P-values are exploratory only - NOT used for variable selection"
+       }
+     }
+     ```
+
+2. **Graphics output (PNG, ENGLISH labels)**:
+   - `bivariate_categorical.png`: Mosaic plots or grouped bar charts for categorical-categorical pairs
+   - `bivariate_continuous.png`: Boxplots for categorical-continuous pairs
+   - `correlation_matrix.png`: Heatmap of weighted correlations for continuous variables
+   - `scatter_plots.png`: Scatter plots with LOESS smoothing for key continuous-continuous pairs
+   - **Quality requirements**:
+     ```r
+     library(ggplot2)
+     # Example: Boxplot for Exercise_Frequency vs Bone_Mineral_Density
+     ggplot(data, aes(x = Exercise_Frequency, y = Bone_Mineral_Density, weight = Sampling_Weight)) +
+       geom_boxplot() +
+       theme_minimal(base_size = 12) +
+       labs(title = "Bone Mineral Density by Exercise Frequency", x = "Exercise Frequency", y = "BMD (g/cm²)")
+     ggsave("bivariate_continuous.png", width = 10, height = 6, dpi = 300)
+     ```
+
+3. **Code requirements**: Use R with survey, ggplot2 packages; English comments
+
+## Validation Template
+```r
+cat("Start execution: Rao-Scott Chi-square Test\n")
+library(survey)
+design <- svydesign(ids = ~1, strata = ~Geographic_Region, weights = ~Sampling_Weight, data = data, nest = TRUE)
+chisq_result <- svychisq(~Exercise_Frequency + Osteoporosis_Status, design, statistic = "Chisq")
+if(!exists("chisq_result")) stop("Error: Rao-Scott Chi-square test failed!")
+cat("Validation passed: Rao-Scott Chi-square test completed\n")
+
+cat("Start execution: Design-based F-test\n")
+f_result <- svyglm(Bone_Mineral_Density ~ Exercise_Frequency, design, family = gaussian())
+anova_result <- anova(f_result, test = "F")
+if(!exists("anova_result")) stop("Error: Design-based F-test failed!")
+cat("Validation passed: Design-based F-test completed\n")
+
+cat("Start execution: Weighted Correlation\n")
+cor_result <- svycor(~Bone_Mineral_Density + Age, design)
+if(!exists("cor_result")) stop("Error: Weighted correlation failed!")
+cat("Validation passed: Weighted correlation completed\n")
+```
+```
+
+---
+
+## File: prompt_7.5_multivariate_modeling_association_analysis.md
+
+```markdown
+# Statistical Analysis Task: SAP 7.5 - Multivariate Modeling and Association Analysis (with Model Diagnostics)
+
+## Core Statistical Methods
+**Verbatim from Protocol Section 7.5 + 7.6:**
+- **Primary model**: Modified Poisson Regression (log-link, robust variance) to estimate Prevalence Ratio (PR)
+- **Alternative models** (graceful degradation):
+  1. Preferred: Log-binomial GLMM (if convergence issues)
+  2. Alternative 1: Modified Poisson GLMM (if log-binomial fails)
+  3. Alternative 2: Logistic GLMM (if Poisson fails)
+  4. Fallback: Survey-weighted GLM (ensure at least some results)
+- **Continuous outcome**: Weighted Linear Regression for Bone_Mineral_Density
+- **Variable inclusion**: Strictly follows DAG-based minimal adjustment set (Age, Gender, Geographic_Region, BMI)
+- **Non-linearity**: Quadratic terms or Restricted Cubic Splines (RCS) for ordinal/continuous exposures
+- **Pooled inference**: Rubin's Rules for MICE datasets (m=20)
+- **Model diagnostics** (Section 7.6):
+  - Multicollinearity: VIF > 5 warning, VIF > 10 severe
+  - Overdispersion: Pearson χ²/df ratio
+  - Goodness-of-fit: Grouped calibration test (weighted Hosmer-Lemeshow)
+  - Log-linearity: Check for non-linear relationships
+  - Residual diagnostics: Q-Q plots, residual vs fitted plots
+  - Outliers: Cook's Distance, DFBETAS
+
+## Hard Constraint Extraction (Contract Enforcement)
+
+**1. Sampling Design Contract:**
+```json
+{
+  "design_contract": {
+    "weight": "Sampling_Weight",
+    "strata": "Geographic_Region",
+    "psu": null
+  },
+  "design_mode": "stratified_weighted"
+}
+```
+
+**2. Estimand & Exposure Definition:**
+- Primary exposure: Exercise_Frequency (Daily vs No_Exercise)
+- Secondary exposures: Dietary_Habits, Smoking_Status, Alcohol_Frequency, Hemoglobin, Fasting_Glucose
+- Outcome: Osteoporosis_Status (binary: Osteoporosis vs Normal/Low_Bone_Mass), Bone_Mineral_Density (continuous)
+
+**3. Covariate Adjustment Strategy:**
+```json
+{
+  "adjustment_mode": "DAG_fixed",
+  "covariates": ["Age", "Gender", "Geographic_Region", "BMI"],
+  "exclude_from_main": ["Physical_Function", "Self_Care_Ability"],
+  "note": "Strictly follow DAG - NO stepwise regression or p-value screening"
+}
+```
+
+**4. Missing Data Primary Strategy:**
+- Use all m=20 imputed datasets from 7.2, pool results via Rubin's Rules
+
+## Data and Variable Requirements
+- **Data reading path**: `../7.2/imputed_datasets.rds` (all m=20 imputed datasets)
+- **Key variables** (ACTUAL data):
+  - **Outcome**: Osteoporosis_Status (binary: recode to Osteoporosis=1, Normal/Low_Bone_Mass=0), Bone_Mineral_Density (continuous)
+  - **Exposures**: Exercise_Frequency (reference: Daily), Dietary_Habits (reference: Balanced), Smoking_Status (reference: Non_Smoker), Alcohol_Frequency (reference: Never), Hemoglobin (continuous), Fasting_Glucose (continuous)
+  - **Adjustment covariates**: Age (continuous), Gender (reference: Male), Geographic_Region (reference: West_Coast), BMI (continuous)
+- **Previous stage information**: Read `../7.4/analysis_summary.json` for bivariate findings (exploratory only, NOT for variable selection)
+
+## Variable Selection Strategy
+**A priori mode (DAG-based):**
+- Strictly use DAG-specified adjustment set: Age, Gender, Geographic_Region, BMI
+- Do NOT add/remove variables based on bivariate p-values
+- Do NOT adjust for mediators (Physical_Function, Self_Care_Ability) or colliders
+
+## Execution Requirements
+
+### Part A: Bivariate Analysis (Univariate Associations)
+1. **Survey design declaration**: Same as 7.3
+2. **Univariate models** (one exposure at a time, NO adjustment):
+   - For each exposure (Exercise_Frequency, Dietary_Habits, Smoking_Status, Alcohol_Frequency, Hemoglobin, Fasting_Glucose):
+     * Fit: `svyglm(Osteoporosis_Status ~ Exposure, design, family = quasipoisson(link = "log"))`
+     * Report: Crude PR, 95% CI, P-value
+3. **Continuous outcome** (Bone_Mineral_Density):
+   - Fit: `svyglm(Bone_Mineral_Density ~ Exposure, design, family = gaussian())`
+   - Report: Crude β, 95% CI, P-value
+
+### Part B: Multivariable Analysis (Adjusted Models)
+1. **Binary outcome (Osteoporosis_Status)**:
+   - **Model formula** (COMPLETE, NO OMISSIONS):
+   ```r
+   # Modified Poisson Regression (Primary Model)
+   svyglm(Osteoporosis_Status ~ 
+          # Main exposures (list ALL, do NOT omit)
+          Exercise_Frequency + Dietary_Habits + Smoking_Status + Alcohol_Frequency + 
+          Hemoglobin + Fasting_Glucose +
+          # Adjustment covariates (DAG-specified, list ALL)
+          Age + Gender + Geographic_Region + BMI,
+          design = design,
+          family = quasipoisson(link = "log"))
+   ```
+   **⚠️ All above variables must be included in the model, do not omit any**
+
+   - **Graceful degradation**:
+     * If convergence fails: Try log-binomial (`family = binomial(link = "log")`)
+     * If still fails: Try Poisson with robust SE (`family = poisson(link = "log")`)
+     * If still fails: Use logistic regression (`family = binomial(link = "logit")`) and report OR with warning
+     * Fallback: Survey-weighted GLM without random effects
+
+2. **Continuous outcome (Bone_Mineral_Density)**:
+   - **Model formula** (COMPLETE, NO OMISSIONS):
+   ```r
+   # Weighted Linear Regression
+   svyglm(Bone_Mineral_Density ~ 
+          # Main exposures (list ALL)
+          Exercise_Frequency + Dietary_Habits + Smoking_Status + Alcohol_Frequency + 
+          Hemoglobin + Fasting_Glucose +
+          # Adjustment covariates (list ALL)
+          Age + Gender + Geographic_Region + BMI,
+          design = design,
+          family = gaussian())
+   ```
+   **⚠️ All above variables must be included in the model, do not omit any**
+
+3. **Pooling across MICE datasets**:
+   - Fit models on each of m=20 imputed datasets
+   - Pool estimates using Rubin's Rules: `pool()` function
+   - Report: Pooled PR/β, 95% CI, P-value
+
+### Part C: Model Diagnostics (Integrated)
+1. **Multicollinearity**:
+   - Calculate VIF for all covariates
+   - Flag VIF > 5 (warning), VIF > 10 (severe)
+   - If severe: Consider centering continuous variables or composite scores
+2. **Overdispersion** (Poisson model):
+   - Calculate Pearson χ²/df ratio
+   - If ratio >> 1: Consider Negative Binomial regression in sensitivity analysis
+3. **Goodness-of-fit**:
+   - Grouped calibration test: Stratify by predicted prevalence deciles, compare observed vs predicted
+   - Report calibration plot
+4. **Log-linearity** (continuous covariates):
+   - Add quadratic terms (e.g., Age², BMI²) to check non-linearity
+   - If significant: Use RCS or categorization
+5. **Residual diagnostics** (linear model):
+   - Q-Q plot of weighted residuals (check normality)
+   - Residual vs fitted plot (check homoscedasticity)
+6. **Outliers and influential points**:
+   - Calculate Cook's Distance (threshold: 4/n)
+   - Calculate DFBETAS (threshold: 2/√n)
+   - Flag influential points, conduct sensitivity analysis (exclude and refit)
+
+### Part D: Validation
+- Each step must include start marker, execution code, result validation, completion confirmation
+
+## Output Requirements
+1. **Standard output files**:
+   - `main_output.csv`: Same as input
+   - `univariate_results.csv`: Crude associations (columns: Exposure, Outcome, PR/Beta, 95%CI, P_Value)
+   - `multivariable_results.csv`: Adjusted associations (columns: Exposure, Outcome, Adjusted_PR/Beta, 95%CI, P_Value)
+     **⚠️ MUST include ALL variables (exposures + adjustment covariates) with coefficients, 95%CI, P-values**
+   - `model_diagnostics.csv`: VIF, overdispersion ratio, calibration test results
+   - `influential_points.csv`: Rows with Cook's D > 4/n or |DFBETAS| > 2/√n
+   - `analysis_summary.json`:
+     ```json
+     {
+       "stage": "7.5_multivariate_modeling",
+       "primary_model": "Modified Poisson Regression",
+       "adjustment_set": ["Age", "Gender", "Geographic_Region", "BMI"],
+       "convergence_status": "converged",
+       "diagnostics": {
+         "vif_max": "XXX",
+         "overdispersion_ratio": "XXX",
+         "influential_points": "XXX"
+       },
+       "critical_decisions": {
+         "model_selection": "Modified Poisson (primary)",
+         "adjustment_strategy": "DAG-based minimal set"
+       }
+     }
+     ```
+
+2. **Graphics output (PNG, ENGLISH labels)**:
+   - `forest_plot_osteoporosis.png`: Forest plot for Osteoporosis_Status outcome (all exposures, adjusted PR)
+   - `forest_plot_bmd.png`: Forest plot for Bone_Mineral_Density outcome (all exposures, adjusted β)
+   - `calibration_plot.png`: Observed vs predicted prevalence by deciles
+   - `residual_plots.png`: Q-Q plot + residual vs fitted plot (linear model)
+   - `cooks_distance.png`: Cook's Distance plot with threshold line
+   - **Quality requirements**:
+     ```r
+     library(ggplot2)
+     library(forestplot)
+     # Forest plot example
+     forestplot(mean = pr_estimates, lower = ci_lower, upper = ci_upper, 
+                labeltext = exposure_names, 
+                xlab = "Prevalence Ratio (95% CI)", 
+                col = fpColors(box = "#4E79A7", line = "#4E79A7"))
+     ggsave("forest_plot_osteoporosis.png", width = 10, height = 8, dpi = 300)
+     ```
+
+3. **Code requirements**: Use R with survey, mice, mitools, ggplot2, forestplot packages; English comments
+
+## Validation Template
+```r
+cat("Start execution: Univariate Models\n")
+library(survey)
+design <- svydesign(ids = ~1, strata = ~Geographic_Region, weights = ~Sampling_Weight, data = data, nest = TRUE)
+model_crude <- svyglm(Osteoporosis_Status ~ Exercise_Frequency, design, family = quasipoisson(link = "log"))
+if(!exists("model_crude")) stop("Error: Univariate model failed!")
+cat("Validation passed: Univariate models completed\n")
+
+cat("Start execution: Multivariable Model\n")
+model_adjusted <- svyglm(Osteoporosis_Status ~ Exercise_Frequency + Dietary_Habits + Smoking_Status + Alcohol_Frequency + Hemoglobin + Fasting_Glucose + Age + Gender + Geographic_Region + BMI, design, family = quasipoisson(link = "log"))
+if(!exists("model_adjusted")) stop("Error: Multivariable model failed!")
+cat("Validation passed: Multivariable model completed\n")
+
+cat("Start execution: Pooling Across MICE Datasets\n")
+library(mice)
+library(mitools)
+imp <- readRDS("../7.2/imputed_datasets.rds")
+fit <- with(imp, svyglm(Osteoporosis_Status ~ Exercise_Frequency + Age + Gender + Geographic_Region + BMI, design, family = quasipoisson(link = "log")))
+pooled <- pool(fit)
+if(!exists("pooled")) stop("Error: Pooling failed!")
+cat("Validation passed: Pooling completed\n")
+
+cat("Start execution: VIF Calculation\n")
+library(car)
+vif_values <- vif(model_adjusted)
+if(!exists("vif_values")) stop("Error: VIF calculation failed!")
+cat("Validation passed: VIF calculation completed\n")
+
+cat("Start execution: Cook's Distance\n")
+cooks_d <- cooks.distance(model_adjusted)
+influential <- which(cooks_d > 4/nrow(data))
+if(!exists("influential")) stop("Error: Cook's Distance calculation failed!")
+cat("Validation passed: Cook's Distance calculation completed\n")
+```
+```
+
+---
+
+## File: prompt_7.6_interaction_effect_modification_analysis.md
+
+```markdown
+# Statistical Analysis Task: SAP 7.6 - Interaction and Effect Modification Analysis
+
+## Core Statistical Methods
+**Verbatim from Protocol Section 7.7:**
+- **Purpose**: Examine whether gender, age group, and residential economic circle modify the association between major exposures and bone health
+- **Model construction**: Add "Exposure × Moderator" product term to main effect model
+- **Covariate adjustment**: Same as main model (Age, Gender, Geographic_Region, BMI)
+- **Multiplicity control**: Benjamini–Hochberg (BH) procedure to control False Discovery Rate (FDR)
+- **Reporting**: Report both raw P-values and corrected q-values
+- **Stratified analysis**: Produce stratified effect estimates (PR or β with 95% CI) and interaction plots ONLY if interaction term is significant (q < 0.05)
+- **Interpretation**: If interaction term is NOT significant, main effect model results prevail
+
+## Hard Constraint Extraction (Contract Enforcement)
+
+**1. Sampling Design Contract:**
+```json
+{
+  "design_contract": {
+    "weight": "Sampling_Weight",
+    "strata": "Geographic_Region",
+    "psu": null
+  },
+  "design_mode": "stratified_weighted"
+}
+```
+
+**2. Estimand & Exposure Definition:**
+- Primary exposure: Exercise_Frequency (Daily vs No_Exercise)
+- Moderators: Gender (Male vs Female), Age_Group (65-74 vs 75-84 vs ≥85), Geographic_Region (West_Coast vs Pingyi vs Boxing)
+- Outcome: Osteoporosis_Status (binary), Bone_Mineral_Density (continuous)
+
+**3. Covariate Adjustment Strategy:**
+```json
+{
+  "adjustment_mode": "DAG_fixed",
+  "covariates": ["Age", "Gender", "Geographic_Region", "BMI"],
+  "note": "If moderator is in adjustment set, do NOT repeat main effect term"
+}
+```
+
+**4. Missing Data Primary Strategy:**
+- Use all m=20 imputed datasets from 7.2, pool results via Rubin's Rules
+
+## Data and Variable Requirements
+- **Data reading path**: `../7.2/imputed_datasets.rds`
+- **Key variables** (ACTUAL data):
+  - **Exposures**: Exercise_Frequency, Dietary_Habits, Smoking_Status, Alcohol_Frequency, Hemoglobin, Fasting_Glucose
+  - **Moderators**: Gender (2 levels), Age_Group (create from Age: 65-74, 75-84, ≥85), Geographic_Region (3 levels)
+  - **Outcome**: Osteoporosis_Status, Bone_Mineral_Density
+  - **Adjustment covariates**: Age, Gender, Geographic_Region, BMI
+- **Previous stage information**: Read `../7.5/analysis_summary.json` for main effect estimates
+
+## Variable Selection Strategy
+**Pre-specified mode:**
+- Test interactions for pre-specified moderators only: Gender, Age_Group, Geographic_Region
+- Do NOT test all possible interactions (avoid data dredging)
+
+## Execution Requirements
+1. **Create Age_Group variable**:
+   ```r
+   data$Age_Group <- cut(data$Age, breaks = c(65, 75, 85, Inf), labels = c("65-74", "75-84", "≥85"), right = FALSE)
+   ```
+2. **Interaction models** (for each exposure-moderator pair):
+   - **Model formula** (example: Exercise_Frequency × Gender):
+   ```r
+   svyglm(Osteoporosis_Status ~ 
+          Exercise_Frequency + Gender + Exercise_Frequency:Gender +
+          Age + Geographic_Region + BMI,
+          design = design,
+          family = quasipoisson(link = "log"))
+   ```
+   - Extract interaction term P-value
+3. **FDR control**:
+   - Collect all interaction term P-values
+   - Apply BH procedure: `p.adjust(p_values, method = "BH")`
+   - Report q-values
+4. **Stratified analysis** (ONLY if q < 0.05):
+   - Fit separate models within each moderator level
+   - Report stratified PR/β with 95% CI
+   - Generate interaction plots
+5. **Pooling**: Pool estimates across MICE datasets using Rubin's Rules
+6. **Validation**: Each step must include start marker, execution code, result validation, completion confirmation
+
+## Output Requirements
+1. **Standard output files**:
+   - `main_output.csv`: Same as input
+   - `interaction_results.csv`: All interaction tests (columns: Exposure, Moderator, Outcome, Interaction_P, Interaction_Q)
+   - `stratified_results.csv`: Stratified estimates for significant interactions (columns: Exposure, Moderator, Moderator_Level, Outcome, Stratified_PR/Beta, 95%CI, P_Value)
+   - `analysis_summary.json`:
+     ```json
+     {
+       "stage": "7.6_interaction_analysis",
+       "n_interactions_tested": "XXX",
+       "significant_interactions": ["Exercise_Frequency × Gender", ...],
+       "critical_decisions": {
+         "fdr_threshold": 0.05,
+         "note": "Stratified analysis conducted only for significant interactions"
+       }
+     }
+     ```
+
+2. **Graphics output (PNG, ENGLISH labels)**:
+   - `interaction_plots.png`: Interaction plots for significant interactions (e.g., stratified PR by moderator level)
+   - **Quality requirements**:
+     ```r
+     library(ggplot2)
+     # Example: Interaction plot for Exercise_Frequency × Gender
+     ggplot(stratified_data, aes(x = Exercise_Frequency, y = PR, color = Gender, group = Gender)) +
+       geom_point(size = 3) +
+       geom_line() +
+       geom_errorbar(aes(ymin = CI_Lower, ymax = CI_Upper), width = 0.2) +
+       theme_minimal(base_size = 12) +
+       labs(title = "Interaction: Exercise Frequency × Gender", x = "Exercise Frequency", y = "Prevalence Ratio (95% CI)")
+     ggsave("interaction_plots.png", width = 10, height = 6, dpi = 300)
+     ```
+
+3. **Code requirements**: Use R with survey, mice, ggplot2 packages; English comments
+
+## Validation Template
+```r
+cat("Start execution: Create Age_Group Variable\n")
+data$Age_Group <- cut(data$Age, breaks = c(65, 75, 85, Inf), labels = c("65-74", "75-84", "≥85"), right = FALSE)
+if(!exists("data$Age_Group")) stop("Error: Age_Group creation failed!")
+cat("Validation passed: Age_Group variable created\n")
+
+cat("Start execution: Interaction Model\n")
+library(survey)
+design <- svydesign(ids = ~1, strata = ~Geographic_Region, weights = ~Sampling_Weight, data = data, nest = TRUE)
+model_interaction <- svyglm(Osteoporosis_Status ~ Exercise_Frequency + Gender + Exercise_Frequency:Gender + Age + Geographic_Region + BMI, design, family = quasipoisson(link = "log"))
+if(!exists("model_interaction")) stop("Error: Interaction model failed!")
+cat("Validation passed: Interaction model completed\n")
+
+cat("Start execution: FDR Control\n")
+p_values <- c(0.03, 0.15, 0.08, ...)  # Example P-values
+q_values <- p.adjust(p_values, method = "BH")
+if(!exists("q_values")) stop("Error: FDR control failed!")
+cat("Validation passed: FDR control completed\n")
+
+cat("Start execution: Stratified Analysis\n")
+# Example: Stratify by Gender
+model_male <- svyglm(Osteoporosis_Status ~ Exercise_Frequency + Age + Geographic_Region + BMI, design_male, family = quasipoisson(link = "log"))
+model_female <- svyglm(Osteoporosis_Status ~ Exercise_Frequency + Age + Geographic_Region + BMI, design_female, family = quasipoisson(link = "log"))
+if(!exists("model_male") | !exists("model_female")) stop("Error: Stratified analysis failed!")
+cat("Validation passed: Stratified analysis completed\n")
+```
+```
+
+---
+
+## File: prompt_7.7_dose_response_relationship_analysis.md
+
+```markdown
+# Statistical Analysis Task: SAP 7.7 - Dose-Response Relationship Analysis
+
+## Core Statistical Methods
+**Verbatim from Protocol Section 2.2.2 (Secondary Objectives):**
+- **Purpose**: Explore dose-response relationships between major modifiable lifestyle factors (e.g., physical exercise frequency, dietary patterns) and radial osteoporosis prevalence
+- **Continuous exposures**: Assess linear or non-linear associations between continuous exposure variables (intellectual ability, hemoglobin, fasting blood glucose) and radial BMD
+- **Methods**:
+  - Ordinal exposures (e.g., Exercise_Frequency): Test for linear trend using ordinal coding
+  - Continuous exposures: Use Restricted Cubic Splines (RCS) to model non-linear relationships
+  - Report: Dose-response curves with 95% CI bands
+
+## Hard Constraint Extraction (Contract Enforcement)
+
+**1. Sampling Design Contract:**
+```json
+{
+  "design_contract": {
+    "weight": "Sampling_Weight",
+    "strata": "Geographic_Region",
+    "psu": null
+  },
+  "design_mode": "stratified_weighted"
+}
+```
+
+**2. Estimand & Exposure Definition:**
+- Ordinal exposures: Exercise_Frequency (4 levels: No_Exercise < Occasional < Weekly_Or_More < Daily), Alcohol_Frequency (4 levels)
+- Continuous exposures: Hemoglobin, Fasting_Glucose, Age, BMI
+- Outcome: Osteoporosis_Status (binary), Bone_Mineral_Density (continuous)
+
+**3. Covariate Adjustment Strategy:**
+```json
+{
+  "adjustment_mode": "DAG_fixed",
+  "covariates": ["Age", "Gender", "Geographic_Region", "BMI"],
+  "note": "Same adjustment set as main model"
+}
+```
+
+**4. Missing Data Primary Strategy:**
+- Use all m=20 imputed datasets from 7.2, pool results via Rubin's Rules
+
+## Data and Variable Requirements
+- **Data reading path**: `../7.2/imputed_datasets.rds`
+- **Key variables** (ACTUAL data):
+  - **Ordinal exposures**: Exercise_Frequency (4 levels), Alcohol_Frequency (4 levels)
+  - **Continuous exposures**: Hemoglobin, Fasting_Glucose, Age, BMI
+  - **Outcome**: Osteoporosis_Status, Bone_Mineral_Density
+  - **Adjustment covariates**: Age, Gender, Geographic_Region, BMI
+- **Previous stage information**: Read `../7.5/analysis_summary.json` for main effect estimates
+
+## Variable Selection Strategy
+**Pre-specified mode:**
+- Test dose-response for pre-specified exposures only: Exercise_Frequency, Alcohol_Frequency, Hemoglobin, Fasting_Glucose
+- Do NOT test all possible exposures
+
+## Execution Requirements
+1. **Ordinal exposures (linear trend test)**:
+   - Assign ordinal scores: Exercise_Frequency (0=No_Exercise, 1=Occasional, 2=Weekly_Or_More, 3=Daily)
+   - Fit model with ordinal score as continuous predictor:
+   ```r
+   svyglm(Osteoporosis_Status ~ Exercise_Frequency_Score + Age + Gender + Geographic_Region + BMI, 
+          design, family = quasipoisson(link = "log"))
+   ```
+   - Test linear trend: P-value for ordinal score coefficient
+2. **Continuous exposures (RCS)**:
+   - Use Restricted Cubic Splines with 3-5 knots (placed at quantiles)
+   - Fit model:
+   ```r
+   library(rms)
+   svyglm(Bone_Mineral_Density ~ rcs(Hemoglobin, 4) + Age + Gender + Geographic_Region + BMI, 
+          design, family = gaussian())
+   ```
+   - Test non-linearity: Wald test for non-linear terms
+3. **Dose-response curves**:
+   - Predict outcome across range of exposure values
+   - Plot predicted values with 95% CI bands
+4. **Pooling**: Pool estimates across MICE datasets using Rubin's Rules
+5. **Validation**: Each step must include start marker, execution code, result validation, completion confirmation
+
+## Output Requirements
+1. **Standard output files**:
+   - `main_output.csv`: Same as input
+   - `dose_response_results.csv`: Linear trend tests and non-linearity tests (columns: Exposure, Outcome, Linear_Trend_P, Nonlinearity_P)
+   - `analysis_summary.json`:
+     ```json
+     {
+       "stage": "7.7_dose_response_analysis",
+       "ordinal_exposures": ["Exercise_Frequency", "Alcohol_Frequency"],
+       "continuous_exposures": ["Hemoglobin", "Fasting_Glucose"],
+       "significant_trends": ["Exercise_Frequency (linear)", ...],
+       "critical_decisions": {
+         "rcs_knots": 4,
+         "note": "Non-linearity tested via Wald test"
+       }
+     }
+     ```
+
+2. **Graphics output (PNG, ENGLISH labels)**:
+   - `dose_response_ordinal.png`: Dose-response curves for ordinal exposures (e.g., Exercise_Frequency)
+   - `dose_response_continuous.png`: Dose-response curves for continuous exposures (e.g., Hemoglobin, Fasting_Glucose) with RCS
+   - **Quality requirements**:
+     ```r
+     library(ggplot2)
+     library(rms)
+     # Example: RCS dose-response curve for Hemoglobin
+     pred_data <- data.frame(Hemoglobin = seq(min(data$Hemoglobin), max(data$Hemoglobin), length.out = 100),
+                             Age = mean(data$Age), Gender = "Male", Geographic_Region = "West_Coast", BMI = mean(data$BMI))
+     pred_data$BMD_pred <- predict(model_rcs, newdata = pred_data, se.fit = TRUE)
+     ggplot(pred_data, aes(x = Hemoglobin, y = BMD_pred)) +
+       geom_line(color = "#4E79A7", size = 1.2) +
+       geom_ribbon(aes(ymin = BMD_pred - 1.96*se, ymax = BMD_pred + 1.96*se), alpha = 0.2, fill = "#4E79A7") +
+       theme_minimal(base_size = 12) +
+       labs(title = "Dose-Response: Hemoglobin vs Bone Mineral Density", x = "Hemoglobin (g/L)", y = "Predicted BMD (g/cm²)")
+     ggsave("dose_response_continuous.png", width = 10, height = 6, dpi = 300)
+     ```
+
+3. **Code requirements**: Use R with survey, rms, ggplot2 packages; English comments
+
+## Validation Template
+```r
+cat("Start execution: Ordinal Trend Test\n")
+library(survey)
+design <- svydesign(ids = ~1, strata = ~Geographic_Region, weights = ~Sampling_Weight, data = data, nest = TRUE)
+data$Exercise_Score <- as.numeric(factor(data$Exercise_Frequency, levels = c("No_Exercise", "Occasional", "Weekly_Or_More", "Daily"))) - 1
+model_trend <- svyglm(Osteoporosis_Status ~ Exercise_Score + Age + Gender + Geographic_Region + BMI, design, family = quasipoisson(link = "log"))
+if(!exists("model_trend")) stop("Error: Ordinal trend test failed!")
+cat("Validation passed: Ordinal trend test completed\n")
+
+cat("Start execution: RCS Non-linearity Test\n")
+library(rms)
+model_rcs <- svyglm(Bone_Mineral_Density ~ rcs(Hemoglobin, 4) + Age + Gender + Geographic_Region + BMI, design, family = gaussian())
+if(!exists("model_rcs")) stop("Error: RCS model failed!")
+cat("Validation passed: RCS non-linearity test completed\n")
+
+cat("Start execution: Dose-Response Curve Prediction\n")
+pred_data <- data.frame(Hemoglobin = seq(min(data$Hemoglobin), max(data$Hemoglobin), length.out = 100))
+pred_data$BMD_pred <- predict(model_rcs, newdata = pred_data)
+if(!exists("pred_data$BMD_pred")) stop("Error: Dose-response prediction failed!")
+cat("Validation passed: Dose-response curve prediction completed\n")
+```
+```
+
+---
+
+## File: prompt_7.8_sensitivity_analysis.md
+
+```markdown
+# Statistical Analysis Task: SAP 7.8 - Sensitivity Analysis
+
+## Core Statistical Methods
+**Verbatim from Protocol Section 7.8:**
+- **Purpose**: Assess dependence of main conclusions on key assumptions
+- **Four dimensions**:
+  1. **Unmeasured confounding (E-value)**: Calculate E-value for point estimate and lower 95% CI limit
+  2. **Missing data handling**: 
+     - Complete Case Analysis (CCA): Repeat main model on complete cases only
+     - MNAR Pattern-Mixture Analysis: Delta-adjustment for key variables (e.g., Hemoglobin)
+  3. **Model form and effect measure**:
+     - Compare PR (Poisson) vs OR (Logistic)
+     - Check residual normality for BMD model; use log-transformation or robust regression if needed
+     - Exclude extreme values (top/bottom 1-2%) for continuous variables
+  4. **Covariate definition and adjustment sets**:
+     - Replace "Education Level" with "SES (Occupation/Income)" (if available)
+     - Change age coding (continuous vs categorical/spline)
+     - Change chronic disease burden coding (count vs binary)
+
+## Hard Constraint Extraction (Contract Enforcement)
+
+**1. Sampling Design Contract:**
+```json
+{
+  "design_contract": {
+    "weight": "Sampling_Weight",
+    "strata": "Geographic_Region",
+    "psu": null
+  },
+  "design_mode": "stratified_weighted"
+}
+```
+
+**2. Estimand & Exposure Definition:**
+- Same as main analysis: Exercise_Frequency (primary), Dietary_Habits, Smoking_Status, Alcohol_Frequency, Hemoglobin, Fasting_Glucose
+- Outcome: Osteoporosis_Status, Bone_Mineral_Density
+
+**3. Covariate Adjustment Strategy:**
+```json
+{
+  "adjustment_mode": "DAG_fixed",
+  "covariates": ["Age", "Gender", "Geographic_Region", "BMI"],
+  "sensitivity_variants": ["Age_categorical", "Age_spline"]
+}
+```
+
+**4. Missing Data Primary Strategy:**
+- Primary: MICE (from 7.2)
+- Sensitivity: CCA, MNAR Delta-adjustment
+
+## Data and Variable Requirements
+- **Data reading path**: 
+  - MICE: `../7.2/imputed_datasets.rds`
+  - CCA: `../7.1/main_output.csv` (complete cases only)
+- **Key variables** (ACTUAL data):
+  - Same as main analysis
+  - **Note**: Protocol mentions "Education Level" and "SES (Occupation/Income)" but actual data does NOT have these variables → Skip covariate definition sensitivity
+- **Previous stage information**: Read `../7.5/analysis_summary.json` for main effect estimates (PR, β)
+
+## Variable Selection Strategy
+**Sensitivity mode:**
+- Test robustness of main results under alternative assumptions
+- Do NOT change core exposure-outcome relationships
+
+## Execution Requirements
+
+### Part A: Unmeasured Confounding (E-value)
+1. **Calculate E-value**:
+   - For each significant association (PR or β from 7.5):
+     * E-value for point estimate: `E = PR + sqrt(PR * (PR - 1))`
+     * E-value for lower 95% CI limit: Same formula using CI_lower
+   - Interpretation: Minimum strength of unmeasured confounder needed to explain away the association
+2. **Report**: E-values for all significant associations
+
+### Part B: Missing Data Handling
+1. **Complete Case Analysis (CCA)**:
+   - Filter data to complete cases only (no missing in key variables)
+   - Refit main models (Poisson for Osteoporosis_Status, Linear for BMD)
+   - Compare: Direction, effect size, significance vs MICE results
+2. **MNAR Pattern-Mixture Analysis**:
+   - For Hemoglobin (potential MNAR):
+     * Apply Delta-adjustment: Shift imputed values by ±0.5 SD
+     * Refit main models with shifted values
+     * Observe stability of main effect estimates
+
+### Part C: Model Form and Effect Measure
+1. **PR vs OR comparison**:
+   - Fit Logistic regression (OR) for Osteoporosis_Status
+   - Compare OR vs PR: Direction, magnitude, significance
+2. **BMD model assumptions**:
+   - Check residual normality: Q-Q plot
+   - If deviation: Try log-transformation or robust regression
+3. **Extreme value exclusion**:
+   - Exclude top/bottom 1% of BMI, Hemoglobin, Fasting_Glucose
+   - Refit main models
+   - Compare results
+
+### Part D: Covariate Definition (SKIP if variables not available)
+- **Note**: Actual data does NOT have "Education Level" or "SES (Occupation/Income)" → Skip this sensitivity
+- If available: Replace Education with SES, refit models
+
+### Part E: Validation
+- Each step must include start marker, execution code, result validation, completion confirmation
+
+## Output Requirements
+1. **Standard output files**:
+   - `main_output.csv`: Same as input
+   - `e_values.csv`: E-values for all significant associations (columns: Exposure, Outcome, PR/Beta, E_Value_Point, E_Value_CI_Lower)
+   - `cca_comparison.csv`: CCA vs MICE comparison (columns: Exposure, Outcome, MICE_PR, CCA_PR, Difference)
+   - `mnar_sensitivity.csv`: MNAR Delta-adjustment results (columns: Exposure, Outcome, Original_PR, Delta_Minus_0.5SD_PR, Delta_Plus_0.5SD_PR)
+   - `model_comparison.csv`: PR vs OR comparison (columns: Exposure, Outcome, PR, OR, Difference)
+   - `extreme_value_sensitivity.csv`: Results after excluding extreme values
+   - `analysis_summary.json`:
+     ```json
+     {
+       "stage": "7.8_sensitivity_analysis",
+       "e_values_calculated": true,
+       "cca_vs_mice": "consistent/inconsistent",
+       "mnar_sensitivity": "robust/sensitive",
+       "pr_vs_or": "consistent/inconsistent",
+       "extreme_value_impact": "minimal/substantial",
+       "critical_decisions": {
+         "note": "Main conclusions robust to sensitivity analyses"
+       }
+     }
+     ```
+
+2. **Graphics output (PNG, ENGLISH labels)**:
+   - `e_value_plot.png`: Bar chart of E-values for significant associations
+   - `cca_vs_mice_comparison.png`: Side-by-side comparison of effect estimates
+   - `mnar_sensitivity_plot.png`: Effect estimates under different Delta shifts
+   - `residual_qq_plot.png`: Q-Q plot for BMD model residuals
+   - **Quality requirements**:
+     ```r
+     library(ggplot2)
+     # Example: E-value bar chart
+     ggplot(e_value_data, aes(x = Exposure, y = E_Value_Point)) +
+       geom_bar(stat = "identity", fill = "#4E79A7") +
+       geom_hline(yintercept = 1.5, linetype = "dashed", color = "red") +
+       theme_minimal(base_size = 12) +
+       labs(title = "E-values for Significant Associations", x = "Exposure", y = "E-value")
+     ggsave("e_value_plot.png", width = 10, height = 6, dpi = 300)
+     ```
+
+3. **Code requirements**: Use R with survey, EValue, ggplot2 packages; English comments
+
+## Validation Template
+```r
+cat("Start execution: E-value Calculation\n")
+library(EValue)
+pr <- 1.4  # Example PR from main analysis
+e_value <- evalue(RR = pr, rare = FALSE)
+if(!exists("e_value")) stop("Error: E-value calculation failed!")
+cat("Validation passed: E-value calculation completed\n")
+
+cat("Start execution: Complete Case Analysis\n")
+library(survey)
+data_complete <- data[complete.cases(data[, c("Osteoporosis_Status", "Exercise_Frequency", "Age", "Gender", "Geographic_Region", "BMI")]), ]
+design_cca <- svydesign(ids = ~1, strata = ~Geographic_Region, weights = ~Sampling_Weight, data = data_complete, nest = TRUE)
+model_cca <- svyglm(Osteoporosis_Status ~ Exercise_Frequency + Age + Gender + Geographic_Region + BMI, design_cca, family = quasipoisson(link = "log"))
+if(!exists("model_cca")) stop("Error: CCA model failed!")
+cat("Validation passed: CCA completed\n")
+
+cat("Start execution: MNAR Delta-Adjustment\n")
+data$Hemoglobin_shifted <- data$Hemoglobin + 0.5 * sd(data$Hemoglobin, na.rm = TRUE)
+model_mnar <- svyglm(Osteoporosis_Status ~ Exercise_Frequency + Age + Gender + Geographic_Region + BMI, design, family = quasipoisson(link = "log"))
+if(!exists("model_mnar")) stop("Error: MNAR sensitivity failed!")
+cat("Validation passed: MNAR sensitivity completed\n")
+
+cat("Start execution: PR vs OR Comparison\n")
+model_logistic <- svyglm(Osteoporosis_Status ~ Exercise_Frequency + Age + Gender + Geographic_Region + BMI, design, family = binomial(link = "logit"))
+if(!exists("model_logistic")) stop("Error: Logistic model failed!")
+cat("Validation passed: PR vs OR comparison completed\n")
+
+cat("Start execution: Extreme Value Exclusion\n")
+data_trimmed <- data[data$BMI > quantile(data$BMI, 0.01) & data$BMI < quantile(data$BMI, 0.99), ]
+design_trimmed <- svydesign(ids = ~1, strata = ~Geographic_Region, weights = ~Sampling_Weight, data = data_trimmed, nest = TRUE)
+model_trimmed <- svyglm(Osteoporosis_Status ~ Exercise_Frequency + Age + Gender + Geographic_Region + BMI, design_trimmed, family = quasipoisson(link = "log"))
+if(!exists("model_trimmed")) stop("Error: Extreme value exclusion failed!")
+cat("Validation passed: Extreme value exclusion completed\n")
+```
+```
+
+---
+
+# Summary
+
+**Generated 8 sub-prompt files:**
+1. `prompt_7.1_data_preparation_quality_control.md` (Data integration, QC, outlier handling, missing diagnosis)
+2. `prompt_7.2_missing_data_handling.md` (MICE imputation, CCA, MNAR sensitivity)
+3. `prompt_7.3_descriptive_statistics_table1.md` (Weighted baseline characteristics, SMD)
+4. `prompt_7.4_bivariate_exploratory_analysis.md` (Rao-Scott Chi-square, weighted t-test, correlations)
+5. `prompt_7.5_multivariate_modeling_association_analysis.md` (Modified Poisson regression, linear regression, model diagnostics integrated)
+6. `prompt_7.6_interaction_effect_modification_analysis.md` (Interaction terms, FDR control, stratified analysis)
+7. `prompt_7.7_dose_response_relationship_analysis.md` (Linear trend tests, RCS for non-linearity)
+8. `prompt_7.8_sensitivity_analysis.md` (E-value, CCA, MNAR, PR vs OR, extreme value exclusion)
+
+**Key features:**
+- ✅ All subsections (7.1-7.8) generated, no skipping
+- ✅ Concise format (150-300 lines per sub-prompt)
+- ✅ Strictly use actual data variables (no protocol placeholders)
+- ✅ Design variable preservation (Geographic_Region as strata, Sampling_Weight as weight)
+- ✅ Model diagnostics merged into 7.5 (no independent 7.6 diagnostics module)
+- ✅ Complete model formulas with ALL variables listed (no omissions)
+- ✅ Publication-quality graphics requirements (ggplot2, theme_minimal, 300 dpi)
+- ✅ Validation templates for each stage
+- ✅ Hard constraint extraction (design contract, adjustment strategy, missing data strategy)

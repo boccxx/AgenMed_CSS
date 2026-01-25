@@ -1,0 +1,534 @@
+{
+  "name": "B_3. Verification and Dissemination Information Storage",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "bochunxinprotocolb3",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "289510cc-ab4a-4ec8-aafb-b44d02760191",
+      "name": "1. Receive Start Request",
+      "webhookId": "52f1698f-0ceb-4021-93a7-550ecaea8f71"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"assignments\": [\n    { \"name\": \"sessionId\", \"value\": \"{{ $json.body.sessionId }}\", \"type\": \"string\" }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        0
+      ],
+      "id": "11a1e6f5-cf8b-4785-a194-16fb53f5ccb8",
+      "name": "2. Prepare Input"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT\n  session_id,\n  classified_framework,\n  final_structured_memory,\n  goal_hypothesises,\n  target_source_population_sampling_frame,\n  probability_non_sampling,\n  sampling_statistical_toolkit,\n  verified_tool,\n  develop_new_tools,\n  potential_ariables_sem,\n  dag_construction,\n  mixed_mediation_collision,\n  adjustment_set,\n  dagitty,\n  Data_Preparation_Quality_Control,\n  Missing_data_handling,\n  descriptive_statistics,\n  Bivariate_exploration,\n  Main_Model,\n  Model_diagnosis,\n  PSM,\n  Mediation,\n  Moderation,\n  SEM,\n  LCA\n\n\nFROM public.conversation_sessions\nWHERE session_id = '{{ $json.assignments[0].value }}';",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        448,
+        0
+      ],
+      "id": "011634cd-070b-4ced-b7e7-bb253d9c32e2",
+      "name": "3. Read Research Design Information",
+      "credentials": {
+        "postgres": {
+          "id": "uaHhgTOU0gtpkeQ6",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const row = $json;   // A row from Postgres\n\nreturn {\n  json: {\n    session_id: row.session_id,\n    classified_framework: row.classified_framework,\n    final_structured_memory: row.final_structured_memory || {},\n    goal_hypothesises: row.goal_hypothesises || {},\n    target_source_population_sampling_frame: row.target_source_population_sampling_frame || {},\n    probability_non_sampling: row.probability_non_sampling || {},\n    sampling_statistical_toolkit: row.sampling_statistical_toolkit || {},\n    verified_tool: row.verified_tool || {},\n    develop_new_tools: row.develop_new_tools || {},\n    potential_ariables_sem: row.potential_ariables_sem || {},\n    dag_construction: row.dag_construction || {},\n    mixed_mediation_collision: row.mixed_mediation_collision || {},\n    adjustment_set: row.adjustment_set || {},\n    dagitty: row.dagitty || {},\n    Data_Preparation_Quality_Control: row.Data_Preparation_Quality_Control || {},\n    Missing_data_handling: row.Missing_data_handling || {},\n    descriptive_statistics: row.descriptive_statistics || {},\n    Bivariate_exploration: row.Bivariate_exploration || {},\n    Main_Model: row.Main_Model || {},\n    Model_diagnosis: row.Model_diagnosis || {},\n    PSM: row.PSM || {},\n    Mediation: row.Mediation || {},\n    Moderation: row.Moderation || {},\n    SEM: row.SEM || {},\n    LCA: row.LCA || {}\n\n  }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        0
+      ],
+      "id": "5699194f-cdd7-43a0-a578-52f3c90cba9d",
+      "name": "4. Organize Input"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# Role\nYou are an expert Epidemiology and Biostatistics Consultant specializing in observational study protocols. Your task is to strictly follow the provided [MANDATORY KNOWLEDGE BASE] (Decision Tree Logic) to plan and write the \"Sensitivity Analysis\" section of the Statistical Analysis Plan (SAP).\n\n# Context\nYou are currently at the \"Quantifying Uncertainty and Sensitivity Analysis\" stage of the protocol design. You must integrate previous decisions (DAG, main model, missing data handling) to construct a robust sensitivity analysis framework.\n\n# [MANDATORY KNOWLEDGE BASE]\nThe following text represents the **irrevocable** logic and rules for this task. You must strictly adhere to every Action, Diagnosis, Warning, and Reporting Requirement defined below. **Do not deviate from this logic.**\n\n“\n7.0 Quantifying Uncertainty: A Rigorous Framework for Sensitivity Analysis (STROBE 12e, 17, 19)\nDiagnosis: Results from the primary analysis do not constitute the final verdict. A series of pre-planned sensitivity analyses must be executed to assess the extent to which research findings remain robust against key assumptions and potential biases.\n7.1 The Threat of the Unmeasured: Quantifying Potential Unmeasured Confounding via E-values\nDiagnosis: All observational studies face an ineliminable threat: unmeasured confounding factors. Traditionally, researchers have addressed this limitation only qualitatively within the Discussion section. This protocol mandates the adoption of a quantitative sensitivity analysis tool—the E-value—to assess the severity of this threat.\nMandatory Action: The E-value must be calculated and reported for the primary association.\n1. Calculation of E-value: For an observed Risk Ratio (RR) > 1, the E-value formula is:\n \n2. Interpretation: The E-value is defined as the minimum strength of association (on the Risk Ratio scale) that an unmeasured confounder would need to have with both the exposure and the outcome to fully “explain away” the observed exposure-outcome association (i.e., attenuate it to the null value of 1.0).\n3. Reporting Requirements: The study protocol must plan for reporting the E-value for both the point estimate and the lower limit of the confidence interval of the primary association. This compels researchers and readers to consider: Is the existence of an unmeasured confounder of such magnitude realistically plausible? This facilitates a deeper evaluation of the conclusion's robustness.\nSubtree 7.1: Quantifying Unmeasured Confounding via E-values\nStarting Point: Primary association analysis results have been obtained in Module 6.2, specifically the adjusted effect size (e.g., PR, OR, RR) and its 95% confidence interval.\nCore Objective: To assess the potential threat of unmeasured confounding to the robustness of study conclusions by calculating and reporting E-values through a systematic, non-negotiable quantitative sensitivity analysis workflow.\nAction: The following modules must be executed sequentially within the analysis script and report drafting process.\nModule 1: Precondition Review and Data Preparation\n7.1.1 Step 1: Extract Core Results.\n· Action: From the final multivariate model, the following two key results must be extracted:\n1. Point Estimate: The adjusted effect size (e.g., PR = 1.5).\n2. Confidence Interval: The 95% confidence interval for this effect size (e.g., 95% CI: 1.2 to 1.9).\n7.1.2 Step 2: Check Effect Measure Type.\n· Core Decision Point: Is the effect measure of the Ratio type (e.g., PR, OR, RR, HR)?\no Yes \n§ Diagnosis: The standard E-value formula is applicable.\n§ Action: Proceed to Module 2.\no No (e.g., Difference type, such as Mean Difference) \n§ Warning: The standard E-value formula is not directly applicable.\n§ Mandatory Action: Specialized E-value calculators or statistical methods designed for difference-type effect sizes must be utilized. This process must be halted, and appropriate statistical support sought.\nModule 2: Calculation and Interpretation of the E-value (Point Estimate)\n7.1.3 Step 1: Prepare the Point Estimate.\n· Action:\no If the point estimate is > 1  The value is used directly (e.g., use 1.5).\no If the point estimate is < 1  The reciprocal must first be calculated (e.g., if PR = 0.8, use 1/0.8 = 1.25).\n7.1.4 Step 2: Calculate the E-value.\n· Action: Substitute the prepared value into the following formula:\no Formula:\n \nExample Calculation: For RR = 1.5, .\n7.1.5 Step 3: Interpret the E-value.\n· Mandatory Action: The following template must be used to interpret the meaning of the E-value.\n· Interpretation Template: “The E-value calculated for the point estimate is [Insert Calculated E-value]. This implies that an unmeasured confounder would need to be associated with both the exposure and the outcome (conditional on other covariates in the model) by a risk ratio of at least [Insert Calculated E-value] each, to potentially fully ‘explain away’ the observed association (i.e., attenuate the effect size to the null value of 1.0).”\nModule 3: Calculation and Interpretation of the E-value (Confidence Interval)\n7.1.6 Step 1: Prepare the Confidence Interval Limit.\n· Action: The limit of the 95% confidence interval that is closer to the null value of 1.0 is selected.\no If 95% CI is (1.2, 1.9)  Use the Lower Limit 1.2.\no If 95% CI is (0.7, 0.9)  Use the Upper Limit 0.9, and the reciprocal must be taken (1/0.9 ≈ 1.11).\n7.1.7 Step 2: Calculate the E-value for the CI Limit.\n· Action: Substitute the prepared limit value into the E-value formula in 7.1.4.\n· Example Calculation: For CI lower limit = 1.2, .\n7.1.8 Step 3: Interpret the E-value for the CI Limit.\n· Mandatory Action: The following template must be used to interpret the meaning of this E-value.\n· Interpretation Template: “The E-value calculated for the confidence interval limit [Insert CI Limit] is [Insert Calculated E-value]. This implies that an unmeasured confounder would need to be associated with both the exposure and the outcome (conditional on other covariates in the model) by a risk ratio of at least [Insert Calculated E-value] each, to potentially shift the confidence interval to include the null value of 1.0, thereby rendering the result statistically non-significant.”\nModule 4: Final Reporting and Methodological Commitment\n7.1.9 Mandatory Reporting Requirement.\n· Action: The two E-values calculated in Module 2 and Module 3 must be reported and interpreted concurrently within the “Sensitivity Analysis” section of the study protocol and the “Results” or “Discussion” section of the final manuscript.\n7.1.10 Final Judgment and Statement.\n· Action: Subsequent to reporting the E-values, a subjective yet evidence-based judgment regarding the plausibility of an unmeasured confounder of such magnitude must be formulated, integrating domain-specific knowledge.\n· Statement Example: “The E-value for the point estimate is 2.37, and for the confidence interval is 1.69. Given the adjustment for [list key confounders], the probability of the existence of a single unmeasured confounder associated with both exposure and outcome with a magnitude exceeding 1.69 within this study context is considered [High/Medium/Low]. Consequently, the study conclusions possess [Weak/Moderate/Strong] robustness against potential unmeasured confounding.”\nCompletion: A quantitative, transparent, and best-practice compliant sensitivity analysis has been successfully executed to assess the potential threat of unmeasured confounding to the study conclusions.\n7.2 Testing Analytical Assumptions: Comparing Results Across Different Models and Missing Data Strategies\nAction: To evaluate the dependence of study conclusions on specific analytical choices, the following sensitivity analyses must be conducted, and their results reported:\n· Comparison of Missing Data Strategies: As delineated in Chapter 5, results from the primary analysis (e.g., based on Multiple Imputation) must be compared against those from a simpler analysis (e.g., Complete Case Analysis). Similarity in results enhances the robustness of conclusions; significant discrepancies indicate that the method of handling missing data exerts a substantial impact on the conclusions.\n· Comparison of Model Selection: Where reasonable uncertainty regarding model selection exists (e.g., comparing Logistic Regression [OR] versus Modified Poisson Regression [PR] when outcome prevalence approximates the 10% threshold), the consistency of results between the two models should be demonstrated.\n· Comparison of Covariate Definitions: If multiple plausible definitions or categorization schemes exist for a key covariate (e.g., treating age as a continuous variable versus a categorical variable), it should be tested whether the utilization of alternative definitions substantially alters the primary results.\nSubtree 7.2: Testing Analytical Assumptions\nStarting Point: The primary association analysis results (i.e., point estimates and 95% confidence intervals derived from the primary analysis model) have been obtained in Module 6.2.\nCore Objective: To evaluate the dependence of the primary study conclusions on specific analytical choices (e.g., handling of missing data, model selection, covariate definitions) via a systematic sensitivity analysis workflow containing mandatory checkpoints, thereby providing quantitative evidence for the robustness of these findings.\nAction: All applicable modules must be executed sequentially within the analysis script and report drafting process.\nModule 1: Comparison of Missing Data Strategies (Mandatory)\n7.2.1 Mandatory Checkpoint: Did the primary analysis utilize Multiple Imputation (MI)? (Based on the decision in Subtree 5.3.2).\n· Yes \no Diagnosis: The MI results must be compared against a simpler analysis (Complete-Case Analysis, CCA).\no Action: Proceed to 7.2.2.\n· No (e.g., data are complete, or CCA was used as the primary analysis) \no Diagnosis: This specific sensitivity analysis is not applicable.\no Action: Proceed to Module 2.\n7.2.2 Step 1: Run Complete-Case Analysis (CCA).\n· Action: A statistical model identical to the primary analysis model must be executed on the “raw” data subset containing only observations with complete data on all variables.\n7.2.3 Step 2: Systematically Compare Results.\n· Action: A comparison table must be generated to contrast the following core metrics between the MI and CCA results:\n1. Point Estimate of the primary exposure variable (e.g., PR or OR).\n2. 95% Confidence Interval.\n3. Final Conclusion (i.e., statistical significance and direction of association).\n7.2.4 Core Decision Point: Does a substantial discrepancy exist between the conclusions of the two methods?\n· Yes (e.g., the difference in point estimates exceeds a clinically meaningful threshold, or one result is significant while the other is not) \no Diagnosis: This indicates that the method of handling missing data exerts a major impact on study conclusions, and the CCA results likely harbor serious bias.\no Mandatory Reporting Action: This discrepancy must be discussed in depth within the Discussion and Limitations sections of the final report, with a cautious explanation provided as to why the MI results (under the MAR assumption) should be regarded as the primary findings.\n· No (Results are similar) \no Diagnosis: The robustness of the study conclusions is enhanced.\no Mandatory Reporting Action: The following statement must be documented in the final report: “A sensitivity analysis conducted using complete-case analysis yielded similar results, indicating that the study conclusions are robust to the method of handling missing data.”\n· Next Step: Proceed to Module 2.\nModule 2: Comparison of Model Selection (Conditional)\n7.2.5 Core Decision Point: Does reasonable uncertainty exist regarding model selection?\n· Action: Decisions made in Subtree 6.2.1 must be reviewed.\n· Decision Path:\no Yes (e.g., outcome prevalence approximates the critical 10% threshold, creating uncertainty between selecting Logistic Regression [OR] and Modified Poisson Regression [PR]) \n§ Action: Proceed to 7.2.6.\no No (e.g., outcome prevalence is clearly < 5% or > 20%, rendering model selection unambiguous) \n§ Diagnosis: This specific sensitivity analysis is not applicable.\n§ Action: Proceed to Module 3.\n7.2.6 Step 1: Execute Alternative Model Analysis.\n· Action: The alternative model not utilized in the primary analysis must be executed (e.g., if the primary model was Modified Poisson Regression, Logistic Regression should be run).\n7.2.7 Step 2: Compare Results.\n· Action: The final conclusions (i.e., direction of association and statistical significance) derived from both models must be compared.\n· Note: Numerical differences between OR and PR are expected under high prevalence; the critical factor is the consistency of statistical inference.\n7.2.8 Core Decision Point: Are the results from both models consistent?\n· Yes \no Diagnosis: The robustness of the conclusions is enhanced.\no Reporting Action: The following statement is to be documented: “Sensitivity analysis conducted using [Alternative Model Name] yielded consistent conclusions.”\n· No \no Diagnosis: This indicates that conclusions are sensitive to model selection.\no Reporting Action: Results from both models must be presented in the report, and the discrepancies discussed.\n· Next Step: Proceed to Module 3.\nModule 3: Comparison of Covariate Definitions (Conditional)\n7.2.9 Core Decision Point: Within the “Final Adjustment Set,” does a key covariate exist that possesses multiple plausible definitions or categorization schemes?\n· Examples: Age (continuous variable vs. categorical variable), BMI (continuous variable vs. categorical status: Obese/Overweight/Normal).\n· Decision Path:\no Yes \n§ Action: Proceed to 7.2.10.\no No \n§ Diagnosis: This specific sensitivity analysis is not applicable.\n§ Action: Complete this sub-process.\n7.2.10 Step 1: Execute Alternative Definition Analysis.\n· Action: The primary analysis model must be re-run using the alternative definition of the covariate (e.g., replacing the continuous age variable with the categorical age group variable).\n7.2.11 Step 2: Compare Results.\n· Action: The point estimates, 95% confidence intervals, and final conclusions for the primary exposure variable derived under different covariate definitions must be compared.\n7.2.12 Core Decision Point: Does the use of the alternative definition substantially alter the primary results?\n· Yes \no Diagnosis: This indicates that conclusions are sensitive to the operationalization of the covariate.\no Reporting Action: Results from both analyses must be presented in the report, and the discrepancies discussed.\n· No \no Diagnosis: The robustness of the conclusions is enhanced.\no Reporting Action: The following statement is to be documented: “Analyzing [Covariate Name] as [Alternative Definition Style] did not substantially alter the primary results.”\n· Next Step: Complete this sub-process.。\n7.3 Pre-specified Subgroup and Interaction Analyses (STROBE 12b, 17)\nQuestion: Are subgroup analyses planned?\n· Yes \no Diagnosis: Exploratory searching within data for “interesting” subgroup findings (i.e., data mining) constitutes a primary etiology of false-positive results.\no Mandatory Action 1: Pre-specification Principle. All planned subgroup analyses and interaction tests must be pre-specified within the study protocol, grounded in robust theoretical frameworks or prior empirical evidence.\no Mandatory Action 2: Interaction Testing. To formally posit that effects differ across subgroups (i.e., effect modification), a product term (interaction term) of the exposure and the subgroup variable must be incorporated into the regression model, and the statistical significance of this term must be assessed. The mere comparison of subgroup-specific effect estimates is deemed methodologically insufficient.\no Mandatory Action 3: Multiple Comparison Issues. If multiple subgroup analyses are contemplated, the protocol must articulate whether and how adjustments for multiple comparisons (e.g., Bonferroni correction) will be implemented to control the family-wise Type I error rate.\n· No  Continue.\nSubtree 7.3: Pre-specified Subgroup and Interaction Analyses\nStarting Point: Primary association analysis results have been obtained in Module 6.2, and exploration of whether this association varies across different population subgroups (i.e., effect modification) is desired.\nCore Objective: To plan and execute a scientifically defensible subgroup/interaction analysis within a strictly controlled framework. The aim is to avoid false-positive findings resulting from data mining and to correctly test and interpret any potential effect modification.\nAction: Proceed to Module 1 to conduct the mandatory precondition review.\nModule 1: Precondition Review - Pre-specification Principle\n7.3.1 Mandatory Checkpoint: Was the hypothesis that “Variable Mod moderates the effect of E on O” pre-specified in the study protocol based on strong theoretical grounds or prior evidence before data analysis commenced?\n· Yes (Best Practice) \no Diagnosis: This constitutes a Confirmatory Analysis.\no Action: Proceed to Module 2.\n· No \no Diagnosis: This constitutes an Exploratory Analysis.\no Severe Warning: Any findings carry a high risk of false positives (data mining).\no Mandatory Action: This analysis must be explicitly labeled as “exploratory” or “hypothesis-generating” in the final report, and results interpreted with extreme caution. Subsequently, proceed to Module 2.\nModule 2: Model Specification and Hypothesis Testing - Interaction Test\n7.3.2 Step 1: Incorporation of Interaction Term.\n· Mandatory Action: To formally posit that effects differ across subgroups, a product term (interaction term) of the Exposure (E) and the Subgroup Variable (Mod) must be added to the primary multivariate regression model.\n· Model Formula Example: Outcome ~ Exposure + Moderator + Exposure*Moderator + [All confounders from “Final Adjustment Set”]\n7.3.3 Step 2: Testing Statistical Significance.\n· Core Decision Point: Within the aforementioned model, is the p-value for the coefficient of the interaction term (Exposure * Moderator) significant (e.g., p < 0.05)?\no Yes \n§ Diagnosis: A statistically significant moderation/interaction effect exists.\n§ Action: Proceed to Module 3 for effect interpretation.\no No \n§ Diagnosis: No evidence supports a moderation effect. The mere comparison of subgroup-specific effect estimates is methodologically insufficient.Mandatory\n§ Action: A claim of effect heterogeneity cannot be made. The interaction term and the moderator variable (unless Mod itself is a significant confounder) should be removed, and results from the reduced model (i.e., the primary analysis model) reported. Terminate this sub-process.\nModule 3: Effect Interpretation and Reporting\n7.3.4 Severe Warning:\n· Warning: When the interaction term is significant, the “main effect” coefficients for Exposure (E) and Moderator (Mod) in the model cannot be interpreted independently as average effects.\n7.3.5 Core Decision Point: Is the Moderator (Mod) Categorical or Continuous?\n· If Mod is Categorical (e.g., Sex, Disease Stage) \no Action: The effect size of E on O and its 95% confidence interval must be reported separately for each level of Mod (i.e., conduct Stratified Analysis).\no Reporting Example: “In males, the PR for the association between exposure and outcome was [value], 95% CI: [...]; in females, the PR was [value], 95% CI: [...].”\n· If Mod is Continuous (e.g., Age, BMI) \no Action (Best Practice): An Interaction Plot must be generated to visualize the moderation effect.\no Action (Optional for Reporting): Select meaningful levels of the moderator (e.g., Mean, Mean  1SD) and report the effect size of E on O and its 95% CI at these levels (i.e., Simple Slopes Analysis).\nModule 4: Multiple Comparisons Issue\n7.3.6 Mandatory Checkpoint: Are multiple subgroup analyses or multiple interaction tests planned?\n· Yes \no Diagnosis: This increases the risk of overall Type I error (false positives).\no Mandatory Action: The study protocol and the Methods section of the final report must explicitly state whether and how corrections for multiple comparisons are applied.\no Correction Examples: Bonferroni correction, Benjamini-Hochberg procedure, etc.\n· No \no Diagnosis: Correction for multiple comparisons is not required.\no Action: Complete this sub-process.\nCompletion: A rigorous implementation path containing critical checkpoints for subgroup/interaction analysis has been successfully planned, thereby minimizing the risk of data mining.\n”\n\n# Input Data\n- Research background, main exposure E, main outcome O, and core research question.\n{{ JSON.stringify($item(0).$node[\"3. Read Research Design Information\"].json.final_structured_memory) }}\n- Primary and secondary research objectives, and whether subgroup analysis or effect modification hypotheses are mentioned.\n{{ JSON.stringify($item(0).$node[\"3. Read Research Design Information\"].json.goal_hypothesises) }}\n- DAG-based causal structure description.\n{{ JSON.stringify($item(0).$node[\"3. Read Research Design Information\"].json.dag_construction) }}\n- Final confounding adjustment set (to be used in all main and sensitivity analyses).\n{{ JSON.stringify($item(0).$node[\"3. Read Research Design Information\"].json.adjustment_set) }}\n- Main model and effect size selection.\n{{ JSON.stringify($item(0).$node[\"3. Read Research Design Information\"].json.main_model) }}\n- Sampling statistical toolkit.\n{{ JSON.stringify($item(0).$node[\"3. Read Research Design Information\"].json.sampling_statistical_toolkit) }}\n- Missing data handling decisions (e.g., Multiple Imputation).\n{{ JSON.stringify($item(0).$node[\"3. Read Research Design Information\"].json.missing_data_handling) }}\n- Interaction/Subgroups hypotheses.\n{{ JSON.stringify($item(0).$node[\"3. Read Research Design Information\"].json.moderation) || {} }}\n\n# Instructions\n1. **Unmeasured Confounding (Refer to Knowledge Base 7.1):**\n    - You MUST plan to calculate E-values for both the point estimate and the confidence interval limit.\n    - If the effect measure is a ratio (RR/OR/PR/HR), use the standard formula logic. If not, issue the mandatory warning in the text.\n    - Write the \"Interpretation Template\" from Module 2 and Module 3 into the protocol text.\n\n2. **Analytical Assumptions (Refer to Knowledge Base 7.2):**\n    - **Missing Data:** Check the input `missing_data_handling`. If Multiple Imputation (MI) is used, you MUST plan a Complete-Case Analysis (CCA) as a sensitivity analysis (Module 1).\n    - **Model Selection:** If there is uncertainty (e.g., high prevalence, ambiguous model choice), plan an alternative model comparison (Module 2).\n    - **Covariate Definitions:** If the adjustment set contains variables like Age/BMI, plan a sensitivity analysis comparing continuous vs. categorical definitions (Module 3).\n\n3. **Subgroups & Interactions (Refer to Knowledge Base 7.3):**\n    - STRICTLY distinguish between Confirmatory (pre-specified) and Exploratory analyses.\n    - You must explicitly state that \"Effect modification will be assessed by including an interaction term (Exposure * Moderator) in the regression model,\" not just by comparing stratified estimates.\n    - If multiple subgroups are present, specify a multiple comparison correction method (e.g., Bonferroni) in the protocol.\n\n# Output Requirements\nOutput an object strictly conforming to the following JSON Schema. \n- `protocol_text`: The full \"Sensitivity Analysis\" section for the SAP, formal and ready to copy.\n- `state`: Structured decisions reflecting the logic paths taken in the Knowledge Base.\n\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"protocol_text\": {\n      \"type\": \"string\",\n      \"description\": \"The complete text for the Sensitivity Analysis section, covering E-values, analytical assumptions, and subgroups/interactions.\"\n    },\n    \"state\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"e_value_plan\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"planned\": { \"type\": \"boolean\", \"const\": true },\n            \"measure_type_check\": { \"type\": \"string\", \"enum\": [\"Standard Ratio Formula\", \"Specialized Method Needed\"] }\n          },\n          \"required\": [\"planned\", \"measure_type_check\"]\n        },\n        \"analytical_assumptions_plan\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"missing_data_sensitivity\": { \n              \"type\": \"string\", \n              \"description\": \"e.g., 'Compare MI with CCA' or 'Not Applicable'\" \n            },\n            \"model_selection_sensitivity\": { \n              \"type\": \"string\", \n              \"description\": \"e.g., 'Compare Logistic vs Poisson' or 'None'\" \n            },\n            \"covariate_definition_sensitivity\": { \n              \"type\": \"string\", \n              \"description\": \"e.g., 'Compare Age Continuous vs Categorical'\" \n            }\n          },\n          \"required\": [\"missing_data_sensitivity\"]\n        },\n        \"interaction_plan\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"interaction_term_specified\": { \"type\": \"boolean\", \"description\": \"Must be true if subgroups are planned.\" },\n            \"multiple_comparison_correction\": { \"type\": \"string\", \"description\": \"Method used or 'None'\" },\n            \"status\": { \"type\": \"string\", \"enum\": [\"Confirmatory\", \"Exploratory\", \"None\"] }\n          }\n        }\n      },\n      \"required\": [\"e_value_plan\", \"analytical_assumptions_plan\", \"interaction_plan\"]\n    }\n  },\n  \"required\": [\"protocol_text\", \"state\"]\n}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        896,
+        0
+      ],
+      "id": "86527622-720b-4b75-9af7-d5ba38494912",
+      "name": "5. Sensitivity Analysis Framework"
+    },
+    {
+      "parameters": {
+        "jsCode": "const new_data = $items('5. Sensitivity Analysis Framework')[0].json.output;\n\nreturn [{\n  json: {\n\n    session_id: $('3. Read Research Design Information').first().json.session_id,\n\n    sampling_philosophy_string: JSON.stringify(new_data),\n\n    new_data_generated: new_data\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1472,
+        0
+      ],
+      "id": "ac76e480-b4c3-4751-8162-ffe0516b0aef",
+      "name": "6. Prepare Database Update"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE conversation_sessions\nSET \n  Sensitivity_analysis = $${{ $json.sampling_philosophy_string }}$$::jsonb\nWHERE \n  session_id = $${{ $json.session_id }}$$;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1696,
+        0
+      ],
+      "id": "b67eedcb-e215-461d-8cc9-4fc3d125a064",
+      "name": "7. Save New Fields to Database",
+      "credentials": {
+        "postgres": {
+          "id": "uaHhgTOU0gtpkeQ6",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# Role\nYou are an expert Epidemiology and Biostatistics Consultant. Your task is to strictly follow the provided [MANDATORY KNOWLEDGE BASE] (Decision Tree Logic) to write the final \"Synthesis and Reporting\" section for the Statistical Analysis Plan (SAP) and Research Protocol.\n\n# Context\nYou are at the final stage of protocol design: \"Synthesis and Reporting\". You must integrate all previous design decisions (sampling, variables, analysis) to ensure the final report is transparent, reproducible, and compliant with STROBE guidelines.\n\n# [MANDATORY KNOWLEDGE BASE]\nThe following text represents the **irrevocable** logic and rules for this task. You must strictly adhere to every Action, Diagnosis, Warning, and Reporting Requirement defined below. **Do not deviate from this logic.**\n\n“\n8.0 Synthesis and Reporting: Adherence to the Highest Standards of Transparency (STROBE 1a, 1b, 18, 19, 20)\nThis chapter ensures that research findings, derived from rigorous design and analysis, are presented in a manner that is complete, transparent, and reproducible, thereby fully satisfying the requirements of the STROBE statement and modern research ethics.\n8.1 Ethical Considerations, Data Sharing, and Reproducibility (STROBE 22)\nAction: The following sections must be included within the study protocol and the final report:\n· Ethical Approval: Explicit citation of approval details from the Institutional Review Board (IRB).\n· Informed Consent: A detailed description of the process for obtaining informed consent from participants.\n· Privacy Protection: Elucidation of specific measures implemented to safeguard participant privacy and data confidentiality (e.g., data de-identification, encrypted storage).\n· Data Sharing and Code Availability: Inclusion of a data and code availability statement, specifying whether and how de-identified Individual Participant Data (IPD), analysis code, and related documentation will be shared, subject to the protection of participant privacy.\nSubtree 8.1: Ethics, Data Sharing, and Reproducibility\nStarting Point: The research design and analysis plan have been finalized, and preparation of the study protocol and the methodology section of the final report is underway.\nCore Objective: To ensure, via a systematic and non-negotiable checklist, that the study remains ethically compliant, operationally transparent, and scientifically reproducible, thereby adhering to the highest standards of modern research.\nAction: The following modules must be verified sequentially to inspect and complete the content of the protocol/report.\nModule 1: Ethical Approval\n8.1.1 Question: Has the Institutional Review Board (IRB) approval information been explicitly cited in the study protocol and final report?\n· No  Action:\no Step 1: Obtain Approval.\n§ Action: Prior to the initiation of any research activities involving human participants, the study protocol must be submitted to and formally approved by a qualified Institutional Review Board.\no Step 2: Write Statement.\n§ Action: A specific statement must be included in the protocol/report, comprising the following elements:\n1. The full name of the Institutional Review Board.\n2. The approval file number/reference code.\n3. The date of approval.\n§ Statement Example: “The study protocol was reviewed and approved by the [Full Name of IRB] (Approval Number: [Number], Date: [Date]).”\no Step 3: Complete and Return.\n§ Action: Upon completion of the statement, return to Question 8.1.1.\n· Yes  Proceed to Module 2.\nModule 2: Informed Consent\n8.1.2 Question: Has the process for obtaining participant informed consent been described in detail in the study protocol and final report?\n· No  Action:\no Step 1: Make a Decision.\n§ Core Decision Point: Which method of informed consent will be employed?\n§ Option A (Standard Practice): Written Consent.\n§ Action: An informed consent form must be prepared, containing the following core elements: study purpose, procedures, potential risks and benefits, confidentiality measures, the voluntary nature of participation, and the right to withdraw at any time.\n§ Option B: Verbal Consent.\n§ Action: Utilization is permitted only under specific circumstances approved by the IRB (e.g., telephone surveys). A standardized verbal consent script must be prepared, and the consent process must be documented.\n§ Option C: Waiver of Consent.\n§ Action: Applicable only if the study meets IRB criteria for waiver (e.g., utilization of fully de-identified secondary data) and explicit IRB approval is obtained.\no Step 2: Write Statement.\n§ Action: The selected informed consent process must be described in detail in the protocol/report.\n§ Statement Example (Option A): “All participants were provided with detailed study information and signed a written informed consent form prior to participation.”\n§ Statement Example (Option C): “This study utilized fully de-identified routine clinical data; consequently, the requirement for individual informed consent was waived by the Institutional Review Board.”\no Step 3: Complete and Return.\n§ Action: Upon completion of the statement, return to Question 8.1.2.\n· Yes  Proceed to Module 3.\nModule 3: Privacy Protection\n8.1.3 Question: Have specific measures to protect participant privacy and data confidentiality been elucidated in the study protocol and final report?\n· No  Action:\no Step 1: Plan Specific Measures.\n§ Action: Protective measures regarding all the following aspects must be planned and documented:\n§ De-identification: Listing of all direct (e.g., names, addresses) and indirect (e.g., precise dates of birth) personal identifiers to be removed or coded from the final analysis dataset.\n§ Data Storage: Specification of storage locations (e.g., institutional secure servers, encrypted hard drives) and access control measures (e.g., password access restricted to core research team members).\n§ Data Transfer: Specification of secure methods to be employed if data transfer is required (e.g., end-to-end encrypted channels).\no Step 2: Write Statement.\n§ Action: These privacy protection measures must be described in detail in the protocol/report.\n§ Statement Example: “To protect participant privacy, all personal identifying information was replaced with unique, non-identifying research ID numbers immediately upon data collection. The file linking research IDs to personal information was stored independently with encryption, accessible only to the Principal Investigator. All analyses were conducted on a de-identified dataset.”\no Step 3: Complete and Return.\n§ Action: Upon completion of the statement, return to Question 8.1.3.\n· Yes  Proceed to Module 4.\nModule 4: Data Sharing and Code Availability\n8.1.4 Core Decision Point: Is the post-publication sharing of data and/or analysis code planned?\n· Yes (Best Practice)  Proceed to 8.1.5.\n· No  Proceed to 8.1.6.\n8.1.5 Path A: Statement of Data/Code Sharing\n· Action: A data and code availability statement must be drafted within the protocol/report, explicitly addressing the following inquiries:\no 1. WHAT: “A fully de-identified individual participant dataset (IPD)” and/or “Complete R analysis scripts used to generate all reported results.”\no 2. WHERE: “Deposited in a public repository” or “Provided as supplementary material to the journal.”\no 3. WHEN: “Immediately upon acceptance for publication, accompanied by a persistent Digital Object Identifier (DOI).”\no 4. HOW: “Data and code will be publicly available” or “Available upon reasonable request to the corresponding author, subject to a signed data use agreement.”\n· Next Step: Completion. The study aligns with best practices for Open Science. Terminate this sub-process.\n8.1.6 Path B: Statement of Non-Sharing\n· Action: A data and code availability statement must be drafted within the protocol/report, providing a clear justification.\n· Statement Examples:\no Example 1 (Ethical Restrictions): “Due to privacy restrictions inherent in the informed consent, individual participant data cannot be publicly shared.”\no Example 2 (Third-Party Data): “Data used in this study were obtained from [Third Party Institution]; redistribution is prohibited under the data use agreement.”\n· Next Step: Terminate this sub-process.\n8.2 Construction of the Final Report: Participant Flow Diagram, Descriptive Table (Table 1), and Results Tables (STROBE 13a, 13b, 13c, 14a, 15, 16)\nAction: Adherence to the following standardized best practice guidelines is required for the key components of the final research report.\n1. Drafting the Participant Flow Diagram: A flow diagram must be provided, clearly illustrating the entire trajectory of participants from the initial potentially eligible population through screening, recruitment, inclusion, and exclusion, to final inclusion in the analysis. The number of individuals at each stage and specific reasons for exclusion must be explicitly labeled.\n2. Creating the Descriptive Characteristics Table (Table 1): As delineated in Section 6.1, a baseline characteristics table stratified by exposure status must be provided.\n3. Creating the Primary Results Table: The results of the primary association analysis must be presented. To ensure maximum informativeness, this table must adhere to the following structure:\no Concurrent presentation of both unadjusted (crude) and adjusted effect sizes (e.g., PR or OR).\no Provision of the 95% confidence interval for each effect size.\no Provision of the corresponding p-value.\no Explicit listing, within the table footnotes, of the covariates adjusted for in the multivariate model (consistent with the adjustment set determined by the DAG in Section 4.0).\nSubtree 8.2: Constructing Core Report Components\nStarting Point: All data analyses have been completed, and preparation of the Results section of the final research report is underway.\nCore Objective: To generate—via a standardized, non-negotiable best practice guide—a Participant Flow Diagram, a Descriptive Characteristics Table (Table 1), and a Primary Results Table that are informationally complete, formally standardized, and fully transparent, thereby complying with the highest standards of the STROBE guidelines.\nAction: The following modules must be navigated sequentially to inspect and finalize the report content.\nModule 1: Drafting the Participant Flow Diagram (STROBE 13a, 13b, 13c)\n8.2.1 Question: Has a flow diagram depicting the entire participant trajectory from screening to final analysis been created?\n· No  Action:\no Step 1: Define the Initial Assessed Population.\n§ Action: The first box must be created, labeled “Total number assessed for eligibility (n=...).” This figure should correspond to the source population or the initially contacted population defined in Subtree 2.1.\no Step 2: Document Exclusions during Screening.\n§ Action: A box branching to the side labeled “Excluded (n=...)” is to be created.\n§ Mandatory Action: Within this box, all reasons for exclusion and their corresponding specific counts must be listed in bullet point format.\n§ Examples:\n§ Did not meet inclusion criteria (n=...)\n§ Met exclusion criteria (n=...)\n§ Refused to participate (n=...)\no Step 3: Define the Final Included Sample.\n§ Action: The next core box is to be created, labeled “Total number included in the study (n=...).”\no Step 4: Document Exclusions from Analysis.\n§ Action: If participants were excluded from the primary analysis due to incomplete data or other reasons, a box branching to the side labeled “Excluded from analysis (n=...)” is to be created.\n§ Mandatory Action: Reasons for exclusion and their counts must be listed within this box (e.g., “Missing data on key outcome variable [n=...]”).\no Step 5: Define the Final Analytical Sample.\n§ Action: The final core box is to be created, labeled “Total number included in the final analysis (n=...).”\no Best Practice: The flow diagram should be visually clear; adaptation of the CONSORT flow diagram format is recommended.\n· Yes  Proceed to Module 2.\nModule 2: Creating the Descriptive Characteristics Table (Table 1) (STROBE 14a, 14b)\n8.2.2 Question: Has a baseline characteristics table stratified by exposure status been created?\n· No  Action:\no Action: The detailed decision tree in Subtree 6.1.A must be followed to generate “Table 1.”\no Mandatory Checkpoint List:\n§ Title: Is the title self-explanatory, encompassing the study population, location, and time period?\n§ Column Structure: Stratification by the status of the primary exposure variable is mandatory. Is a “Total” column included?\n§ Row Content: Inclusion of key demographic variables and all confounding factors derived from the \"Final Adjustment Set\" is mandatory.\n§ Cell Content: Are continuous variables correctly reported as “Mean (SD)” or “Median [IQR]”? Are categorical variables correctly reported as “n (%)”?\n§ Missing Data: Is the number of participants with missing data indicated for each variable? (STROBE 14b).\n§ Footnotes: All abbreviations must be explained. Statistical tests utilized (if applicable) must be specified. If complex sampling was employed, a statement that all statistics are weighted estimates is mandatory.\n· Yes  Proceed to Module 3.\nModule 3: Creation of the Main Results Table (STROBE 16a)\n8.2.3 Question: Has a table presenting the results of the primary association analysis been created?\n· No  Action:\no Step 1: Set Up Table Structure.\n§ Action: A table is to be created. Rows should represent predictors (led by the primary exposure variable). Columns should comprise at least two major sections: “Unadjusted Model” and “Adjusted Model.”\no Step 2: Populate “Unadjusted Model” Columns.\n§ Action: A simple regression model containing only the exposure and outcome variables must be executed.\n§ Mandatory Action: The following data from the model must be entered into the corresponding columns:\n4. Effect Estimate (e.g., Crude OR/PR)\n5. 95% Confidence Interval (95% CI)\n6. p-value\no Step 3: Populate “Adjusted Model” \n§ Columns.Action: The primary multivariate regression model must be executed.\n§ Mandatory Action: The following data from the model must be entered into the corresponding columns:\n7. Adjusted Effect Estimate (e.g., Adjusted OR/PR)\n8. 95% Confidence Interval (95% CI)\n9. p-value\no Step 4: Write Mandatory Footnote.\n§ Mandatory Action: The table footnote must clearly and exhaustively list all covariates adjusted for in the “Adjusted Model.”\n§ Statement Example: “The adjusted model adjusted for the following variables: [Variable 1], [Variable 2], [Variable 3]...”\n· Yes  Proceed to 8.2.4.\n8.2.4 Final Mandatory Checkpoint:\n· Question: Is the list of adjusted covariates in the Main Results Table footnote completely consistent with the “Final Adjustment Set” derived from the DAG in Subtree 4.4?\n· Yes  The core components of the report comply with the highest standards. Terminate this sub-process.\n· No \no Warning: The analysis is inconsistent with the theoretical framework, constituting a serious methodological flaw.\no Mandatory Corrective Action: The analysis or the report must be revised to ensure complete consistency.\n8.3 Concluding with the STROBE Checklist: Closing the Loop\nFinal Action: The ultimate step in the workflow involves a return to the design origin: utilizing the STROBE checklist for cross-sectional studies, but this time functioning as a final auditing tool.\nAction: The STROBE checklist must be verified item by item to ensure that all information generated during adherence to this methodological framework (ranging from objectives, design, sampling, and variable definitions to bias control, statistical methods, and results presentation) has been reported completely, accurately, and transparently in the final manuscript.\nDiagnosis: This step symbolically completes the comprehensive closed loop from “front-loading STROBE as a design constraint” to “verifying report integrity with the post-hoc STROBE checklist.” It demonstrates that research guided by rigorous a priori methodological constraints naturally yields output compliant with the highest reporting standards.\nSubtree 8.3: Concluding with the STROBE Checklist: Closing the Loop\nStarting Point: All analyses have been completed, and the final draft of the research manuscript has been composed.\nCore Objective: To utilize the STROBE checklist for cross-sectional studies as a final, non-negotiable auditing tool to verify the final manuscript item by item. This ensures that all information generated throughout the adherence to this methodological framework has been reported completely, accurately, and transparently, thereby achieving the perfect closed loop from “front-loading STROBE as a design constraint” to “verifying report integrity with the post-hoc STROBE checklist”.\nAction: The manuscript must be subjected to a final audit by navigating through all the following modules sequentially.\nModule 1: Title and Abstract Audit\n8.3.1 Question (STROBE 1a): Is the study design explicitly identified as a \"cross-sectional study\" with common terminology in the title or the abstract?\n· No  Mandatory Action: The title or abstract must be immediately revised to include an explicit identifier of the study design.\n· Yes  Proceed to 8.3.2.\n8.3.2 Question (STROBE 1b): Does the abstract provide an informative and balanced summary of the background, objectives, methods, main findings, and conclusions?\n· No  Mandatory Action: The abstract must be rewritten to ensure the inclusion of all core elements and complete consistency with the main text.\n· Yes  Module 1 Complete. Proceed to Module 2.\nModule 2: Introduction Audit\n8.3.3 Question (STROBE 2): Does the introduction adequately explain the scientific background and rationale for the investigation?\n· No  Mandatory Action: Background information must be supplemented to clearly articulate existing knowledge gaps and the theoretical or practical basis for the study.\n· Yes  Proceed to 8.3.4.\n8.3.4 Question (STROBE 3): Does the introduction state specific objectives, including any prespecified hypotheses defined in Subtree 1.2?\n· No  Mandatory Action: Objectives and hypotheses must be stated clearly and explicitly, maintaining complete consistency with the original definitions in the study protocol.\n· Yes  Module 2 Complete. Proceed to Module 3.\nModule 3: Methods Section Audit\n8.3.5 Question (STROBE 4, 5): Does the Methods section present key elements of the study design early in the paper and describe the setting, locations, and relevant dates (periods of recruitment, exposure, follow-up, and data collection) in detail?\n· No  Mandatory Action: These core design details must be supplemented.\n· Yes  Proceed to 8.3.6.\n8.3.6 Question (STROBE 6a, 7, 8): Does the Methods section specify in detail:\n1. Eligibility criteria, sources, and methods of selection of participants (consistent with planning in Subtrees 2.1, 2.2)?\n2. Clear definitions of all key variables (exposure, outcome, confounders)?\n3. Data sources and methods of assessment (measurement) for each variable (consistent with decisions in Subtree 3.1)?\n· No  Mandatory Action: Missing definitions and descriptions must be added to ensure reproducibility.\n· Yes  Proceed to 8.3.7.\n8.3.7 Question (STROBE 9, 10, 11): Does the Methods section explain:\n1. Efforts to address potential sources of bias (specifically the DAG-based confounding control strategy from Subtree 4.0)?\n2. How the study size was arrived at?\n3. How quantitative variables were handled in the analyses?\n· No  Mandatory Action: These critical methodological details must be supplemented.\n· Yes  Proceed to 8.3.8.\n8.3.8 Question (STROBE 12a-e): Does the statistical methods subsection describe in detail:\n1. All statistical methods, including those used to control for confounding (must be consistent with the “Final Adjustment Set” in Subtree 4.4)?\n2. Methods used to examine subgroups and interactions (consistent with planning in Subtree 7.3)?\n3. How missing data were addressed (must be consistent with the MICE protocol in Subtree 5.3)?\n4. (If applicable) How the sampling strategy was accounted for in the analysis (must be consistent with \"Analysis Constraint Flags\" in Subtree 2.4)?\n5. All executed sensitivity analyses (consistent with planning in Subtrees 7.1, 7.2)?\n· No  Mandatory Action: Missing statistical method details must be supplemented to ensure complete transparency of the analytical process.\n· Yes  Module 3 Complete. Proceed to Module 4.\nModule 4: Results Section Audit\n8.3.9 Question (STROBE 13a,b,c): Does the Results section report the numbers of participants at each stage of the study, specifying reasons for non-participation, preferably utilizing a flow diagram? (Adherence to the planning in Subtree 8.2 is required).\n· No  Mandatory Action: The participant flow diagram and its accompanying description must be created or refined.\n· Yes  Proceed to 8.3.10.\n8.3.10 Question (STROBE 14a,b): Does the Results section:\n1. Present characteristics of study participants (Table 1), stratified by exposure status? (Adherence to the planning in Subtree 8.2 is required).\n2. Indicate the number of participants with missing data for each variable of interest?\n· No  Mandatory Action: “Table 1” and its related description must be created or refined.\n· Yes  Proceed to 8.3.11.\n8.3.11 Question (STROBE 15, 16a): Does the Results section:\n1. Report the numbers of outcome events or summary measures?\n2. Present both unadjusted and adjusted estimates with their 95% confidence intervals, explicitly stating which confounders were adjusted for? (Adherence to the planning in Subtree 8.2 is required).\n· No  Mandatory Action: The main results table and its interpretation must be created or refined.\n· Yes  Proceed to 8.3.12.\n8.3.12 Question (STROBE 17): Does the Results section report the results of all other analyses performed, such as subgroup analyses, interaction tests, and sensitivity analyses?\n· No  Mandatory Action: Results from these pre-planned analyses must be supplemented.\n· Yes  Module 4 Complete. Proceed to Module 5.\nModule 5: Discussion & Other Information Audit\n8.3.13 Question (STROBE 18, 19, 20, 21): Does the Discussion section:\n1. Summarize key results with reference to study objectives?\n2. Discuss limitations, taking into account sources of potential bias, their direction, and magnitude?\n3. Provide a cautious overall interpretation?\n4. Discuss the generalizability (external validity) of the findings (consistent with the diagnosis in Subtree 2.1)?\n· No  Mandatory Action: The Discussion section must be refined to ensure it is comprehensive, balanced, and prudent.\n· Yes  Proceed to 8.3.14.\n8.3.14 Question (STROBE 22): Does the Other Information section specify the source of funding? (Adherence to the planning in Subtree 8.1 is required).\n· No  Mandatory Action: The funding statement must be supplemented.\n· Yes  Module 5 Complete.\nFinal Diagnosis\n8.3.15 Final Check:\n· Question: Have all the aforementioned STROBE checklist items been reported completely, accurately, and transparently in the final manuscript?\n· Yes \no Diagnosis: This step symbolically concludes the closed loop, transitioning from “front-loading STROBE as a design constraint” to “verifying report integrity with the post-hoc STROBE checklist.” It demonstrates that research guided by rigorous a priori methodological constraints naturally yields output compliant with the highest reporting standards.\no Action: The manuscript is prepared for peer review.\n· No \no Action: Return to the corresponding module to supplement missing reporting content.\n”\n\n# Input Data\n- Core research question.\n{{ JSON.stringify($item(0).$node[\"3. Read Research Design Information\"].json.final_structured_memory) }}\n- Primary and secondary research objectives and hypotheses.\n{{ JSON.stringify($item(0).$node[\"3. Read Research Design Information\"].json.goal_hypothesises) }}\n- Target population, source population, and sampling frame.\n{{ JSON.stringify($item(0).$node[\"3. Read Research Design Information\"].json.target_source_population_sampling_frame) }}\n- adjustment_set: Final confounding adjustment set.\n{{ JSON.stringify($item(0).$node[\"3. Read Research Design Information\"].json.adjustment_set) }}\n- Data_Preparation_Quality_Control: Strategies related to sample flow and Table 1 content.\n{{ JSON.stringify($item(0).$node[\"3. Read Research Design Information\"].json.data_preparation_quality_control) }}\n- Missing_data_handling: Missing data handling plan.\n{{ JSON.stringify($item(0).$node[\"3. Read Research Design Information\"].json.missing_data_handling) }}\n- Descriptive statistical analysis.\n{{ JSON.stringify($item(0).$node[\"3. Read Research Design Information\"].json.descriptive_statistics) }}\n- Main model and effect sizes.\n{{ JSON.stringify($item(0).$node[\"3. Read Research Design Information\"].json.main_model) }}\n- Advanced Designs (PSM / Mediation / SEM / LCA).\n{{ $('3. Read Research Design Information').item.json.psm }}\n{{ $('3. Read Research Design Information').item.json.mediation}}\n{{ $('3. Read Research Design Information').item.json.moderation}}\n{{ $('3. Read Research Design Information').item.json.sem}}\n- Sensitivity Analysis Plan.\n{{ $('6. Prepare Database Update').item.json.new_data_generated }}\n\n# Instructions\n1. **Ethical Considerations (Refer to Knowledge Base 8.1):**\n    - You MUST execute the actions in Module 1, 2, 3, and 4.\n    - If explicit IRB details are missing in the input, use placeholders as defined in 8.1.1 Step 2 but strictly follow the \"Statement Example\".\n    - Determine the consent method (8.1.2) based on the data source (e.g., if secondary data -> Option C: Waiver).\n    - If data sharing is not explicitly forbidden in inputs, default to \"Path A: Statement of Data/Code Sharing\" (8.1.5) as Best Practice.\n\n2. **Core Report Components (Refer to Knowledge Base 8.2):**\n    - **Flow Diagram:** Describe the \"Assessed -> Excluded -> Included\" logic from Module 1.\n    - **Table 1:** Strictly follow \"Module 2: Checkpoint List\". You must mention stratification by exposure and inclusion of all variables in the `adjustment_set`.\n    - **Main Results Table:** Strictly follow \"Module 3\". You MUST write the mandatory footnote requirement: \"The table footnote must clearly and exhaustively list all covariates adjusted for...\".\n\n3. **STROBE Audit (Refer to Knowledge Base 8.3):**\n    - Summarize the plan to use the STROBE checklist as a \"final auditing tool\" (Module 1-5).\n    - Explicitly mention that this step \"symbolically completes the comprehensive closed loop\".\n\n# Output Requirements\nOutput an object strictly conforming to the following JSON Schema. Do not add extra fields.\n\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ethics_and_reproducibility_section\": {\n      \"type\": \"string\",\n      \"description\": \"A text section specifically describing plans for ethical approval, informed consent, privacy protection, data sharing, code availability, and reproducibility, strictly following Knowledge Base 8.1.\"\n    },\n    \"reporting_core_components_section\": {\n      \"type\": \"string\",\n      \"description\": \"A text section specifically describing the planning and formatting requirements for the Participant Flow Diagram, Baseline Characteristics Table (Table 1), and Main Results Table, strictly following Knowledge Base 8.2.\"\n    },\n    \"strobe_audit_plan_section\": {\n      \"type\": \"string\",\n      \"description\": \"A text section specifically describing the plan to use the STROBE checklist for auditing and supplementation, strictly following Knowledge Base 8.3.\"\n    },\n    \"sap_chunk\": {\n      \"type\": \"string\",\n      \"description\": \"A comprehensive text paragraph integrating the above three parts naturally, suitable for direct pasting into the 'Synthesis and Reporting' chapter of the Research Protocol/SAP.\"\n    }\n  },\n  \"required\": [\"ethics_and_reproducibility_section\", \"reporting_core_components_section\", \"strobe_audit_plan_section\", \"sap_chunk\"]\n}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1920,
+        0
+      ],
+      "id": "2f8a51ae-8e3b-4e28-bfce-b6881606dfd7",
+      "name": "8. Synthesis and Reporting"
+    },
+    {
+      "parameters": {
+        "jsCode": "const new_data = $items('8. Synthesis and Reporting')[0].json.output;\n\nreturn [{\n  json: {\n\n    session_id: $('3. Read Research Design Information').first().json.session_id,\n\n    sampling_philosophy_string: JSON.stringify(new_data),\n\n    new_data_generated: new_data\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2496,
+        0
+      ],
+      "id": "a05b0d91-4c22-4c1f-a550-21dd9279c37b",
+      "name": "9. Prepare Database Update"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE conversation_sessions\nSET \n  Reporting_standards = $${{ $json.sampling_philosophy_string }}$$::jsonb\nWHERE \n  session_id = $${{ $json.session_id }}$$;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        2720,
+        0
+      ],
+      "id": "60a4048b-e277-4bd4-8e5a-1a42afbb6d15",
+      "name": "10. Save New Fields to Database",
+      "credentials": {
+        "postgres": {
+          "id": "uaHhgTOU0gtpkeQ6",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# Role\nYou are a Medical Journal Associate Editor and Research Communication Consultant. Your task is to strictly follow the provided [MANDATORY KNOWLEDGE BASE] (Decision Tree Logic) to write the \"Publication and Dissemination Plan\" section for the Research Protocol.\n\n# Context\nYou are at the final stage of the protocol design: planning how to publish, disseminate, and share the results. You must ensure this plan is actionable, ethically compliant, and consistent with previous ethical/data sharing commitments (Section 8.1).\n\n# [MANDATORY KNOWLEDGE BASE]\nThe following text represents the **irrevocable** logic and rules for this task. You must strictly adhere to every Action, Diagnosis, and Reporting Requirement defined below. **Do not deviate from this logic.**\n\n“\n9.0 Publication and dissemination plan for study results\nDiagnosis: The value of a study lies not only in its scientific rigour, but also in whether its findings can be effectively disseminated and generate positive impact. Therefore, a comprehensive protocol must include a clear publication and dissemination plan for study results.\nAction: Your protocol must include the following components.\n9.1 Academic Publication Plan\n· Journal publication: Specify that you plan to write the study findings as academic papers, and list the types and potential names of target journals.\n· Authorship: State in advance the principles for determining authorship (e.g., following ICMJE standards).\n· Conference presentations: Plan to present at relevant academic conferences as oral presentations or posters.\n9.2 Dissemination Strategy\n· For policymakers: If the findings have public health or policy implications, consider preparing a policy brief or summary.\n· For clinicians and the public: Disseminate the findings in an accessible manner through channels such as professional associations, science communication websites, social media, or press releases.\n9.3 Data Sharing & Reproducibility Statement\n· Data sharing policy: State clearly whether, after study completion, you will share de-identified individual participant data (IPD), and specify the platform(s), routes, and conditions for sharing.\n· Code and materials sharing: State whether the statistical code used for data cleaning and analysis, as well as related materials such as the study questionnaire, will be made publicly available.\n· Privacy protection: In all sharing plans, reiterate that all necessary measures will be taken to protect participants' privacy, ensuring that shared data cannot be re-identified.\nSubtree 9.0: Publication and dissemination plan for study results\nStarting point: You have completed all core methodological planning for the study protocol.\nCore objective: In the protocol, create a comprehensive, actionable publication and dissemination plan that meets modern requirements for scientific transparency and impact.\nAction: Proceed through all of the following modules, in sequence, to check and complete your protocol content.\nModule 1: Academic Publication Plan\n9.1.1 Question: Have you planned a journal publication strategy?\n· No  Action:\no Step 1: Create Target Journal List.\n§ Action: Create a list that includes 3-5 potential journals tiered list (Preferred, Alternative 1, Alternative 2).\no Step 2: Assess Journal Fit.\n§ Action: For each journal on the list, evaluate the following core checkpoints:\n§ Scope: Are the journal’s readership and scope highly aligned with your research topic?\n§ Impact: the journal's impact factor/quartile ranking meet your expectations?\n§ Open access: Does the journal’s open access policy meet your funder’s requirements or your personal preference?\n§ Reporting guidelines: Does the journal recommend or require adherence to STROBE reporting guidelines?\n· Yes  Proceed to 9.1.2.\n9.1.2 Question: Have you stated in advance the principles for determining authorship?\n· No  Action:\no Step 1: Adopt a Standard.\n§ Mandatory action: State explicitly in the protocol that authorship will follow International Committee of Medical Journal Editors (ICMJE)  standards.\no Step 2: Discuss and Document in Advance.\n§ Best practice: Early in the study, discuss with all potential contributors and preliminarily determine the author order and each person’s role.\n· Yes  Proceed to 9.1.3.\n9.1.3 Question: Have you planned a conference presentation plan?\n· No  Action:\no Step 1: Create Target Conference List.\n§ Action: List 1-3 reputable domestic or international academic conferences relevant to your research field.\no Step 2: Record Key Dates.\n§ Action: Record the abstract submission deadlines for these conferences.\n· Yes  Module 1 completed. Proceed to Module 2.\nModule 2: Dissemination Strategy (Dissemination Strategy)\n9.2.1 Question: Do your study findings have potential public health or policy implications?\n· Yes  Action:\no Step 1: Plan a Policy Brief.\n§ Action: Plan, after study completion, to write a 1-2-page policy brief.\no Step 2: Plan Key Content.\n§ Action: brief must include:\n1. Key Findings: Summarise the core results using non-technical language.\n2. Policy Relevance: Clearly explain what these findings mean for current policy or practice.\n3. Actionable Recommendations: Provide specific, evidence-based policy recommendations.\n· No  Proceed to 9.2.2.\n9.2.2 Question: Have you planned a dissemination strategy for clinicians and the public?\n· No  Action:\no Step 1: Select Dissemination Products.\n§ Action: Select at least one of the following options to plan:\n§ Plain-language Summary\n§ Infographic\n§ Press Release\n§ Social Media Posts\no Step 2: Identify Dissemination Channels.\n§ Action: Specify through which channels you will disseminate (e.g., professional association websites, patient advocacy organisations, the university press office, the research team's social media accounts).\n· Yes  Module 2 completed. Proceed to Module 3.\nModule 3: Data Sharing & Reproducibility Statement\n9.3.1 Core decision point: Do you plan to share your data and/or analysis code? (must be consistent with Subtree 8.1  ethical commitments).\n· Yes (Best practice)  Proceed to Sub-module A.\n· No  Proceed to Sub-module B.\nSub-module A: Sharing data/code statement\n9.3.2 Question: Have you clearly specified the data sharing policy in the protocol?\n· No  Action:\no Action: Must Draft a data availability statement and explicitly answer all of the following questions :\n§ 1. What will be shared (WHAT)？\n§ Example: “a fully de-identified individual participant dataset (IPD).”\n§ 2. Where will it be shared (WHERE)？\n§ Example: “will be deposited in a public data repository (e.g., Zenodo, Dryad).”\n§ 3. When will it be shared (WHEN)？\n§ Example: “Effective immediately upon acceptance of the article for publication, and provide a permanent digital object identifier (DOI).”\n§ 4. How will it be accessed (HOW)？\n§ Example: “the data will be publicly available” or “available upon reasonable request to the corresponding author after signing a data use agreement.”\n· Yes  Proceed to 9.3.3.\n9.3.3 Question: Have you clearly specified the code and materials sharing policy in the protocol?\n· No  Action:\no Action: Must Draft a code availability statement and explicitly answer the following questions:\n§ 1. What will be shared (WHAT)？\n§ Example: “the complete R analysis scripts (consistent with Subtree 5.1 plan)” and/or “the final questionnaire (consistent with Subtree 3.2 outputs)”.\n§ 2. Where will it be shared (WHERE)？\n§ Example: “will be hosted on a code hosting platform (e.g., GitHub)” or “provided as supplementary material to the journal”.\n· Yes  Proceed to 9.3.4.\n9.3.4 Question: Have you reiterated the privacy protection commitment in the protocol?\n· No  Action:\no Mandatory action: In all sharing plans, must Reiterate:“Before sharing any data, all necessary measures will be taken to protect participants’ privacy, ensuring that all shared data are thoroughly de-identified and cannot be re-identified.”\n· Yes  Your study meets best practices for open science. Complete this sub-process.\nSub-module B: Not sharing data/code statement\n9.3.5 Question: Have you provided a clear rationale in the protocol for not sharing?\n· No  Action:\no Mandatory action: Must Draft a data and code availability statement and provide a clear, acceptable rationale.\no Statement examples:\n§ Example1 (Ethical restrictions): “Due to privacy restrictions included in the informed consent form, the individual participant data from this study cannot be publicly shared.”\n§ Example2 (third-party data): “The data used in this study come from[a third-party organisation], under the data use agreement, we are not authorised to further redistribute these data.”\n· Yes  Complete this sub-process.\n”\n\n# Input Data\n- Core research question.\n{{ JSON.stringify($item(0).$node[\"3. Read Research Design Information\"].json.final_structured_memory) }}\n- Primary and secondary research objectives.\n{{ JSON.stringify($item(0).$node[\"3. Read Research Design Information\"].json.goal_hypothesises) }}\n- Target population, source population, and sampling frame.\n{{ JSON.stringify($item(0).$node[\"3. Read Research Design Information\"].json.target_source_population_sampling_frame) }}\n- Synthesis and Reporting (Check Section 8.1 output for Ethical/Data Sharing commitments).\n{{ JSON.stringify($('8. Synthesis and Reporting').item.json.output) }}\n\n# Instructions\n1. **Academic Publication Plan (Refer to Knowledge Base 9.1):**\n    - **Journal Strategy (9.1.1):** Create a 3-5 tiered journal list (Preferred/Alternative). For each, you MUST explicitly evaluate: Scope, Impact, Open Access, and STROBE adherence.\n    - **Authorship (9.1.2):** You MUST explicitly state compliance with \"ICMJE standards\".\n    - **Conferences (9.1.3):** List 1-3 conferences and include \"Abstract Submission Deadlines\" (approximate dates are acceptable).\n\n2. **Dissemination Strategy (Refer to Knowledge Base 9.2):**\n    - **Policy Brief (9.2.1):** If the study implies public health/policy changes, plan a 1-2 page brief containing the 3 specific content elements defined in Step 2.\n    - **Public/Clinician (9.2.2):** Select specific products (e.g., Infographic) and channels (e.g., Association websites).\n\n3. **Data Sharing & Reproducibility (Refer to Knowledge Base 9.3):**\n    - **Consistency Check (9.3.1):** Check the input from Section 8.1 (`ethics_and_reproducibility_section`).\n    - **If Sharing (Sub-module A):** You MUST answer the 4 questions (WHAT, WHERE, WHEN, HOW) for data (9.3.2) and the 2 questions for code (9.3.3). You MUST include the mandatory privacy reiteration (9.3.4).\n    - **If Not Sharing (Sub-module B):** You MUST provide a rationale using the statement examples (9.3.5).\n\n# Output Requirements\nOutput an object strictly conforming to the following JSON Schema.\n- `protocol_text`: The full text for the \"Publication and Dissemination Plan\" section, strictly following the Knowledge Base logic and tone.\n- `state`: Structured decisions reflecting the logic paths taken.\n\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"protocol_text\": {\n      \"type\": \"string\",\n      \"description\": \"The complete text for Chapter 9, formal and ready to copy.\"\n    },\n    \"state\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"journal_plan\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"tier\": { \"type\": \"string\", \"enum\": [\"Preferred\", \"Alternative 1\", \"Alternative 2\"] },\n              \"journal_name_type\": { \"type\": \"string\" },\n              \"rationale_checkpoints\": { \"type\": \"string\", \"description\": \"Brief notes on Scope, Impact, OA, STROBE.\" }\n            }\n          }\n        },\n        \"conference_plan\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"name\": { \"type\": \"string\" },\n              \"deadline_note\": { \"type\": \"string\" }\n            }\n          }\n        },\n        \"policy_brief_planned\": { \"type\": \"boolean\" },\n        \"dissemination_channels\": { \"type\": \"array\", \"items\": { \"type\": \"string\" } },\n        \"data_sharing_mode\": { \n          \"type\": \"string\", \n          \"enum\": [\"Sharing (Sub-module A)\", \"Not Sharing (Sub-module B)\"] \n        },\n        \"privacy_reiteration_included\": { \n          \"type\": \"boolean\", \n          \"description\": \"Must be true.\" \n        }\n      },\n      \"required\": [\"journal_plan\", \"conference_plan\", \"policy_brief_planned\", \"dissemination_channels\", \"data_sharing_mode\", \"privacy_reiteration_included\"]\n    }\n  },\n  \"required\": [\"protocol_text\", \"state\"]\n}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        2944,
+        0
+      ],
+      "id": "a19cd866-d4d9-4911-a2f1-85babc63f7b4",
+      "name": "11. Results Publication and Dissemination Plan"
+    },
+    {
+      "parameters": {
+        "jsCode": "const new_data = $items('11. Results Publication and Dissemination Plan')[0].json.output;\n\nreturn [{\n  json: {\n\n    session_id: $('3. Read Research Design Information').first().json.session_id,\n\n    sampling_philosophy_string: JSON.stringify(new_data),\n\n    new_data_generated: new_data\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3520,
+        0
+      ],
+      "id": "cba7c94b-4614-4a82-ba44-25d3c1b27c3d",
+      "name": "12. Prepare Database Update"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE conversation_sessions\nSET \n  Results_Publication_Dissemination = $${{ $json.sampling_philosophy_string }}$$::jsonb\nWHERE \n  session_id = $${{ $json.session_id }}$$;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        3744,
+        0
+      ],
+      "id": "d4aeeff0-92fe-4fcd-858e-0883824514ca",
+      "name": "13. Save New Fields to Database",
+      "credentials": {
+        "postgres": {
+          "id": "uaHhgTOU0gtpkeQ6",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"completed\",\n  \"sessionId\": \"...\",\n  \"message\": \"Workflow execution completed\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        4192,
+        0
+      ],
+      "id": "0b2a0bf9-aac5-47db-a9f5-6c4bb6d86cda",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE conversation_sessions \nSET workflow_b3_completed = NOW()\nWHERE session_id = '{{ $('12. Prepare Database Update').item.json.session_id }}';",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        3968,
+        0
+      ],
+      "id": "d6f60b37-9d77-4b44-bfb8-abba8a54e929",
+      "name": "Mark B3 Completed",
+      "credentials": {
+        "postgres": {
+          "id": "uaHhgTOU0gtpkeQ6",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-5.2-pro",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        976,
+        224
+      ],
+      "id": "86d364ef-95df-405f-ab3a-228baf8ae559",
+      "name": "Model1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "So4oLCHbFnhyK4pw",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nfunction stripFences(s) {\n  return String(s)\n    .replace(/^\\s*```(?:json)?\\s*/i, '')\n    .replace(/\\s*```$/i, '')\n    .trim();\n}\n\nfunction firstJsonLike(s) {\n  if (typeof s !== 'string') return null;\n\n  const mObj = s.match(/{[\\s\\S]*}/);\n  if (mObj && mObj[0]) return mObj[0];\n\n  const mArr = s.match(/\\[[\\s\\S]*\\]/);\n  if (mArr && mArr[0]) return mArr[0];\n  return null;\n}\n\nfunction parseMaybe(any) {\n  if (any == null) return null;\n  if (typeof any === 'object') return any;\n\n  if (typeof any === 'string') {\n    const txt = stripFences(any);\n    try {\n      return JSON.parse(txt);\n    } catch (e) {}\n\n    const picked = firstJsonLike(txt);\n    if (picked) {\n      try {\n        return JSON.parse(picked);\n      } catch (e2) {}\n    }\n  }\n\n  return null;\n}\n\nfunction tryFromJson(j) {\n  if (!j || typeof j !== 'object') return null;\n\n  let raw = null;\n\n  if (j.output !== undefined) raw = j.output;\n  else if (j.text !== undefined) raw = j.text;\n  else if (j.message !== undefined) raw = j.message;\n  else raw = j;\n\n  if (raw && typeof raw === 'object' && raw.action === 'parse' && typeof raw.text === 'string') {\n    const parsedFromAction = parseMaybe(raw.text);\n    if (parsedFromAction) return parsedFromAction;\n  }\n\n  const parsed = parseMaybe(raw);\n  if (parsed) return parsed;\n\n  if (raw && typeof raw === 'object') {\n    for (const key in raw) {\n      if (!Object.prototype.hasOwnProperty.call(raw, key)) continue;\n      const v = raw[key];\n      const p = parseMaybe(v);\n      if (p) return p;\n    }\n  }\n\n  return null;\n}\n\nlet payload = null;\n\nfor (let i = 0; i < items.length; i++) {\n  const j = items[i].json || {};\n  const p = tryFromJson(j);\n  if (p) {\n    payload = p;\n    break;\n  }\n}\n\nif (!payload) {\n  throw new Error('No parsable JSON found in upstream output, please check if AI Agent output valid JSON.');\n}\n\nreturn [\n  {\n    json: payload\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1248,
+        0
+      ],
+      "id": "11215076-78fe-4266-9bf9-6d284a6abd4a",
+      "name": "Code in JavaScript_1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nfunction stripFences(s) {\n  return String(s)\n    .replace(/^\\s*```(?:json)?\\s*/i, '')\n    .replace(/\\s*```$/i, '')\n    .trim();\n}\n\nfunction tryParseJsonFromString(s) {\n  if (typeof s !== 'string') return null;\n  const txt = stripFences(s);\n\n  try {\n    return JSON.parse(txt);\n  } catch (e) {}\n\n  const mArr = txt.match(/\\[[\\s\\S]*\\]/);\n  if (mArr && mArr[0]) {\n    try {\n      return JSON.parse(mArr[0]);\n    } catch (e2) {}\n  }\n\n  const mObj = txt.match(/{[\\s\\S]*}/);\n  if (mObj && mObj[0]) {\n    try {\n      return JSON.parse(mObj[0]);\n    } catch (e3) {}\n  }\n\n  return null;\n}\n\nfunction pickPayload(any, depth) {\n  if (depth === undefined) depth = 0;\n  if (any == null || depth > 4) return null;\n\n  if (typeof any === 'object' && !Array.isArray(any)) {\n    return any;\n  }\n\n  if (typeof any === 'string') {\n    const j = tryParseJsonFromString(any);\n    if (j && typeof j === 'object') return j;\n    return any;\n  }\n\n  if (Array.isArray(any) && any.length > 0) {\n    const first = any[0];\n    return pickPayload(first, depth + 1);\n  }\n\n  return null;\n}\n\nfunction extractRawFromItemJson(j) {\n  if (!j || typeof j !== 'object') return null;\n\n  const candidates = [];\n  candidates.push(j);\n\n  if (j.output != null)   candidates.push(j.output);\n  if (j.text != null)     candidates.push(j.text);\n  if (j.message != null)  candidates.push(j.message);\n  if (j.data != null)     candidates.push(j.data);\n  if (j.response != null) candidates.push(j.response);\n\n  for (let i = 0; i < candidates.length; i++) {\n    const hit = pickPayload(candidates[i], 0);\n    if (hit != null) return hit;\n  }\n\n  for (const k of Object.keys(j)) {\n    const v = j[k];\n    if (typeof v === 'string' && v.trim()) {\n      return v;\n    }\n  }\n\n  return null;\n}\n\nlet raw = null;\nif (items.length > 0) {\n  const j = items[0].json || {};\n  raw = extractRawFromItemJson(j);\n}\n\nlet payload;\n\nif (raw == null) {\n  payload = {\n    protocol_text: 'The content for \"Synthesis and Reporting/Reporting Plan\" has not been successfully generated yet and will be supplemented when the research design information is further refined.'\n  };\n}\n\nelse if (typeof raw === 'string') {\n  const parsed = tryParseJsonFromString(raw);\n  if (parsed && typeof parsed === 'object') {\n    payload = parsed;\n  } else {\n    payload = {\n      protocol_text: stripFences(raw)\n    };\n  }\n}\n\nelse if (typeof raw === 'object') {\n  if (Array.isArray(raw)) {\n    payload = { list: raw };\n  } else {\n    payload = raw;\n  }\n}\n\nelse {\n  payload = {\n    protocol_text: String(raw)\n  };\n}\n\nreturn [\n  {\n    json: payload\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2272,
+        0
+      ],
+      "id": "f6de6061-6b36-43f1-812a-74155979fcf6",
+      "name": "Code in JavaScript_2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nfunction stripFences(s) {\n  return String(s)\n    .replace(/^\\s*```(?:json)?\\s*/i, '')\n    .replace(/\\s*```$/i, '')\n    .trim();\n}\n\nfunction tryParseJsonFromString(s) {\n  if (typeof s !== 'string') return null;\n  const txt = stripFences(s);\n\n  try {\n    return JSON.parse(txt);\n  } catch (e) {}\n\n  const mArr = txt.match(/\\[[\\s\\S]*\\]/);\n  if (mArr && mArr[0]) {\n    try {\n      return JSON.parse(mArr[0]);\n    } catch (e2) {}\n  }\n\n  const mObj = txt.match(/{[\\s\\S]*}/);\n  if (mObj && mObj[0]) {\n    try {\n      return JSON.parse(mObj[0]);\n    } catch (e3) {}\n  }\n\n  return null;\n}\n\nfunction pickPayload(any, depth) {\n  if (depth === undefined) depth = 0;\n  if (any == null || depth > 4) return null;\n\n  if (typeof any === 'object' && !Array.isArray(any)) {\n    return any;\n  }\n\n  if (typeof any === 'string') {\n    const j = tryParseJsonFromString(any);\n    if (j && typeof j === 'object') return j;\n    return any;\n  }\n\n  if (Array.isArray(any) && any.length > 0) {\n    const first = any[0];\n    return pickPayload(first, depth + 1);\n  }\n\n  return null;\n}\n\nfunction extractRawFromItemJson(j) {\n  if (!j || typeof j !== 'object') return null;\n\n  const candidates = [];\n  candidates.push(j);\n\n  if (j.output != null)   candidates.push(j.output);\n  if (j.text != null)     candidates.push(j.text);\n  if (j.message != null)  candidates.push(j.message);\n  if (j.data != null)     candidates.push(j.data);\n  if (j.response != null) candidates.push(j.response);\n\n  for (let i = 0; i < candidates.length; i++) {\n    const hit = pickPayload(candidates[i], 0);\n    if (hit != null) return hit;\n  }\n\n  for (const k of Object.keys(j)) {\n    const v = j[k];\n    if (typeof v === 'string' && v.trim()) {\n      return v;\n    }\n  }\n\n  return null;\n}\n\nlet raw = null;\nif (items.length > 0) {\n  const j = items[0].json || {};\n  raw = extractRawFromItemJson(j);\n}\n\nlet payload;\n\nif (raw == null) {\n  payload = {\n    protocol_text: 'The content for \"Synthesis and Reporting/Reporting Plan\" has not been successfully generated yet and will be supplemented when the research design information is further refined.'\n  };\n}\n\nelse if (typeof raw === 'string') {\n  const parsed = tryParseJsonFromString(raw);\n  if (parsed && typeof parsed === 'object') {\n    payload = parsed;\n  } else {\n    payload = {\n      protocol_text: stripFences(raw)\n    };\n  }\n}\n\nelse if (typeof raw === 'object') {\n  if (Array.isArray(raw)) {\n    payload = { list: raw };\n  } else {\n    payload = raw;\n  }\n}\n\nelse {\n  payload = {\n    protocol_text: String(raw)\n  };\n}\n\nreturn [\n  {\n    json: payload\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3296,
+        0
+      ],
+      "id": "d0b60271-e5e3-451c-b896-41fe5196c006",
+      "name": "Code in JavaScript_3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "2. Prepare Input": {
+      "main": [
+        [
+          {
+            "node": "3. Read Research Design Information",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3. Read Research Design Information": {
+      "main": [
+        [
+          {
+            "node": "4. Organize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1. Receive Start Request": {
+      "main": [
+        [
+          {
+            "node": "2. Prepare Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "4. Organize Input": {
+      "main": [
+        [
+          {
+            "node": "5. Sensitivity Analysis Framework",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "5. Sensitivity Analysis Framework": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript_1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "6. Prepare Database Update": {
+      "main": [
+        [
+          {
+            "node": "7. Save New Fields to Database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "7. Save New Fields to Database": {
+      "main": [
+        [
+          {
+            "node": "8. Synthesis and Reporting",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "8. Synthesis and Reporting": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript_2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "9. Prepare Database Update": {
+      "main": [
+        [
+          {
+            "node": "10. Save New Fields to Database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "10. Save New Fields to Database": {
+      "main": [
+        [
+          {
+            "node": "11. Results Publication and Dissemination Plan",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "12. Prepare Database Update": {
+      "main": [
+        [
+          {
+            "node": "13. Save New Fields to Database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "11. Results Publication and Dissemination Plan": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript_3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "13. Save New Fields to Database": {
+      "main": [
+        [
+          {
+            "node": "Mark B3 Completed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark B3 Completed": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "5. Sensitivity Analysis Framework",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "8. Synthesis and Reporting",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "11. Results Publication and Dissemination Plan",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript_1": {
+      "main": [
+        [
+          {
+            "node": "6. Prepare Database Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript_2": {
+      "main": [
+        [
+          {
+            "node": "9. Prepare Database Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript_3": {
+      "main": [
+        [
+          {
+            "node": "12. Prepare Database Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "01c12d0e-ccd8-492b-a2c5-bf9cbeda6e98",
+  "meta": {
+    "instanceId": "80ba165fc158dff2241db7d1bcd6321181a547103579dbd3779b72b2fd728028"
+  },
+  "id": "GtVJYWdEsNx4mRme",
+  "tags": []
+}

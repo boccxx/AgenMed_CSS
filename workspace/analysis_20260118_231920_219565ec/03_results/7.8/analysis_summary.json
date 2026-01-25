@@ -1,0 +1,81 @@
+{
+  "stage": "7.8_sensitivity_analysis",
+  "timestamp": "2026-01-19 00:17:58",
+  "sample_size": 1265,
+  "n_imputations": 20,
+  "sensitivity_analyses": {
+    "e_value_analysis": {
+      "point_estimate_pr": 1.25,
+      "point_estimate_evalue": 1.25,
+      "interpretation": "Unmeasured confounder must have RR >= 1.25 with both exposure and outcome to explain away the observed association",
+      "lower_ci_evalue": null,
+      "lower_ci_interpretation": "E-value not calculable"
+    },
+    "pr_or_comparison": {
+      "modified_poisson_pr": {
+        "estimate": 1.25,
+        "ci_lower": 0.76,
+        "ci_upper": 1.85
+      },
+      "logistic_regression_or": {
+        "estimate": 1.19,
+        "ci_lower": 0.76,
+        "ci_upper": 1.85
+      }
+    },
+    "alternative_adjustment": {
+      "adjustment_set": "Alternative (BMI instead of Self_Care_Ability)",
+      "pr": 1.08,
+      "ci_lower": 0.83,
+      "ci_upper": 1.4
+    },
+    "log_transformed_bmd": {
+      "beta": -0.053,
+      "ci_lower": -0.1,
+      "ci_upper": -0.0059
+    },
+    "trimmed_bmd_analysis": {
+      "exclusion_criteria": "Exclude Extreme BMD (1%)",
+      "beta": -0.0258,
+      "ci_lower": -0.0448,
+      "ci_upper": -0.0067
+    }
+  },
+  "warnings": {
+    "statistical_consistency": {
+      "status": "failed",
+      "issues": [
+        "INVALID: 2 rows with invalid p-values in E_Value_Point"
+      ]
+    }
+  },
+  "critical_decisions": {
+    "e_value_calculation": "E-value calculated for point estimate and lower CI bound",
+    "pr_or_comparison": "Modified Poisson (PR) vs Logistic Regression (OR) comparison",
+    "alternative_adjustment": "Replaced Self_Care_Ability with BMI in adjustment set",
+    "bmd_transformation": "Log-transformed BMD as continuous outcome",
+    "outlier_handling": "Excluded extreme BMD values (1% trim) for sensitivity",
+    "pooling_method": "Manual Rubin's Rules for combining MICE results across 20 imputations"
+  },
+  "statistical_methods_summary": {
+    "e_value": "E-value calculation for unmeasured confounding assessment",
+    "pr_estimation": "Survey-weighted Modified Poisson regression for PR",
+    "or_estimation": "Survey-weighted Logistic regression for OR",
+    "alternative_model": "Same model structure with different adjustment variables",
+    "log_bmd_model": "Linear regression with log-transformed BMD as outcome",
+    "trimmed_analysis": "Sensitivity analysis excluding extreme BMD values",
+    "inference": "Pooled estimates with Barnard-Rubin degrees of freedom across MICE datasets"
+  },
+  "next_stage_requirements": {
+    "note": "Final stage - no further analysis required",
+    "recommendation": "Compile all results into final report"
+  },
+  "output_files": {
+    "main_output": "main_output.csv",
+    "sensitivity_evalue": "sensitivity_evalue.csv",
+    "sensitivity_pr_or_comparison": "sensitivity_pr_or_comparison.csv",
+    "sensitivity_alt_adjustment_results": "sensitivity_alt_adjustment_results.csv",
+    "sensitivity_log_bmd_results": "sensitivity_log_bmd_results.csv",
+    "sensitivity_trim_bmd_results": "sensitivity_trim_bmd_results.csv"
+  }
+}

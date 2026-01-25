@@ -1,0 +1,5 @@
+"Pair","Variable1","Variable2","Test","Coefficient","SE","T_statistic","P_value"
+"BMD vs Age","Bone_Mineral_Density","Age","Weighted Linear Regression",-0.0052,0.0011,-4.961,0
+"BMD vs BMI","Bone_Mineral_Density","BMI","Weighted Linear Regression",0.0097,0.0014,6.839,0
+"BMD vs Hemoglobin","Bone_Mineral_Density","Hemoglobin","Weighted Linear Regression",0.0039,4e-04,9.158,0
+"BMD vs Fasting_Glucose","Bone_Mineral_Density","Fasting_Glucose","Weighted Linear Regression",0.0046,0.0036,1.285,0.1992

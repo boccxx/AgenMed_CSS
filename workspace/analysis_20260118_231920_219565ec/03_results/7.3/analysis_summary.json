@@ -1,0 +1,52 @@
+{
+  "stage": "7.3_descriptive_statistics",
+  "timestamp": "2026-01-18 23:34:25.597025",
+  "n_total": 1263,
+  "n_total_weighted": 1266,
+  "n_below_recommended": 892,
+  "n_below_recommended_weighted": 771,
+  "n_at_above_recommended": 371,
+  "n_at_above_recommended_weighted": 0,
+  "critical_decisions": {
+    "exercise_grouping": "Below_Recommended = (No_Exercise + Occasional); At_Above_Recommended = (Daily + Weekly_Or_More)",
+    "imbalanced_vars": ["BMI", "Hemoglobin", "Fasting_Glucose", "Serum_Creatinine", "Blood_Urea_Nitrogen", "Total_Cholesterol", "Bone_Mineral_Density", "Geographic_Region", "Self_Rated_Health", "Exercise_Frequency", "Dietary_Habits", "Smoking_Status", "Alcohol_Frequency", "Cerebrovascular_Disease", "Osteoporosis_Status"],
+    "smd_threshold": 0.1,
+    "normality_testing": "Shapiro-Wilk test by strata, alpha = 0.05",
+    "nonnormal_vars": ["Age", "BMI", "Hemoglobin", "Fasting_Glucose", "Total_Bilirubin", "Serum_Creatinine", "Blood_Urea_Nitrogen", "Total_Cholesterol", "Triglycerides", "Bone_Mineral_Density"]
+  },
+  "design": {
+    "design_verified_level": "design_based",
+    "weight_variable": "Sampling_Weight",
+    "strata_variable": "Geographic_Region",
+    "psu_variable": {},
+    "weight_is_placeholder": false,
+    "weights_actually_used": true,
+    "design_declaration": "svydesign with strata, no PSU clustering"
+  },
+  "statistical_methods_summary": {
+    "framework": "Complex Survey Weighted Estimation",
+    "continuous_vars_normal": "",
+    "continuous_vars_nonnormal": "Age, BMI, Hemoglobin, Fasting_Glucose, Total_Bilirubin, Serum_Creatinine, Blood_Urea_Nitrogen, Total_Cholesterol, Triglycerides, Bone_Mineral_Density",
+    "categorical_vars": "Geographic_Region, Gender, Self_Rated_Health, Self_Care_Ability, Exercise_Frequency, Dietary_Habits, Smoking_Status, Alcohol_Frequency, Physical_Function, Cerebrovascular_Disease, Other_Neurological_Diseases, Osteoporosis_Status",
+    "balance_metric": "Standardized Mean Difference (SMD)",
+    "hypothesis_testing": "None (descriptive only, per protocol)"
+  },
+  "variables": {
+    "continuous": ["Age", "BMI", "Hemoglobin", "Fasting_Glucose", "Total_Bilirubin", "Serum_Creatinine", "Blood_Urea_Nitrogen", "Total_Cholesterol", "Triglycerides", "Bone_Mineral_Density"],
+    "categorical": ["Geographic_Region", "Gender", "Self_Rated_Health", "Self_Care_Ability", "Exercise_Frequency", "Dietary_Habits", "Smoking_Status", "Alcohol_Frequency", "Physical_Function", "Cerebrovascular_Disease", "Other_Neurological_Diseases", "Osteoporosis_Status"],
+    "nonnormal": ["Age", "BMI", "Hemoglobin", "Fasting_Glucose", "Total_Bilirubin", "Serum_Creatinine", "Blood_Urea_Nitrogen", "Total_Cholesterol", "Triglycerides", "Bone_Mineral_Density"],
+    "total_vars": 22
+  },
+  "next_stage_requirements": {
+    "note": "Exercise_Group variable created for stratified analysis",
+    "imbalanced_vars_require_adjustment": true,
+    "recommended_action": "Consider adjustment for imbalanced variables in regression models"
+  },
+  "deliverables": {
+    "main_output": "main_output.csv",
+    "table1": "table1_weighted_baseline.csv",
+    "smd_table": "table1_smd.csv",
+    "variable_dictionary": "table1_variable_dictionary.csv",
+    "smd_plot": "table1_smd_plot.png"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "openai_api_key": "......",
+  "api_base": "......",
+  "model": "......",
+  "sub_prompt_model": "......",
+  "meta_prompt_path": "./templates/prompts/meta_prompt.md",
+  "input_dir": ".",
+  "output_dir": "./output",
+  "temp_dir": "./temp",
+  "r_scripts_dir": "./r_scripts",
+  "log_dir": "./Log",
+  "max_retries": 10,
+  "timeout": 800,
+  "r_executable": "Rscript",
+  "max_tokens": 40000,
+  "temperature": 0.1
+}

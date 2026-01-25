@@ -1,0 +1,5 @@
+"Exposure","Outcome","Trend_Type","Effect_Estimate","CI_Lower","CI_Upper","P_Value","Nonlinearity_P"
+"Exercise_Frequency","Osteoporosis_Binary","Ordinal_Linear",0.961334531530206,0.878354696691753,1.05215362881668,0.391911305954966,NA
+"Alcohol_Frequency","Osteoporosis_Binary","Ordinal_Linear",1.1243856414324,0.973987001909576,1.29800815429848,0.109553308461856,NA
+"Hemoglobin","Bone_Mineral_Density","RCS_Nonlinear",NA,NA,NA,NA,0.158215183557064
+"Fasting_Glucose","Bone_Mineral_Density","RCS_Nonlinear",NA,NA,NA,NA,0.562494721012655
