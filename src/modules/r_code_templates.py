@@ -21,9 +21,10 @@ class RCodeTemplates:
         Exports all imputed datasets as CSV files for downstream use
         """
         return '''
-# === MICE Dataset Export (MANDATORY) ===
-# Export all m imputed datasets as CSV files
-# Reason: Subsequent stages run in separate R processes and cannot load .rds objects
+# === MICE Dataset Export (SAP-CONDITIONAL) ===
+# Use this branch only when the final SAP specifies MICE.
+# Reason: Subsequent stages run in separate R processes and cannot load .rds objects.
+# If no MICE object exists, the non-MICE branch still writes main_output.csv.
 
 if (exists("imp") && inherits(imp, "mids")) {
   m_total <- imp$m
@@ -44,11 +45,11 @@ if (exists("imp") && inherits(imp, "mids")) {
   cat("  - imputed_data_1.csv to imputed_data_", m_total, ".csv\\n")
   cat("  - main_output.csv (= imputed_data_1.csv)\\n")
 } else {
-  warning("MICE object not found or invalid; skipping imputed dataset export")
+  cat("No valid MICE object detected; using non-MICE export branch for main_output.csv\\n")
   if (exists("data") && is.data.frame(data)) {
     write.csv(data, "main_output.csv", row.names = FALSE, na = "")
     if (!file.exists("main_output.csv")) stop("ERROR: Failed to write main_output.csv")
-    cat("main_output.csv saved (processed data without MICE imputation)\\n")
+    cat("main_output.csv saved (analysis-ready data without MICE export)\\n")
   } else {
     stop("ERROR: Neither MICE object nor data object found; cannot write main_output.csv")
   }
@@ -1299,7 +1300,7 @@ safe_factor_conversion <- function(data, var_list, min_levels = 2) {
     @staticmethod
     def mice_data_reading_template() -> str:
         return '''
-read_mice_datasets <- function(prev_stage_path = NULL, mice_stage_path = "../7.2", n_imputations = 20) {
+read_mice_datasets <- function(prev_stage_path = NULL, mice_stage_path = "../7.2", n_imputations = 20, prefer_mice = TRUE) {
   imp_list <- list()
   
   if(!is.null(prev_stage_path) && file.exists(prev_stage_path)) {
@@ -1330,6 +1331,9 @@ read_mice_datasets <- function(prev_stage_path = NULL, mice_stage_path = "../7.2
     } else {
       stop("ERROR: No data found. Neither previous stage data nor MICE datasets are available.")
     }
+  } else if(!prefer_mice && !is.null(primary_data)) {
+    cat("MICE datasets found but final SAP does not require MICE; using primary data as single dataset\\n")
+    imp_list <- list(primary_data)
   } else {
     cat("Successfully loaded", length(imp_list), "MICE imputed datasets\\n")
     if(!is.null(primary_data)) {
@@ -1366,10 +1370,10 @@ The system provides the following standardized templates, please follow them whe
 - **safe_factor_conversion()**: Safely convert variables to factors with level preservation
 - MUST use these functions to prevent single-level factor errors in model building
 
-6. **MICE Data Reading Template** (for stages requiring multiple imputation):
-- **read_mice_datasets()**: Read data from previous stage's main_output.csv first, then MICE datasets if needed
-- Automatically handles fallback logic and prioritizes previous stage data
-- MUST use this function instead of hardcoding data paths
+6. **MICE Data Reading Template** (SAP-conditional for stages requiring multiple imputation):
+- **read_mice_datasets()**: Read data from previous stage's main_output.csv first, then MICE datasets only if needed
+- Automatically handles fallback logic and supports `prefer_mice = FALSE` when the final SAP specifies a non-MICE missing-data strategy
+- Use this function instead of hardcoding data paths when multiple imputation is required by the SAP
 
 7. **Pooled Results Extraction Template** (for stages 7.5, 7.7):
 - **extract_coefficient_by_levels()**: Smart coefficient extraction based on factor levels from data
@@ -1607,6 +1611,4 @@ create_forest_plot <- function(df, effect_type = c("OR", "PR", "Beta"),
 
 
 __all__ = ['RCodeTemplates']
-
-
 

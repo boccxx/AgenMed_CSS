@@ -64,12 +64,19 @@ For EACH analysis stage, extract and enforce:
    - **CRITICAL**: Extract and list ALL protocol-specified variables (especially from DAG adjustment set) in sub-prompt, even if they are missing from actual data
 
 4. **Missing Data Primary Strategy**:
-   - Extract primary method: CCA, simple imputation, MICE, multiple imputation
+   - Extract primary method: CCA, simple imputation, MICE, multiple imputation, survey-compatible imputation, model-based handling, pattern-mixture/selection model, variable exclusion, or another SAP-specified method
    - Extract sensitivity analyses separately
-   - Output: "missing_contract": {"primary": "MICE", "sensitivity": ["CCA", "worst_case"]}
+   - Output: "missing_contract": {"primary": "<SAP-specified method>", "sensitivity": ["CCA", "worst_case"]}
    - Enforcement: State primary method clearly, do not mix with sensitivity methods
+   - If the SAP includes `deviation_record`, preserve it in the sub-prompt and follow `deviation_record.accepted_method` instead of reverting to the original default recommendation
 
-These contracts are MANDATORY - violations will be detected and flagged in output validation.
+These contracts are MANDATORY. A finalized SAP and its accepted `deviation_record` are authoritative; violations will be detected and flagged in output validation.
+
+**Controlled Deviation Preservation (MANDATORY)**:
+- If any protocol/SAP component contains `deviation_record`, copy the relevant fields into the corresponding sub-prompt
+- If `deviation_record.is_deviation_from_default` is true, the sub-prompt must instruct the code generator to implement `deviation_record.accepted_method`
+- Do not write sub-prompts that silently revert accepted deviations to the default decision-tree pathway
+- Require the generated R code to record a `controlled_deviation_audit` entry in `analysis_summary.json` and print a "Controlled deviation audit" section in the execution log
 
 **CRITICAL: Design Variable Preservation (MANDATORY)**:
 - NEVER filter data by design variables (weight, strata, PSU) unless protocol explicitly requires subsetting

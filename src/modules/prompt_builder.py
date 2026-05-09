@@ -209,6 +209,29 @@ class PromptBuilder:
                 **If design variables NOT verified**: Downgrade language to "exploratory analysis without design adjustment"
                 """
             ).strip() + "\n\n"
+
+        controlled_deviation_instructions = textwrap.dedent(
+            """
+            **CONTROLLED DEVIATION HANDLING (SAP-AUTHORITATIVE):**
+
+            The submitted protocol/SAP is the final pre-execution contract. Before generating code, inspect all available `deviation_record` fields in the analysis_plan.
+
+            - If `deviation_record.is_deviation_from_default` is false, follow the SAP method specified in that component.
+            - If `deviation_record.is_deviation_from_default` is true, follow `deviation_record.accepted_method` rather than reverting to the original default recommendation, provided the submitted protocol is final.
+            - Do not silently override an accepted SAP deviation with a default decision-tree pathway.
+            - If a deviation_record says human confirmation is required but the protocol is not clearly finalized or approved, flag that deviation for investigator confirmation instead of silently executing it.
+
+            For each accepted deviation, record a `controlled_deviation_audit` entry in analysis_summary.json and print a "Controlled deviation audit" section in the execution log with:
+            1. SAP component,
+            2. default recommendation,
+            3. accepted method,
+            4. rationale,
+            5. human confirmation status,
+            6. code implementation or verification.
+
+            If no accepted controlled deviation is identified, record: "No accepted controlled deviation was identified in the core SAP components. The execution followed the final SAP-specified methodological pathway."
+            """
+        ).strip() + "\n\n"
         
         # Build sparse variable handling instructions if needed
         sparse_instructions = ""
@@ -251,23 +274,21 @@ class PromptBuilder:
             from .r_code_templates import RCodeTemplates
             mice_export_instructions = textwrap.dedent(
                 f"""
-                **MICE DATASET EXPORT (MANDATORY - MUST USE TEMPLATE EXACTLY):**
-                
-                If Multiple Imputation (MICE) is performed, you MUST use the following template code EXACTLY:
-                
+                **MISSING DATA HANDLING - DATA EXPORT (SAP-CONDITIONAL TEMPLATE):**
+                The final SAP is authoritative. Before generating code, inspect the SAP-specified missing-data strategy and any available `deviation_record`.
+                If the SAP specifies Multiple Imputation by Chained Equations (MICE), implement MICE and use the MICE export template to generate the analysis-ready dataset.
+                If the SAP specifies an alternative missing-data strategy, such as complete-case analysis, survey-compatible imputation, model-based missing-data handling, pattern-mixture/selection models, or variable exclusion, implement the SAP-specified strategy instead of forcing MICE.
+                In all cases, the code must write the required main_output.csv file. If no MICE object exists, use the template's non-MICE branch or equivalent direct export logic to save the final analysis-ready dataset.
+                Do not introduce MICE solely because a default template exists. Do not override an accepted SAP deviation unless the SAP itself requires human reconfirmation before execution.
+                Template to use when MICE is actually implemented, or to reuse for its non-MICE direct export branch:
                 ```r
                 {RCodeTemplates.mice_export_template()}
                 ```
-                
                 **CRITICAL REQUIREMENTS**:
-                - You MUST copy and use the template code above EXACTLY as provided
-                - DO NOT write your own export code
-                - DO NOT modify the template logic
-                - DO NOT replace with simplified or alternative implementations
-                - Subsequent stages cannot read .rds objects. CSV export is mandatory.
-                - The template handles all edge cases and error checking
-                - **CRITICAL**: The template ensures main_output.csv is ALWAYS written, whether MICE is used or not
-                - **DO NOT skip or remove the template code** - it is required for pipeline continuity
+                - Subsequent stages cannot read .rds objects; CSV export is mandatory.
+                - main_output.csv must always be written, whether MICE is used or not.
+                - If SAP requires MICE, export imputed_data_*.csv and main_output.csv from the MICE object.
+                - If SAP does not require MICE, do not create a MICE object solely for pipeline continuity; directly write the SAP-consistent analysis-ready data to main_output.csv.
                 """
             ).strip() + "\n\n"
             
@@ -439,9 +460,9 @@ class PromptBuilder:
             
             mice_reading_instructions = textwrap.dedent(
                 f"""
-                **MICE DATA READING (MANDATORY for stages requiring multiple imputation):**
+                **MICE DATA READING (SAP-CONDITIONAL for stages requiring multiple imputation):**
                 
-                You MUST read data from the previous stage's main_output.csv FIRST, then attempt to read MICE datasets if needed:
+                Read data from the previous stage's main_output.csv FIRST. Only read and prioritize MICE datasets when the final SAP/sub-prompt requires multiple imputation:
                 
                 ```r
                 {RCodeTemplates.mice_data_reading_template()}
@@ -449,19 +470,21 @@ class PromptBuilder:
                 
                 **CRITICAL REQUIREMENTS**:
                 - PRIMARY data source: Read from previous stage's main_output.csv (e.g., "../7.4/main_output.csv")
-                - SECONDARY data source: If MICE is required, read imputed datasets from stage 7.2 (e.g., "../7.2/imputed_data_*.csv")
+                - SECONDARY data source: If and only if MICE is required by the final SAP, read imputed datasets from stage 7.2 (e.g., "../7.2/imputed_data_*.csv")
                 - Use `read_mice_datasets()` function which handles both sources automatically
-                - If MICE datasets are found, they take precedence (for multiple imputation analysis)
-                - If only previous stage data is available, use it as single dataset
+                - If SAP requires MICE and MICE datasets are found, they take precedence for multiple-imputation analysis
+                - If SAP specifies a non-MICE strategy, do not switch to MICE just because imputed_data_*.csv files exist; set `prefer_mice = FALSE` and use the previous stage data or SAP-specific dataset
+                - If only previous stage data is available, use it as a single dataset
                 - DO NOT hardcode data paths - use relative paths from current stage directory
                 
                 **Example usage**:
                 ```r
-                # Read data (prioritizes previous stage, falls back to MICE if needed)
+                # Read data. Set prefer_mice=TRUE only when the final SAP requires MICE.
                 imp_list <- read_mice_datasets(
                   prev_stage_path = "../7.4/main_output.csv",
                   mice_stage_path = "../7.2",
-                  n_imputations = 20
+                  n_imputations = 20,
+                  prefer_mice = TRUE
                 )
                 ```
                 """
@@ -682,7 +705,7 @@ class PromptBuilder:
             - If any preconditions are not met, explicitly stop(...) with explanation;
             - May only adjust variables or parameters when allowed by the allowed_adjustments list.
 
-           {weight_detection_rules}{mice_export_instructions}{missing_visualization_instructions}{mice_convergence_instructions}{mice_density_instructions}{mice_reading_instructions}{factor_validation_instructions}{tableone_instructions}{correlation_matrix_instructions}{pooled_extraction_instructions}{all_variables_modeling_instructions}{statistical_rules}{framework_instructions}{design_instructions}{sparse_instructions}**Strict file naming requirements:**
+           {controlled_deviation_instructions}{weight_detection_rules}{mice_export_instructions}{missing_visualization_instructions}{mice_convergence_instructions}{mice_density_instructions}{mice_reading_instructions}{factor_validation_instructions}{tableone_instructions}{correlation_matrix_instructions}{pooled_extraction_instructions}{all_variables_modeling_instructions}{statistical_rules}{framework_instructions}{design_instructions}{sparse_instructions}**Strict file naming requirements:**
            - Output file names must exactly match those specified in the sub-prompt
            - Do not arbitrarily change file names or add extra suffixes
            - Graphics file names must clearly describe content (e.g., forest_plot_[outcome_name].png)
