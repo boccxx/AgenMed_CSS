@@ -1,0 +1,25 @@
+{
+  "required_fields": [
+    "figure_id",
+    "objective_id",
+    "stage_id",
+    "title",
+    "display_title",
+    "caption",
+    "legend",
+    "registry_role",
+    "source_path",
+    "source_sha256",
+    "source_result_ids",
+    "source_table_ids"
+  ],
+  "notes": {
+    "registry_role": [
+      "main_text",
+      "supplement",
+      "report_only"
+    ],
+    "source_sha256": "Lowercase SHA-256 of the exact source artifact at registry construction.",
+    "source_table_ids": "Exact table provenance. Declare source_table_paths in analysis_summary.json when more than one table shares the figure objective/stage; ambiguous first-table inference is prohibited."
+  }
+}

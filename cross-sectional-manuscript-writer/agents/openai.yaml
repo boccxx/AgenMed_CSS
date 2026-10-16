@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cross-Sectional Manuscript Writer"
+  short_description: "Assemble a registry-grounded scientific manuscript"
+  default_prompt: "Use $cross-sectional-manuscript-writer to assemble and validate a manuscript from my frozen analysis outputs."

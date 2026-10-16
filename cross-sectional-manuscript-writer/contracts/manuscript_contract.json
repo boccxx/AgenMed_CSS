@@ -1,0 +1,44 @@
+{
+  "required_fields": [
+    "contract_version",
+    "project_mode",
+    "manuscript_mode",
+    "upstream_contract_version",
+    "generated_at",
+    "status",
+    "downgrade_state",
+    "title",
+    "source_inputs",
+    "allowed_claim_level",
+    "allowed_result_ids",
+    "allowed_table_ids",
+    "allowed_figure_ids",
+    "allowed_citation_ids",
+    "binding_map"
+  ],
+  "required_inputs": [
+    "review_contract.json",
+    "protocol_contract.json",
+    "estimand_bridge.json",
+    "sap_contract.json",
+    "analysis_core_contract.json",
+    "report_release_quality_audit.json",
+    "result_registry.json",
+    "table_registry.json",
+    "figure_registry.json",
+    "citation_registry.json"
+  ],
+  "required_outputs": [
+    "manuscript.md",
+    "manuscript.docx",
+    "manuscript.pdf",
+    "figure_legends.md",
+    "submission_package_checklist.md",
+    "tables_for_manuscript.docx"
+  ],
+  "modes": [
+    "research",
+    "applied_methods",
+    "workflow_methods"
+  ]
+}

@@ -1,0 +1,182 @@
+{
+  "schema_version": "2.2-final",
+  "result_schemas": {
+    "prevalence_descriptive_result": {
+      "required_fields": [
+        "result_id",
+        "label",
+        "result_type",
+        "objective_id",
+        "stage_id",
+        "outcome_id",
+        "exposure_term",
+        "effect_measure",
+        "estimate",
+        "ci_lower",
+        "ci_upper",
+        "p_value",
+        "model_family",
+        "design_mode",
+        "pooling_mode"
+      ],
+      "effect_measure_vocabulary": ["prevalence", "weighted mean", "weighted proportion"],
+      "compatible_design_modes": ["sample", "survey_full", "survey_weight_only"],
+      "compatible_pooling_modes": ["none", "mice_pooling"],
+      "table_figure_render_expectations": ["Table1_BaselineByExposure", "plot_distribution", "plot_balance"]
+    },
+    "binary_association_result": {
+      "required_fields": [
+        "result_id",
+        "label",
+        "result_type",
+        "objective_id",
+        "stage_id",
+        "outcome_id",
+        "exposure_term",
+        "effect_measure",
+        "estimate",
+        "ci_lower",
+        "ci_upper",
+        "p_value",
+        "model_family",
+        "design_mode",
+        "pooling_mode"
+      ],
+      "effect_measure_vocabulary": ["prevalence ratio", "odds ratio", "risk ratio"],
+      "compatible_design_modes": ["sample", "survey_full", "survey_weight_only"],
+      "compatible_pooling_modes": ["none", "mice_pooling"],
+      "table_figure_render_expectations": ["Table_PrimaryModel", "plot_forest", "plot_marginal_effects"]
+    },
+    "continuous_association_result": {
+      "required_fields": [
+        "result_id",
+        "label",
+        "result_type",
+        "objective_id",
+        "stage_id",
+        "outcome_id",
+        "exposure_term",
+        "effect_measure",
+        "estimate",
+        "ci_lower",
+        "ci_upper",
+        "p_value",
+        "model_family",
+        "design_mode",
+        "pooling_mode"
+      ],
+      "effect_measure_vocabulary": ["beta", "beta coefficient", "mean difference", "logit-scale coefficient"],
+      "compatible_design_modes": ["sample", "survey_full", "survey_weight_only"],
+      "compatible_pooling_modes": ["none", "mice_pooling"],
+      "table_figure_render_expectations": ["Table_PrimaryLinearModel", "plot_forest", "plot_distribution"]
+    },
+    "ordinal_association_result": {
+      "required_fields": [
+        "result_id",
+        "label",
+        "result_type",
+        "objective_id",
+        "stage_id",
+        "outcome_id",
+        "exposure_term",
+        "effect_measure",
+        "estimate",
+        "ci_lower",
+        "ci_upper",
+        "p_value",
+        "model_family",
+        "design_mode",
+        "pooling_mode"
+      ],
+      "effect_measure_vocabulary": ["common odds ratio", "partial proportional odds ratio"],
+      "compatible_design_modes": ["sample"],
+      "compatible_pooling_modes": ["none", "mice_pooling"],
+      "table_figure_render_expectations": ["Table_OrdinalModel", "plot_forest"]
+    },
+    "multinomial_association_result": {
+      "required_fields": [
+        "result_id",
+        "label",
+        "result_type",
+        "objective_id",
+        "stage_id",
+        "outcome_id",
+        "exposure_term",
+        "effect_measure",
+        "estimate",
+        "ci_lower",
+        "ci_upper",
+        "p_value",
+        "model_family",
+        "design_mode",
+        "pooling_mode"
+      ],
+      "effect_measure_vocabulary": ["relative risk ratio", "multinomial odds ratio"],
+      "compatible_design_modes": ["sample", "survey_full", "survey_weight_only"],
+      "compatible_pooling_modes": ["none", "mice_pooling"],
+      "table_figure_render_expectations": ["Table_MultinomialModel", "plot_marginal_effects"]
+    },
+    "count_association_result": {
+      "required_fields": [
+        "result_id",
+        "label",
+        "result_type",
+        "objective_id",
+        "stage_id",
+        "outcome_id",
+        "exposure_term",
+        "effect_measure",
+        "estimate",
+        "ci_lower",
+        "ci_upper",
+        "p_value",
+        "model_family",
+        "design_mode",
+        "pooling_mode"
+      ],
+      "effect_measure_vocabulary": ["rate ratio", "incidence rate ratio", "count ratio"],
+      "compatible_design_modes": ["sample", "survey_full", "survey_weight_only"],
+      "compatible_pooling_modes": ["none", "mice_pooling"],
+      "table_figure_render_expectations": ["Table_CountModel", "plot_forest", "plot_distribution"]
+    },
+    "marginal_effect_prediction_result": {
+      "required_fields": [
+        "result_id",
+        "label",
+        "result_type",
+        "objective_id",
+        "stage_id",
+        "outcome_id",
+        "exposure_term",
+        "effect_measure",
+        "estimate",
+        "ci_lower",
+        "ci_upper",
+        "p_value",
+        "model_family",
+        "design_mode",
+        "pooling_mode"
+      ],
+      "effect_measure_vocabulary": ["predicted probability", "marginal mean", "average contrast", "slope"],
+      "compatible_design_modes": ["sample", "survey_full", "survey_weight_only"],
+      "compatible_pooling_modes": ["none", "mice_pooling"],
+      "table_figure_render_expectations": ["Table_AdjustedPredictions", "plot_marginal_effects"]
+    },
+    "diagnostic_result": {
+      "required_fields": [
+        "diagnostic_id",
+        "objective_id",
+        "stage_id",
+        "diagnostic_type",
+        "diagnostic_value",
+        "threshold",
+        "status",
+        "interpretation_note"
+      ],
+      "effect_measure_vocabulary": [],
+      "compatible_design_modes": ["sample", "survey_full", "survey_weight_only"],
+      "compatible_pooling_modes": ["none", "mice_pooling"],
+      "table_figure_render_expectations": ["plot_calibration", "plot_distribution"]
+    }
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cross-Sectional Analysis R"
+  short_description: "Execute and audit registry-grounded R analyses"
+  default_prompt: "Use $cross-sectional-analysis-r to plan and validate a cross-sectional analysis from my protocol, SAP, and data."

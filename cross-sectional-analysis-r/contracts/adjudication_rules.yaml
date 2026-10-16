@@ -1,0 +1,21 @@
+{
+  "schema_version": "2.2-final",
+  "rules": {
+    "sparse_min_cell_count": 5,
+    "interaction_min_events_per_parameter": 10,
+    "interaction_min_cell_count": 10,
+    "missingness_pct_for_mi_recommendation": 5.0,
+    "missingness_pct_for_cca_only": 2.0,
+    "allow_weight_only_without_psu": true,
+    "require_weights_for_survey_path": true,
+    "dose_response_requires_exposure_forms": ["continuous", "ordinal"],
+    "proxy_covariate_allowed": true,
+    "multinomial_min_levels": 3,
+    "bounded_requires_range_zero_one": true,
+    "count_requires_nonnegative_integer": true,
+    "clustered_requires_cluster_id": true,
+    "extended_methods_require_explicit_contract": true,
+    "performance_outputs_require_prediction_target": true,
+    "package_missing_default_action": "degraded_with_deviation"
+  }
+}

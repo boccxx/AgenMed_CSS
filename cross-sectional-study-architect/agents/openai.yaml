@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cross-Sectional Study Architect"
+  short_description: "Guide and audit cross-sectional study design"
+  default_prompt: "Use $cross-sectional-study-architect to parse my study concept, guide me through one methodological decision at a time, and generate a protocol and SAP only after I confirm the design."

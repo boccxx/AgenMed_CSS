@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cross-Sectional Literature Review"
+  short_description: "Build and validate an evidence-grounded review"
+  default_prompt: "Use $cross-sectional-literature-review to build and validate a literature review for my cross-sectional study."

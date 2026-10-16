@@ -1,0 +1,16 @@
+{
+  "schema_version": "2.2-final",
+  "invariants": [
+    "requested_pr_cannot_silently_become_or",
+    "report_cannot_modify_frozen_registries",
+    "skip_or_degrade_requires_decision_and_deviation",
+    "canonical_result_must_trace_to_unique_objective_stage_method_path",
+    "main_text_numbers_must_trace_to_result_registry",
+    "unapproved_extended_method_cannot_run",
+    "figure_registry_rows_must_trace_to_source_result_ids",
+    "ci_and_p_value_must_share_one_declared_reference_distribution",
+    "adjusted_weighted_imputed_claims_require_execution_evidence",
+    "demonstration_outputs_cannot_be_released_as_scientific_inference",
+    "scientific_reports_require_diagnostics_sensitivity_and_embedded_displays"
+  ]
+}

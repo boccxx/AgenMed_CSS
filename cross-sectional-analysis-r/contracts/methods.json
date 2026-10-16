@@ -1,0 +1,740 @@
+{
+  "schema_version": "2.2-final",
+  "source_priority": [
+    "cran_task_views",
+    "official_vignettes_or_pkgdown",
+    "cran_reference_manuals",
+    "package_examples_and_tests",
+    "blogs_as_auxiliary_only"
+  ],
+  "methods": [
+    {
+      "id": "missingness_overview",
+      "label": "Missingness Overview",
+      "tier": "default_mainline",
+      "method_family": "missingness",
+      "example_file": "assets/r_methods.R",
+      "packages": [
+        "mice",
+        "VIM"
+      ],
+      "outcome_families": [
+        "all"
+      ],
+      "effect_measures": [],
+      "design_modes": [
+        "sample",
+        "survey_full",
+        "survey_weight_only"
+      ],
+      "pooling_modes": [
+        "none",
+        "mice_pooling"
+      ],
+      "required_outputs": [
+        "analysis/output/tables/Table_MissingnessProfile.csv"
+      ],
+      "dependency_policy": "required",
+      "entrypoint": "run_mice_pipeline"
+    },
+    {
+      "id": "weighted_table1_nonnormal_smd",
+      "label": "Weighted Table 1 With SMD",
+      "tier": "default_mainline",
+      "method_family": "prevalence_descriptive",
+      "example_file": "assets/r_methods.R",
+      "packages": [
+        "survey",
+        "tableone",
+        "dplyr"
+      ],
+      "outcome_families": [
+        "all"
+      ],
+      "effect_measures": [
+        "prevalence",
+        "weighted mean",
+        "weighted proportion"
+      ],
+      "design_modes": [
+        "sample",
+        "survey_full",
+        "survey_weight_only"
+      ],
+      "pooling_modes": [
+        "none"
+      ],
+      "required_outputs": [
+        "analysis/output/tables/Table1_BaselineByExposure.csv"
+      ],
+      "required_figures": [
+        "plot_distribution",
+        "plot_balance"
+      ],
+      "dependency_policy": "required",
+      "entrypoint": "build_weighted_table1_nonnormal_smd"
+    },
+    {
+      "id": "weighted_bivariate_bundle",
+      "label": "Weighted Bivariate Bundle",
+      "tier": "default_mainline",
+      "method_family": "bivariate_bundle",
+      "example_file": "assets/r_methods.R",
+      "packages": [
+        "survey",
+        "ggplot2",
+        "dplyr"
+      ],
+      "outcome_families": [
+        "binary",
+        "continuous",
+        "ordinal",
+        "multinomial",
+        "bounded",
+        "count"
+      ],
+      "effect_measures": [],
+      "design_modes": [
+        "sample",
+        "survey_full",
+        "survey_weight_only"
+      ],
+      "pooling_modes": [
+        "none"
+      ],
+      "required_outputs": [
+        "analysis/output/tables/Table_BivariateBundle.csv"
+      ],
+      "required_figures": [
+        "plot_distribution"
+      ],
+      "dependency_policy": "required",
+      "entrypoint": "run_weighted_bivariate_bundle"
+    },
+    {
+      "id": "weighted_modified_poisson_pr",
+      "label": "Weighted Modified Poisson PR",
+      "tier": "default_mainline",
+      "method_family": "binary_pr",
+      "example_file": "assets/r_methods.R",
+      "packages": [
+        "survey",
+        "sandwich",
+        "lmtest",
+        "dplyr"
+      ],
+      "outcome_families": [
+        "binary"
+      ],
+      "effect_measures": [
+        "prevalence ratio"
+      ],
+      "design_modes": [
+        "sample",
+        "survey_full",
+        "survey_weight_only"
+      ],
+      "pooling_modes": [
+        "none",
+        "mice_pooling"
+      ],
+      "required_outputs": [
+        "analysis/output/tables/Table_PrimaryModifiedPoisson.csv"
+      ],
+      "required_figures": [
+        "plot_forest",
+        "plot_marginal_effects"
+      ],
+      "forbidden_substitutions": [
+        "logistic_regression_or"
+      ],
+      "dependency_policy": "required",
+      "entrypoint": "fit_weighted_modified_poisson_pr"
+    },
+    {
+      "id": "logistic_regression_or",
+      "label": "Logistic Regression OR",
+      "tier": "default_mainline",
+      "method_family": "binary_or",
+      "example_file": "assets/r_methods.R",
+      "packages": [
+        "stats",
+        "broom"
+      ],
+      "outcome_families": [
+        "binary"
+      ],
+      "effect_measures": [
+        "odds ratio"
+      ],
+      "design_modes": [
+        "sample",
+        "survey_full",
+        "survey_weight_only"
+      ],
+      "pooling_modes": [
+        "none",
+        "mice_pooling"
+      ],
+      "required_outputs": [
+        "analysis/output/tables/Table_PrimaryLogistic.csv"
+      ],
+      "required_figures": [
+        "plot_forest",
+        "plot_marginal_effects"
+      ],
+      "dependency_policy": "required",
+      "entrypoint": "fit_logistic_model"
+    },
+    {
+      "id": "weighted_linear_model",
+      "label": "Weighted Linear Model",
+      "tier": "default_mainline",
+      "method_family": "continuous_linear",
+      "example_file": "assets/r_methods.R",
+      "packages": [
+        "survey",
+        "broom",
+        "dplyr"
+      ],
+      "outcome_families": [
+        "continuous"
+      ],
+      "effect_measures": [
+        "beta"
+      ],
+      "design_modes": [
+        "sample",
+        "survey_full",
+        "survey_weight_only"
+      ],
+      "pooling_modes": [
+        "none",
+        "mice_pooling"
+      ],
+      "required_outputs": [
+        "analysis/output/tables/Table_PrimaryLinearModel.csv"
+      ],
+      "required_figures": [
+        "plot_forest",
+        "plot_distribution"
+      ],
+      "dependency_policy": "required",
+      "entrypoint": "fit_weighted_linear_model"
+    },
+    {
+      "id": "ordinal_model",
+      "label": "Ordinal Model",
+      "tier": "default_mainline",
+      "method_family": "ordinal_clm",
+      "example_file": "assets/r_methods.R",
+      "packages": [
+        "ordinal",
+        "broom"
+      ],
+      "outcome_families": [
+        "ordinal"
+      ],
+      "effect_measures": [
+        "common odds ratio",
+        "partial proportional odds ratio"
+      ],
+      "design_modes": [
+        "sample"
+      ],
+      "pooling_modes": [
+        "none",
+        "mice_pooling"
+      ],
+      "required_outputs": [
+        "analysis/output/tables/Table_OrdinalModel.csv"
+      ],
+      "required_figures": [
+        "plot_forest"
+      ],
+      "dependency_policy": "required",
+      "entrypoint": "fit_ordinal_logit"
+    },
+    {
+      "id": "mi_survey_pooling_wrapper",
+      "label": "MI Survey Pooling Wrapper",
+      "tier": "default_mainline",
+      "method_family": "continuous_mi_weighted",
+      "example_file": "assets/r_methods.R",
+      "packages": [
+        "mice",
+        "survey",
+        "mitools"
+      ],
+      "outcome_families": [
+        "binary",
+        "continuous",
+        "ordinal",
+        "multinomial",
+        "bounded",
+        "count"
+      ],
+      "effect_measures": [
+        "prevalence ratio",
+        "odds ratio",
+        "beta",
+        "common odds ratio",
+        "rate ratio"
+      ],
+      "design_modes": [
+        "survey_full",
+        "survey_weight_only",
+        "sample"
+      ],
+      "pooling_modes": [
+        "mice_pooling"
+      ],
+      "required_outputs": [
+        "analysis/output/tables/Table_MI_PooledPrimary.csv"
+      ],
+      "required_figures": [
+        "plot_missingness",
+        "plot_forest"
+      ],
+      "dependency_policy": "required",
+      "entrypoint": "run_mi_survey_pooling_wrapper"
+    },
+    {
+      "id": "adjusted_predictions_contrasts",
+      "label": "Adjusted Predictions And Contrasts",
+      "tier": "default_mainline",
+      "method_family": "adjusted_predictions",
+      "example_file": "assets/r_methods.R",
+      "packages": [
+        "marginaleffects",
+        "ggplot2"
+      ],
+      "outcome_families": [
+        "binary",
+        "continuous",
+        "ordinal",
+        "multinomial",
+        "bounded",
+        "count"
+      ],
+      "effect_measures": [
+        "predicted probability",
+        "marginal mean",
+        "average contrast",
+        "slope"
+      ],
+      "design_modes": [
+        "sample",
+        "survey_full",
+        "survey_weight_only"
+      ],
+      "pooling_modes": [
+        "none",
+        "mice_pooling"
+      ],
+      "required_outputs": [
+        "analysis/output/tables/Table_AdjustedPredictions.csv"
+      ],
+      "required_figures": [
+        "plot_marginal_effects"
+      ],
+      "dependency_policy": "required",
+      "entrypoint": "run_adjusted_predictions_contrasts"
+    },
+    {
+      "id": "weighted_interaction_continuous",
+      "label": "Weighted Interaction Model",
+      "tier": "default_mainline",
+      "method_family": "interaction_bundle",
+      "example_file": "assets/r_methods.R",
+      "packages": [
+        "survey",
+        "emmeans",
+        "ggplot2"
+      ],
+      "outcome_families": [
+        "binary",
+        "continuous",
+        "ordinal"
+      ],
+      "effect_measures": [
+        "prevalence ratio",
+        "beta",
+        "odds ratio",
+        "common odds ratio"
+      ],
+      "design_modes": [
+        "sample",
+        "survey_full",
+        "survey_weight_only"
+      ],
+      "pooling_modes": [
+        "none",
+        "mice_pooling"
+      ],
+      "required_outputs": [
+        "analysis/output/tables/Table_InteractionModel.csv"
+      ],
+      "required_figures": [
+        "plot_marginal_effects"
+      ],
+      "dependency_policy": "required",
+      "entrypoint": "fit_weighted_interaction_continuous"
+    },
+    {
+      "id": "weighted_rcs_dose_response",
+      "label": "Weighted Dose Response",
+      "tier": "default_mainline",
+      "method_family": "dose_response_bundle",
+      "example_file": "assets/r_methods.R",
+      "packages": [
+        "survey",
+        "rms",
+        "ggplot2"
+      ],
+      "outcome_families": [
+        "binary",
+        "continuous"
+      ],
+      "effect_measures": [
+        "prevalence ratio",
+        "beta",
+        "odds ratio"
+      ],
+      "design_modes": [
+        "sample",
+        "survey_full",
+        "survey_weight_only"
+      ],
+      "pooling_modes": [
+        "none",
+        "mice_pooling"
+      ],
+      "required_outputs": [
+        "analysis/output/tables/Table_DoseResponse.csv"
+      ],
+      "required_figures": [
+        "plot_spline"
+      ],
+      "dependency_policy": "required",
+      "entrypoint": "run_weighted_rcs_dose_response"
+    },
+    {
+      "id": "sensitivity_bundle",
+      "label": "Sensitivity Bundle",
+      "tier": "default_mainline",
+      "method_family": "sensitivity_bundle",
+      "example_file": "assets/r_methods.R",
+      "packages": [
+        "dplyr",
+        "readr"
+      ],
+      "outcome_families": [
+        "binary",
+        "continuous",
+        "ordinal",
+        "multinomial",
+        "bounded",
+        "count"
+      ],
+      "effect_measures": [
+        "prevalence ratio",
+        "odds ratio",
+        "beta",
+        "common odds ratio",
+        "rate ratio"
+      ],
+      "design_modes": [
+        "sample",
+        "survey_full",
+        "survey_weight_only"
+      ],
+      "pooling_modes": [
+        "none",
+        "mice_pooling"
+      ],
+      "required_outputs": [
+        "analysis/output/tables/Table_SensitivitySummary.csv"
+      ],
+      "required_figures": [
+        "plot_forest"
+      ],
+      "dependency_policy": "required",
+      "entrypoint": "run_sensitivity_bundle"
+    },
+    {
+      "id": "balance_assessment_bundle",
+      "label": "Balance Assessment Bundle",
+      "tier": "default_mainline",
+      "method_family": "balance_assessment",
+      "example_file": "assets/r_methods.R",
+      "packages": [
+        "cobalt",
+        "ggplot2"
+      ],
+      "outcome_families": [
+        "all"
+      ],
+      "effect_measures": [],
+      "design_modes": [
+        "sample",
+        "survey_full",
+        "survey_weight_only"
+      ],
+      "pooling_modes": [
+        "none"
+      ],
+      "required_outputs": [
+        "analysis/output/tables/Table_BalanceAssessment.csv"
+      ],
+      "required_figures": [
+        "plot_balance"
+      ],
+      "dependency_policy": "required",
+      "entrypoint": "run_balance_assessment_bundle"
+    },
+    {
+      "id": "calibration_performance_bundle",
+      "label": "Calibration And Performance Bundle",
+      "tier": "common_extended",
+      "method_family": "calibration_performance",
+      "example_file": "assets/r_methods.R",
+      "packages": [
+        "dplyr",
+        "ggplot2"
+      ],
+      "outcome_families": [
+        "binary",
+        "continuous"
+      ],
+      "effect_measures": [
+        "brier score",
+        "calibration"
+      ],
+      "design_modes": [
+        "sample"
+      ],
+      "pooling_modes": [
+        "none"
+      ],
+      "required_outputs": [
+        "analysis/output/tables/Table_PerformanceMetrics.csv",
+        "analysis/output/tables/Table_CalibrationCurve.csv"
+      ],
+      "required_figures": [
+        "plot_calibration"
+      ],
+      "dependency_policy": "conditional",
+      "entrypoint": "run_calibration_performance_bundle"
+    },
+    {
+      "id": "domain_analysis_bundle",
+      "label": "Survey Domain Analysis Bundle",
+      "tier": "common_extended",
+      "method_family": "domain_analysis",
+      "example_file": "assets/r_methods.R",
+      "packages": [
+        "survey",
+        "dplyr",
+        "ggplot2"
+      ],
+      "outcome_families": [
+        "binary",
+        "continuous"
+      ],
+      "effect_measures": [
+        "prevalence",
+        "mean"
+      ],
+      "design_modes": [
+        "sample",
+        "survey_full",
+        "survey_weight_only"
+      ],
+      "pooling_modes": [
+        "none"
+      ],
+      "required_outputs": [
+        "analysis/output/tables/Table_DomainAnalysis.csv"
+      ],
+      "required_figures": [
+        "plot_forest"
+      ],
+      "dependency_policy": "conditional",
+      "entrypoint": "run_domain_analysis_bundle"
+    },
+    {
+      "id": "bounded_proportion_model",
+      "label": "Bounded Proportion Model",
+      "tier": "common_extended",
+      "method_family": "bounded_proportion",
+      "example_file": "assets/r_methods.R",
+      "packages": [
+        "betareg",
+        "broom",
+        "dplyr",
+        "ggplot2"
+      ],
+      "outcome_families": [
+        "bounded"
+      ],
+      "effect_measures": [
+        "logit-scale coefficient"
+      ],
+      "design_modes": [
+        "sample"
+      ],
+      "pooling_modes": [
+        "none"
+      ],
+      "required_outputs": [
+        "analysis/output/tables/Table_BoundedOutcome.csv"
+      ],
+      "required_figures": [
+        "plot_distribution",
+        "plot_marginal_effects"
+      ],
+      "dependency_policy": "conditional",
+      "entrypoint": "fit_bounded_proportion_model"
+    },
+    {
+      "id": "count_outcome_model",
+      "label": "Count Outcome Model",
+      "tier": "common_extended",
+      "method_family": "count_outcome",
+      "example_file": "assets/r_methods.R",
+      "packages": [
+        "stats",
+        "MASS",
+        "broom",
+        "dplyr",
+        "ggplot2"
+      ],
+      "outcome_families": [
+        "count"
+      ],
+      "effect_measures": [
+        "rate ratio"
+      ],
+      "design_modes": [
+        "sample"
+      ],
+      "pooling_modes": [
+        "none"
+      ],
+      "required_outputs": [
+        "analysis/output/tables/Table_CountModel.csv"
+      ],
+      "required_figures": [
+        "plot_distribution",
+        "plot_forest"
+      ],
+      "dependency_policy": "conditional",
+      "entrypoint": "fit_count_outcome_model"
+    },
+    {
+      "id": "clustered_gee_model",
+      "label": "Clustered GEE Model",
+      "tier": "common_extended",
+      "method_family": "clustered_gee",
+      "example_file": "assets/r_methods.R",
+      "packages": [
+        "geepack",
+        "broom",
+        "dplyr",
+        "ggplot2"
+      ],
+      "outcome_families": [
+        "binary",
+        "continuous",
+        "count"
+      ],
+      "effect_measures": [
+        "prevalence ratio",
+        "odds ratio",
+        "beta"
+      ],
+      "design_modes": [
+        "sample"
+      ],
+      "pooling_modes": [
+        "none"
+      ],
+      "required_outputs": [
+        "analysis/output/tables/Table_ClusteredGEE.csv"
+      ],
+      "required_figures": [
+        "plot_forest"
+      ],
+      "dependency_policy": "conditional",
+      "entrypoint": "fit_clustered_gee_model"
+    },
+    {
+      "id": "multinomial_nominal_model",
+      "label": "Multinomial Nominal Model",
+      "tier": "common_extended",
+      "method_family": "multinomial_nominal",
+      "example_file": "assets/r_methods.R",
+      "packages": [
+        "nnet",
+        "broom",
+        "dplyr",
+        "ggplot2"
+      ],
+      "outcome_families": [
+        "multinomial"
+      ],
+      "effect_measures": [
+        "relative risk ratio"
+      ],
+      "design_modes": [
+        "sample"
+      ],
+      "pooling_modes": [
+        "none"
+      ],
+      "required_outputs": [
+        "analysis/output/tables/Table_MultinomialModel.csv"
+      ],
+      "required_figures": [
+        "plot_marginal_effects"
+      ],
+      "dependency_policy": "conditional",
+      "entrypoint": "fit_multinomial_nominal_model"
+    },
+    {
+      "id": "zero_inflated_count_model",
+      "label": "Zero-Inflated Count Model",
+      "tier": "common_extended",
+      "method_family": "zero_inflated_count",
+      "example_file": "assets/r_methods.R",
+      "packages": [
+        "glmmTMB",
+        "broom",
+        "dplyr",
+        "ggplot2"
+      ],
+      "outcome_families": [
+        "count"
+      ],
+      "effect_measures": [
+        "rate ratio"
+      ],
+      "design_modes": [
+        "sample"
+      ],
+      "pooling_modes": [
+        "none"
+      ],
+      "required_outputs": [
+        "analysis/output/tables/Table_ZeroInflatedCount.csv"
+      ],
+      "required_figures": [
+        "plot_distribution",
+        "plot_forest"
+      ],
+      "dependency_policy": "conditional",
+      "entrypoint": "fit_zero_inflated_count_model"
+    }
+  ]
+}
